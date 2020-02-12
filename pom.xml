@@ -3,11 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>no.nav.bidrag.beregning</groupId>
-	<artifactId>bidrag-beregning-forskudd</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<groupId>no.nav.bidrag</groupId>
+	<artifactId>bidrag-beregn-forskudd-core</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>Bidrag - Beregning - Forskudd</name>
+	<name>bidrag-beregn-forskudd-core</name>
+	<description>Forskuddsberegning</description>
 
 	<properties>
 		<java.version>13</java.version>
