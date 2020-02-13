@@ -10,6 +10,20 @@
 	<name>bidrag-beregn-forskudd-core</name>
 	<description>Forskuddsberegning</description>
 
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>https://opensource.org/licenses/MIT</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<organization>NAV (Arbeids- og velferdsdirektoratet) - The Norwegian Labour and Welfare Administration</organization>
+			<organizationUrl>https://www.nav.no</organizationUrl>
+		</developer>
+	</developers>
+
 	<properties>
 		<java.version>13</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
@@ -24,6 +38,20 @@
 		<junit.jupiter.version>5.4.0</junit.jupiter.version>
 		<assertj.version>3.13.2</assertj.version>
 	</properties>
+
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<url>https://maven.pkg.github.com/navikt/bidrag-beregn-forskudd-core</url>
+		</repository>
+	</distributionManagement>
+
+	<scm>
+		<developerConnection>scm:git:git@github.com:navikt/bidrag-beregn-forskudd-core.git</developerConnection>
+		<connection>scm:git:git@github.com:navikt/bidrag-beregn-forskudd-core.git</connection>
+		<url>https://github.com/navikt/bidrag-beregn-forskudd-core.git</url>
+		<tag>HEAD</tag>
+	</scm>
 
 	<dependencies>
 		<dependency>
