@@ -1,6 +1,6 @@
 # bidrag-beregn-forskudd-core
 
-![](https://github.com/navikt/bidrag-beregn-forskudd-core/workflows/continious%20integration/badge.svg)
+![](https://github.com/navikt/bidrag-beregn-forskudd-core/workflows/maven%20deploy/badge.svg)
 
 Forskuddsberegning forretningslogikk
 
