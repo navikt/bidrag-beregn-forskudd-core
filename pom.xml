@@ -5,7 +5,7 @@
 	<artifactId>bidrag-beregn-forskudd-core</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>bidrag-beregn-forskudd-core-test</name>
+	<name>bidrag-beregn-forskudd-core</name>
 	<description>Forskuddsberegning</description>
 
 	<licenses>
