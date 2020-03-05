@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.forskudd.core.dto
 
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.Collections.emptyList
 
 data class BeregnForskuddGrunnlagDto(var beregnDatoFra: LocalDate? = null,
                                      var beregnDatoTil: LocalDate? = null,
@@ -57,7 +58,7 @@ data class Periode(
     }
 
     // Sjekker at en denne perioden overlapper med annenPeriode (intersect)
-    fun overlapperMed(annenPeriode: no.nav.bidrag.beregn.forskudd.periode.grunnlag.Periode): Boolean {
+    fun overlapperMed(annenPeriode: Periode): Boolean {
         return ((annenPeriode.datoTil == null || datoFra!!.isBefore(annenPeriode.datoTil))
                 && (datoTil == null || datoTil!!.isAfter(annenPeriode.datoFra)))
     }
