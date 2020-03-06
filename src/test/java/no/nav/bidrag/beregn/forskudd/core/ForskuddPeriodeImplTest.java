@@ -27,7 +27,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 @TestMethodOrder(OrderAnnotation.class)
 @DisplayName("ForskuddsperiodeberegningTest")
-class ForskuddPeriodeTest {
+class ForskuddPeriodeImplTest {
 
   private ForskuddPeriodeGrunnlag grunnlag = new ForskuddPeriodeGrunnlag();
 
