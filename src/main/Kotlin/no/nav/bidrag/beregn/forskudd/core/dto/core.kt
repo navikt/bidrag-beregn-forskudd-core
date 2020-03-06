@@ -4,12 +4,13 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.Collections.emptyList
 
-data class BeregnForskuddGrunnlagDto(var beregnDatoFra: LocalDate? = null,
-                                     var beregnDatoTil: LocalDate? = null,
-                                     var soknadBarn: List<SoknadBarn> = emptyList(),
-                                     var bidragMottakerInntektPeriodeListe: List<BidragMottakerInntektPeriodeListe> = emptyList(),
-                                     var bidragMottakerSivilstandPeriodeListe: List<BidragMottakerSivilstandPeriodeListe> = emptyList(),
-                                     var bidragMottakerBarnPeriodeListe: List<BidragMottakerBarnPeriodeListe?> = emptyList()
+data class ForskuddPeriodeGrunnlag(
+        var beregnDatoFra: LocalDate? = null,
+        var beregnDatoTil: LocalDate? = null,
+        var soknadBarn: SoknadBarn? = null,
+        var bidragMottakerInntektPeriodeListe: List<BidragMottakerInntektPeriodeListe> = emptyList(),
+        var bidragMottakerSivilstandPeriodeListe: List<BidragMottakerSivilstandPeriodeListe> = emptyList(),
+        var bidragMottakerBarnPeriodeListe: List<BidragMottakerBarnPeriodeListe?> = emptyList()
 )
 
 data class SoknadBarn(

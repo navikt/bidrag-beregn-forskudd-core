@@ -13,7 +13,6 @@ import no.nav.bidrag.beregn.forskudd.core.beregning.grunnlag.SivilstandKode;
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode;
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriodeImpl;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.BostatusPeriode;
-import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.ForskuddPeriodeGrunnlag;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.InntektPeriode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.Periode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.SivilstandPeriode;
