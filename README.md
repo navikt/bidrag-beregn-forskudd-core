@@ -9,3 +9,4 @@ Forskuddsberegning forretningslogikk
 Versjon | Endringstype      | Beskrivelse
 --------|-------------------|------------
 0.0.1   |  Opprettet        | Første versjon
+0.0.2   |  Endring          | Lagt til Kotlin + nytt ytre lag for å skille mellom ekstern og intern DTO
