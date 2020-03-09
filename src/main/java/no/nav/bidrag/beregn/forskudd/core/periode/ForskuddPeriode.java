@@ -1,7 +1,7 @@
 package no.nav.bidrag.beregn.forskudd.core.periode;
 
-import no.nav.bidrag.beregn.forskudd.core.dto.ForskuddPeriodeGrunnlag;
-import no.nav.bidrag.beregn.forskudd.core.dto.ForskuddPeriodeResultat;
+import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.ForskuddPeriodeGrunnlag;
+import no.nav.bidrag.beregn.forskudd.core.periode.resultat.ForskuddPeriodeResultat;
 
 public interface ForskuddPeriode {
 
