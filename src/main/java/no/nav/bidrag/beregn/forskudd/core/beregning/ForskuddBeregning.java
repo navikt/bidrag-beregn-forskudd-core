@@ -7,4 +7,7 @@ public interface ForskuddBeregning {
 
   ForskuddBeregningResultat beregn(ForskuddBeregningGrunnlag grunnlag);
 
+  static ForskuddBeregning getInstance() {
+    return new ForskuddBeregningImpl();
+  }
 }

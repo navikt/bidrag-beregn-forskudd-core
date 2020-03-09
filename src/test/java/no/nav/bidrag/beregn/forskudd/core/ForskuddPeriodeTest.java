@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
+import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregning;
 import no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ResultatKode;
 import no.nav.bidrag.beregn.forskudd.core.beregning.grunnlag.BostedStatusKode;
 import no.nav.bidrag.beregn.forskudd.core.beregning.grunnlag.SivilstandKode;
@@ -31,12 +32,14 @@ class ForskuddPeriodeTest {
 
   private ForskuddPeriodeGrunnlag grunnlag = new ForskuddPeriodeGrunnlag();
 
+  private ForskuddPeriode forskuddPeriode = ForskuddPeriode.getInstance();
+
   @Test
   @Order(1)
   @DisplayName("Test utvidet grunnlag")
   void testUtvidetGrunnlag() {
     lagGrunnlag();
-    var resultat = forskuddsperiode().beregnPerioder(grunnlag);
+    var resultat = forskuddPeriode.beregnPerioder(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
         () -> assertThat(resultat.getPeriodeResultatListe().size()).isEqualTo(8),
@@ -90,10 +93,6 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getPeriodeResultatListe().get(7).getForskuddBeregningResultat().getResultatBeskrivelse()).isEqualTo("REGEL 11")
     );
     printGrunnlagResultat(resultat);
-  }
-
-  private ForskuddPeriode forskuddsperiode() {
-    return new ForskuddPeriodeImpl();
   }
 
   private void lagGrunnlag() {

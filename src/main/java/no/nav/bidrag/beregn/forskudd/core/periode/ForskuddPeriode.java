@@ -6,4 +6,8 @@ import no.nav.bidrag.beregn.forskudd.core.periode.resultat.ForskuddPeriodeResult
 public interface ForskuddPeriode {
 
   ForskuddPeriodeResultat beregnPerioder(ForskuddPeriodeGrunnlag grunnlag);
+
+  static ForskuddPeriode getInstance() {
+    return new ForskuddPeriodeImpl();
+  }
 }

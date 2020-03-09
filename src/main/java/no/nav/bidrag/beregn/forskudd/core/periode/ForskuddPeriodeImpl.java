@@ -9,25 +9,27 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregning;
 import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregningImpl;
 import no.nav.bidrag.beregn.forskudd.core.beregning.grunnlag.BostedStatusKode;
 import no.nav.bidrag.beregn.forskudd.core.beregning.grunnlag.ForskuddBeregningGrunnlag;
 import no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ForskuddBeregningResultat;
 import no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ResultatKode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.BostatusPeriode;
+import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.ForskuddPeriodeGrunnlag;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.Periode;
 import no.nav.bidrag.beregn.forskudd.core.periode.resultat.PeriodeResultat;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.AlderPeriode;
-import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.ForskuddPeriodeGrunnlag;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.InntektPeriode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.SivilstandPeriode;
 import no.nav.bidrag.beregn.forskudd.core.periode.resultat.ForskuddPeriodeResultat;
 
 public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
+  private ForskuddBeregning forskuddBeregning = ForskuddBeregning.getInstance();
+
   public ForskuddPeriodeResultat beregnPerioder(ForskuddPeriodeGrunnlag periodeGrunnlag) {
 
-    var forskuddBeregning = new ForskuddBeregningImpl();
     var periodeResultatListe = new ArrayList<PeriodeResultat>();
 
     // Justerer datoer på grunnlagslistene
@@ -117,7 +119,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     return new ForskuddPeriodeResultat(filtrertPeriodeResultatListe);
   }
 
-  // Deler opp ialdersperioder med utgangspunkt i fødselsdato
+  // Deler opp i aldersperioder med utgangspunkt i fødselsdato
   private List<AlderPeriode> settBarnAlderPerioder(LocalDate fodselDato, LocalDate beregnDatoFra, LocalDate beregnDatoTil) {
     var bruddAlderListe = new ArrayList<AlderPeriode>();
     var barn11AarDato = fodselDato.plusYears(11).with(firstDayOfMonth());

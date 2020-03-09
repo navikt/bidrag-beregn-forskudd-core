@@ -26,11 +26,13 @@ class ForskuddBeregningTest {
 
   private ForskuddBeregningGrunnlag grunnlag = new ForskuddBeregningGrunnlag();
 
+  private ForskuddBeregning forskuddBeregning = ForskuddBeregning.getInstance();
+
   @Test
   @Order(1)
   @DisplayName("Beregning feiler hvis grunnlag er null")
   void beregningFeilerVedNullGrunnlag() {
-    assertThrows(NullPointerException.class, () -> forskuddsberegning().beregn(null));
+    assertThrows(NullPointerException.class, () -> forskuddBeregning.beregn(null));
   }
 
   @Test
@@ -38,7 +40,7 @@ class ForskuddBeregningTest {
   @DisplayName("Regel 1: Søknadsbarn alder er høyere enn eller lik 18 år")
   void skalGiAvslagBarnOver18Aar() {
     lagGrunnlag(BigDecimal.ZERO, SivilstandKode.ENSLIG, 1, 18, BostedStatusKode.MED_FORELDRE);
-    var resultat = forskuddsberegning().beregn(grunnlag);
+    var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> Assertions.assertThat(resultat).isNotNull(),
         () -> Assertions.assertThat(resultat.getBelop()).isEqualTo(BigDecimal.ZERO),
@@ -53,7 +55,7 @@ class ForskuddBeregningTest {
   @DisplayName("Regel 2: Søknadsbarn alder er høyere enn eller lik 11 år og type barn er ENSLIG ASYLANT")
   void skalGi250ProsentEnsligAsylant() {
     lagGrunnlag(BigDecimal.ZERO, SivilstandKode.ENSLIG, 1, 11, BostedStatusKode.ENSLIG_ASYLANT);
-    var resultat = forskuddsberegning().beregn(grunnlag);
+    var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> Assertions.assertThat(resultat).isNotNull(),
         () -> Assertions.assertThat(resultat.getBelop()).isEqualTo(BigDecimal.valueOf(Sjablonverdi.FORSKUDDSSATS_250_PROSENT)),
@@ -68,7 +70,7 @@ class ForskuddBeregningTest {
   @DisplayName("Regel 3: Søknadsbarn alder er lavere enn 11 år og type barn er ENSLIG ASYLANT")
   void skalGi100ProsentEnsligAsylant() {
     lagGrunnlag(BigDecimal.ZERO, SivilstandKode.ENSLIG, 1, 10, BostedStatusKode.ENSLIG_ASYLANT);
-    var resultat = forskuddsberegning().beregn(grunnlag);
+    var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> Assertions.assertThat(resultat).isNotNull(),
         () -> Assertions.assertThat(resultat.getBelop()).isEqualTo(BigDecimal.valueOf(Sjablonverdi.FORSKUDDSSATS_200_PROSENT)),
@@ -83,7 +85,7 @@ class ForskuddBeregningTest {
   @DisplayName("Regel 4: Søknadsbarn alder er høyere enn eller lik 11 år og bostedsstatus er ikke MED FORELDRE")
   void skalGi125ProsentBorIkkeMedForeldre() {
     lagGrunnlag(BigDecimal.ZERO, SivilstandKode.ENSLIG, 1, 11, BostedStatusKode.ALENE);
-    var resultat = forskuddsberegning().beregn(grunnlag);
+    var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> Assertions.assertThat(resultat).isNotNull(),
         () -> Assertions.assertThat(resultat.getBelop()).isEqualTo(BigDecimal.valueOf(Sjablonverdi.FORSKUDDSSATS_125_PROSENT)),
@@ -98,7 +100,7 @@ class ForskuddBeregningTest {
   @DisplayName("Regel 5: Søknadsbarn alder er lavere enn 11 år og bostedsstatus er ikke MED FORELDRE")
   void skalGi100ProsentBorIkkeMedForeldre() {
     lagGrunnlag(BigDecimal.ZERO, SivilstandKode.ENSLIG, 1, 10, BostedStatusKode.ALENE);
-    var resultat = forskuddsberegning().beregn(grunnlag);
+    var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> Assertions.assertThat(resultat).isNotNull(),
         () -> Assertions.assertThat(resultat.getBelop()).isEqualTo(BigDecimal.valueOf(Sjablonverdi.FORSKUDDSSATS_100_PROSENT)),
@@ -113,7 +115,7 @@ class ForskuddBeregningTest {
   @DisplayName("Regel 6: BM inntekt er over maks grense")
   void skalGiAvslagOverMaksGrense() {
     lagGrunnlag(BigDecimal.valueOf((Sjablonverdi.FORSKUDDSSATS_100_PROSENT * Sjablonverdi.MULTIPLIKATOR_MAKS_INNTEKTSGRENSE) + 1), SivilstandKode.ENSLIG, 1, 11, BostedStatusKode.MED_FORELDRE);
-    var resultat = forskuddsberegning().beregn(grunnlag);
+    var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> Assertions.assertThat(resultat).isNotNull(),
         () -> Assertions.assertThat(resultat.getBelop()).isEqualTo(BigDecimal.ZERO),
@@ -128,7 +130,7 @@ class ForskuddBeregningTest {
   @DisplayName("Regel 7: BM inntekt er lavere eller lik sats for fullt forskudd og søknadsbarn alder er høyere enn eller lik 11 år")
   void skalGi125ProsentLavInntekt() {
     lagGrunnlag(BigDecimal.valueOf(Sjablonverdi.INNTEKTSGRENSE_100_PROSENT), SivilstandKode.ENSLIG, 1, 11, BostedStatusKode.MED_FORELDRE);
-    var resultat = forskuddsberegning().beregn(grunnlag);
+    var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> Assertions.assertThat(resultat).isNotNull(),
         () -> Assertions.assertThat(resultat.getBelop()).isEqualTo(BigDecimal.valueOf(Sjablonverdi.FORSKUDDSSATS_125_PROSENT)),
@@ -143,7 +145,7 @@ class ForskuddBeregningTest {
   @DisplayName("Regel 8: BM inntekt er lavere eller lik sats for fullt forskudd og søknadsbarn alder er lavere enn 11 år")
   void skalGi100ProsentLavInntekt() {
     lagGrunnlag(BigDecimal.valueOf(Sjablonverdi.INNTEKTSGRENSE_100_PROSENT), SivilstandKode.ENSLIG, 1, 10, BostedStatusKode.MED_FORELDRE);
-    var resultat = forskuddsberegning().beregn(grunnlag);
+    var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> Assertions.assertThat(resultat).isNotNull(),
         () -> Assertions.assertThat(resultat.getBelop()).isEqualTo(BigDecimal.valueOf(Sjablonverdi.FORSKUDDSSATS_100_PROSENT)),
@@ -158,7 +160,7 @@ class ForskuddBeregningTest {
   @DisplayName("Regel 9: BM inntekt er lavere eller lik sats for 75% forskudd enslig og antall barn i husstand er 1")
   void skalGi75ProsentEnsligEttBarn() {
     lagGrunnlag(BigDecimal.valueOf(Sjablonverdi.INNTEKTSGRENSE_75_PROSENT_ENSLIG), SivilstandKode.ENSLIG, 1, 11, BostedStatusKode.MED_FORELDRE);
-    var resultat = forskuddsberegning().beregn(grunnlag);
+    var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> Assertions.assertThat(resultat).isNotNull(),
         () -> Assertions.assertThat(resultat.getBelop()).isEqualTo(BigDecimal.valueOf(Sjablonverdi.FORSKUDDSSATS_75_PROSENT)),
@@ -173,7 +175,7 @@ class ForskuddBeregningTest {
   @DisplayName("Regel 10: BM inntekt er høyere enn sats for 75% forskudd enslig og antall barn i husstand er 1")
   void skalGi50ProsentEnsligEttBarn() {
     lagGrunnlag(BigDecimal.valueOf(Sjablonverdi.INNTEKTSGRENSE_75_PROSENT_ENSLIG + 1), SivilstandKode.ENSLIG, 1, 11, BostedStatusKode.MED_FORELDRE);
-    var resultat = forskuddsberegning().beregn(grunnlag);
+    var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> Assertions.assertThat(resultat).isNotNull(),
         () -> Assertions.assertThat(resultat.getBelop()).isEqualTo(BigDecimal.valueOf(Sjablonverdi.FORSKUDDSSATS_50_PROSENT)),
@@ -188,7 +190,7 @@ class ForskuddBeregningTest {
   @DisplayName("Regel 11: BM inntekt er lavere eller lik sats for 75% forskudd enslig ++ og antall barn i husstand er mer enn 1")
   void skalGi75ProsentEnsligMerEnnEttBarn() {
     lagGrunnlag(BigDecimal.valueOf(Sjablonverdi.INNTEKTSGRENSE_75_PROSENT_ENSLIG + Sjablonverdi.INNTEKTSINTERVALL_FORSKUDD), SivilstandKode.ENSLIG, 2, 11, BostedStatusKode.MED_FORELDRE);
-    var resultat = forskuddsberegning().beregn(grunnlag);
+    var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> Assertions.assertThat(resultat).isNotNull(),
         () -> Assertions.assertThat(resultat.getBelop()).isEqualTo(BigDecimal.valueOf(Sjablonverdi.FORSKUDDSSATS_75_PROSENT)),
@@ -203,7 +205,7 @@ class ForskuddBeregningTest {
   @DisplayName("Regel 12: BM inntekt er høyere enn sats for 75% forskudd enslig ++ og antall barn i husstand er mer enn 1")
   void skalGi50ProsentEnsligMerEnnEttBarn() {
     lagGrunnlag(BigDecimal.valueOf(Sjablonverdi.INNTEKTSGRENSE_75_PROSENT_ENSLIG + Sjablonverdi.INNTEKTSINTERVALL_FORSKUDD + 1), SivilstandKode.ENSLIG, 2, 11, BostedStatusKode.MED_FORELDRE);
-    var resultat = forskuddsberegning().beregn(grunnlag);
+    var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> Assertions.assertThat(resultat).isNotNull(),
         () -> Assertions.assertThat(resultat.getBelop()).isEqualTo(BigDecimal.valueOf(Sjablonverdi.FORSKUDDSSATS_50_PROSENT)),
@@ -218,7 +220,7 @@ class ForskuddBeregningTest {
   @DisplayName("Regel 13: BM inntekt er lavere eller lik sats for 75% forskudd gift og antall barn i husstand er 1")
   void skalGi75ProsentGiftEttBarn() {
     lagGrunnlag(BigDecimal.valueOf(Sjablonverdi.INNTEKTSGRENSE_75_PROSENT_GIFT), SivilstandKode.GIFT, 1, 11, BostedStatusKode.MED_FORELDRE);
-    var resultat = forskuddsberegning().beregn(grunnlag);
+    var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> Assertions.assertThat(resultat).isNotNull(),
         () -> Assertions.assertThat(resultat.getBelop()).isEqualTo(BigDecimal.valueOf(Sjablonverdi.FORSKUDDSSATS_75_PROSENT)),
@@ -233,7 +235,7 @@ class ForskuddBeregningTest {
   @DisplayName("Regel 14: BM inntekt er høyere enn sats for 75% forskudd gift og antall barn i husstand er 1")
   void skalGi50ProsentGiftEttBarn() {
     lagGrunnlag(BigDecimal.valueOf(Sjablonverdi.INNTEKTSGRENSE_75_PROSENT_GIFT + 1), SivilstandKode.GIFT, 1, 11, BostedStatusKode.MED_FORELDRE);
-    var resultat = forskuddsberegning().beregn(grunnlag);
+    var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> Assertions.assertThat(resultat).isNotNull(),
         () -> Assertions.assertThat(resultat.getBelop()).isEqualTo(BigDecimal.valueOf(Sjablonverdi.FORSKUDDSSATS_50_PROSENT)),
@@ -248,7 +250,7 @@ class ForskuddBeregningTest {
   @DisplayName("Regel 15: BM inntekt er lavere eller lik sats for 75% forskudd gift ++ og antall barn i husstand er mer enn 1")
   void skalGi75ProsentGiftMerEnnEttBarn() {
     lagGrunnlag(BigDecimal.valueOf(Sjablonverdi.INNTEKTSGRENSE_75_PROSENT_GIFT + Sjablonverdi.INNTEKTSINTERVALL_FORSKUDD), SivilstandKode.GIFT, 2, 11, BostedStatusKode.MED_FORELDRE);
-    var resultat = forskuddsberegning().beregn(grunnlag);
+    var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> Assertions.assertThat(resultat).isNotNull(),
         () -> Assertions.assertThat(resultat.getBelop()).isEqualTo(BigDecimal.valueOf(Sjablonverdi.FORSKUDDSSATS_75_PROSENT)),
@@ -263,7 +265,7 @@ class ForskuddBeregningTest {
   @DisplayName("Regel 16: BM inntekt er høyere enn sats for 75% forskudd gift ++ og antall barn i husstand er mer enn 1")
   void skalGi50ProsentGiftMerEnnEttBarn() {
     lagGrunnlag(BigDecimal.valueOf(Sjablonverdi.INNTEKTSGRENSE_75_PROSENT_GIFT + Sjablonverdi.INNTEKTSINTERVALL_FORSKUDD + 1), SivilstandKode.GIFT, 2, 11, BostedStatusKode.MED_FORELDRE);
-    var resultat = forskuddsberegning().beregn(grunnlag);
+    var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> Assertions.assertThat(resultat).isNotNull(),
         () -> Assertions.assertThat(resultat.getResultatKode()).isEqualTo(ResultatKode.INNVILGET_50_PROSENT),
@@ -271,10 +273,6 @@ class ForskuddBeregningTest {
         () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 16")
     );
     printGrunnlagResultat(resultat, "***  ");
-  }
-
-  private ForskuddBeregning forskuddsberegning() {
-    return new ForskuddBeregningImpl();
   }
 
   private void lagGrunnlag(BigDecimal inntekt, SivilstandKode sivilstandKode, Integer antallBarnHjemme, Integer alderBarn,
