@@ -12,6 +12,13 @@ public class ForskuddBeregningGrunnlag {
   private Integer antallBarnIHusstand;
   private Integer soknadBarnAlder;
   private BostedStatusKode soknadBarnBostedStatusKode;
+  private Integer forskuddssats100Prosent;
+  private Integer multiplikatorMaksInntektsgrense;
+  private Integer inntektsgrense100ProsentForskudd;
+  private Integer inntektsgrenseEnslig75ProsentForskudd;
+  private Integer inntektsgrenseGift75ProsentForskudd;
+  private Integer inntektsintervallForskudd;
+
 
   public ForskuddBeregningGrunnlag(BigDecimal bidragMottakerInntekt, SivilstandKode bidragMottakerSivilstandKode, Integer antallBarnIHusstand,
       Integer soknadBarnAlder, BostedStatusKode soknadBarnBostedStatusKode) {

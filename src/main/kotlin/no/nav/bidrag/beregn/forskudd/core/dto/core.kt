@@ -11,7 +11,8 @@ data class ForskuddPeriodeGrunnlagDto(
     var soknadBarn: SoknadBarnDto? = null,
     var bidragMottakerInntektPeriodeListe: List<BidragMottakerInntektPeriodeDto> = emptyList(),
     var bidragMottakerSivilstandPeriodeListe: List<BidragMottakerSivilstandPeriodeDto> = emptyList(),
-    var bidragMottakerBarnPeriodeListe: List<PeriodeDto?> = emptyList()
+    var bidragMottakerBarnPeriodeListe: List<PeriodeDto?> = emptyList(),
+    var sjablontallListe: List<SjablontallDto> = emptyList()
 )
 
 data class SoknadBarnDto(
@@ -33,6 +34,13 @@ data class BidragMottakerSivilstandPeriodeDto(
     var datoFraTil: PeriodeDto?,
     var sivilstandKode: String? = null
 )
+
+data class SjablontallDto(
+    var typeSjablon: String,
+    var datoFraTil: PeriodeDto,
+    var verdi: BigDecimal
+)
+
 
 // Resultat
 data class ForskuddPeriodeResultatDto(

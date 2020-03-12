@@ -14,6 +14,7 @@ public class ForskuddPeriodeGrunnlag {
   private List<InntektPeriode> bidragMottakerInntektPeriodeListe;
   private List<SivilstandPeriode> bidragMottakerSivilstandPeriodeListe;
   private List<Periode> bidragMottakerBarnPeriodeListe;
+  private List<SjablonPeriode> sjablonPeriodeListe;
 
   public LocalDate getBeregnDatoFra() {
     return beregnDatoFra;
@@ -61,5 +62,13 @@ public class ForskuddPeriodeGrunnlag {
 
   public void setBidragMottakerBarnPeriodeListe(List<Periode> bidragMottakerBarnPeriodeListe) {
     this.bidragMottakerBarnPeriodeListe = bidragMottakerBarnPeriodeListe;
+  }
+
+  public List<SjablonPeriode> getSjablonPeriodeListe() {
+    return sjablonPeriodeListe;
+  }
+
+  public void setSjablonPeriodeListe(List<SjablonPeriode> sjablonPeriodeListe) {
+    this.sjablonPeriodeListe = sjablonPeriodeListe;
   }
 }
