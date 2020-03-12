@@ -20,52 +20,65 @@ public class ForskuddBeregningGrunnlag {
   private Integer inntektsintervallForskudd;
 
 
-  public ForskuddBeregningGrunnlag(BigDecimal bidragMottakerInntekt, SivilstandKode bidragMottakerSivilstandKode, Integer antallBarnIHusstand,
-      Integer soknadBarnAlder, BostedStatusKode soknadBarnBostedStatusKode) {
+  public ForskuddBeregningGrunnlag(BigDecimal bidragMottakerInntekt,
+      SivilstandKode bidragMottakerSivilstandKode, Integer antallBarnIHusstand, Integer soknadBarnAlder,
+      BostedStatusKode soknadBarnBostedStatusKode, Integer forskuddssats100Prosent, Integer multiplikatorMaksInntektsgrense,
+      Integer inntektsgrense100ProsentForskudd, Integer inntektsgrenseEnslig75ProsentForskudd, Integer inntektsgrenseGift75ProsentForskudd,
+      Integer inntektsintervallForskudd) {
     this.bidragMottakerInntekt = bidragMottakerInntekt;
     this.bidragMottakerSivilstandKode = bidragMottakerSivilstandKode;
     this.antallBarnIHusstand = antallBarnIHusstand;
     this.soknadBarnAlder = soknadBarnAlder;
     this.soknadBarnBostedStatusKode = soknadBarnBostedStatusKode;
+    this.forskuddssats100Prosent = forskuddssats100Prosent;
+    this.multiplikatorMaksInntektsgrense = multiplikatorMaksInntektsgrense;
+    this.inntektsgrense100ProsentForskudd = inntektsgrense100ProsentForskudd;
+    this.inntektsgrenseEnslig75ProsentForskudd = inntektsgrenseEnslig75ProsentForskudd;
+    this.inntektsgrenseGift75ProsentForskudd = inntektsgrenseGift75ProsentForskudd;
+    this.inntektsintervallForskudd = inntektsintervallForskudd;
   }
 
   public BigDecimal getBidragMottakerInntekt() {
     return bidragMottakerInntekt;
   }
 
-  public void setBidragMottakerInntekt(BigDecimal bidragMottakerInntekt) {
-    this.bidragMottakerInntekt = bidragMottakerInntekt;
-  }
-
   public SivilstandKode getBidragMottakerSivilstandKode() {
     return bidragMottakerSivilstandKode;
-  }
-
-  public void setBidragMottakerSivilstandKode(SivilstandKode bidragMottakerSivilstandKode) {
-    this.bidragMottakerSivilstandKode = bidragMottakerSivilstandKode;
   }
 
   public Integer getAntallBarnIHusstand() {
     return antallBarnIHusstand;
   }
 
-  public void setAntallBarnIHusstand(Integer antallBarnIHusstand) {
-    this.antallBarnIHusstand = antallBarnIHusstand;
-  }
-
   public Integer getSoknadBarnAlder() {
     return soknadBarnAlder;
-  }
-
-  public void setSoknadBarnAlder(Integer soknadBarnAlder) {
-    this.soknadBarnAlder = soknadBarnAlder;
   }
 
   public BostedStatusKode getSoknadBarnBostedStatusKode() {
     return soknadBarnBostedStatusKode;
   }
 
-  public void setSoknadBarnBostedStatusKode(BostedStatusKode soknadBarnBostedStatusKode) {
-    this.soknadBarnBostedStatusKode = soknadBarnBostedStatusKode;
+  public Integer getForskuddssats100Prosent() {
+    return forskuddssats100Prosent;
+  }
+
+  public Integer getMultiplikatorMaksInntektsgrense() {
+    return multiplikatorMaksInntektsgrense;
+  }
+
+  public Integer getInntektsgrense100ProsentForskudd() {
+    return inntektsgrense100ProsentForskudd;
+  }
+
+  public Integer getInntektsgrenseEnslig75ProsentForskudd() {
+    return inntektsgrenseEnslig75ProsentForskudd;
+  }
+
+  public Integer getInntektsgrenseGift75ProsentForskudd() {
+    return inntektsgrenseGift75ProsentForskudd;
+  }
+
+  public Integer getInntektsintervallForskudd() {
+    return inntektsintervallForskudd;
   }
 }

@@ -10,19 +10,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregning;
-import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregningImpl;
 import no.nav.bidrag.beregn.forskudd.core.beregning.grunnlag.BostedStatusKode;
 import no.nav.bidrag.beregn.forskudd.core.beregning.grunnlag.ForskuddBeregningGrunnlag;
 import no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ForskuddBeregningResultat;
 import no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ResultatKode;
+import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.AlderPeriode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.BostatusPeriode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.ForskuddPeriodeGrunnlag;
-import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.Periode;
-import no.nav.bidrag.beregn.forskudd.core.periode.resultat.PeriodeResultat;
-import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.AlderPeriode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.InntektPeriode;
+import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.Periode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.SivilstandPeriode;
 import no.nav.bidrag.beregn.forskudd.core.periode.resultat.ForskuddPeriodeResultat;
+import no.nav.bidrag.beregn.forskudd.core.periode.resultat.PeriodeResultat;
 
 public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
@@ -36,11 +35,13 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     var justertInntektPeriodeListe = periodeGrunnlag.getBidragMottakerInntektPeriodeListe().stream()
         .map(iP -> new InntektPeriode(PeriodeUtil.justerPeriode(iP.getDatoFraTil()), iP.getBelop())).collect(toCollection(ArrayList::new));
     var justertSivilstandPeriodeListe = periodeGrunnlag.getBidragMottakerSivilstandPeriodeListe().stream()
-        .map(sP -> new SivilstandPeriode(PeriodeUtil.justerPeriode(sP.getDatoFraTil()), sP.getSivilstandKode())).collect(toCollection(ArrayList::new));
+        .map(sP -> new SivilstandPeriode(PeriodeUtil.justerPeriode(sP.getDatoFraTil()), sP.getSivilstandKode()))
+        .collect(toCollection(ArrayList::new));
     var justertBarnPeriodeListe = periodeGrunnlag.getBidragMottakerBarnPeriodeListe().stream()
         .map(PeriodeUtil::justerPeriode).collect(toCollection(ArrayList::new));
     var justertBostatusPeriodeListe = periodeGrunnlag.getSoknadBarn().getSoknadBarnBostatusPeriodeListe().stream()
-        .map(bP -> new BostatusPeriode(PeriodeUtil.justerPeriode(bP.getDatoFraTil()), bP.getBostedStatusKode())).collect(toCollection(ArrayList::new));
+        .map(bP -> new BostatusPeriode(PeriodeUtil.justerPeriode(bP.getDatoFraTil()), bP.getBostedStatusKode()))
+        .collect(toCollection(ArrayList::new));
 
     // Bygger opp liste over perioder
     List<Periode> perioder = new Periodiserer()
@@ -75,7 +76,8 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
       }
 
       periodeResultatListe.add(new PeriodeResultat(beregningsperiode, forskuddBeregning
-          .beregn(new ForskuddBeregningGrunnlag(inntektBelop, sivilstandKode, antallBarn, alder, bostedStatusKode))));
+          .beregn(new ForskuddBeregningGrunnlag(inntektBelop, sivilstandKode, antallBarn, alder, bostedStatusKode,
+              1600, 320, 270200, 419700, 336500, 61700))));
     }
 
     //Slår sammen perioder med samme resultat
@@ -85,7 +87,8 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
   // Slår sammen perioder hvis Beløp, ResultatKode og ResultatBeskrivelse er like i tilgrensende perioder
   private ForskuddPeriodeResultat mergePerioder(ArrayList<PeriodeResultat> periodeResultatListe) {
     var filtrertPeriodeResultatListe = new ArrayList<PeriodeResultat>();
-    var periodeResultatForrige = new PeriodeResultat(new Periode(LocalDate.MIN, LocalDate.MAX), new ForskuddBeregningResultat(BigDecimal.ZERO, ResultatKode.AVSLAG, ""));
+    var periodeResultatForrige = new PeriodeResultat(new Periode(LocalDate.MIN, LocalDate.MAX),
+        new ForskuddBeregningResultat(BigDecimal.ZERO, ResultatKode.AVSLAG, ""));
     var datoFra = periodeResultatListe.get(0).getDatoFraTil().getDatoFra();
     var mergePerioder = false;
     int count = 0;
