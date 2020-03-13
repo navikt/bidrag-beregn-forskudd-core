@@ -7,17 +7,16 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
-import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregning;
-import no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ResultatKode;
 import no.nav.bidrag.beregn.forskudd.core.beregning.grunnlag.BostedStatusKode;
 import no.nav.bidrag.beregn.forskudd.core.beregning.grunnlag.SivilstandKode;
+import no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ResultatKode;
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode;
-import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriodeImpl;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.BostatusPeriode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.ForskuddPeriodeGrunnlag;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.InntektPeriode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.Periode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.SivilstandPeriode;
+import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.SjablonPeriode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.SoknadBarn;
 import no.nav.bidrag.beregn.forskudd.core.periode.resultat.ForskuddPeriodeResultat;
 import org.junit.jupiter.api.DisplayName;
@@ -124,13 +123,22 @@ class ForskuddPeriodeTest {
     bostedStatusListe.add(new BostatusPeriode(new Periode(LocalDate.parse("2018-11-13"), null), BostedStatusKode.MED_FORELDRE));
     soknadBarn.setSoknadBarnBostatusPeriodeListe(bostedStatusListe);
     grunnlag.setSoknadBarn(soknadBarn);
+
+    var sjablonPeriodeListe = new ArrayList<SjablonPeriode>();
+    sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null),"0005", 1600));
+    sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null),"0013", 320));
+    sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null),"0033", 270200));
+    sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null),"0034", 419700));
+    sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null),"0035", 336500));
+    sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null),"0036", 61700));
+    grunnlag.setSjablonPeriodeListe(sjablonPeriodeListe);
   }
 
   private void printGrunnlagResultat(ForskuddPeriodeResultat resultat) {
     resultat.getPeriodeResultatListe().stream().sorted(Comparator.comparing(pR -> pR.getDatoFraTil().getDatoFra()))
         .forEach(sortedPR -> System.out
             .println("Dato fra: " + sortedPR.getDatoFraTil().getDatoFra() + "; " + "Dato til: " + sortedPR.getDatoFraTil().getDatoTil()
-                + "; " + "Beløp: " + sortedPR.getForskuddBeregningResultat().getBelop() + "; " + "Resultatkode: " + sortedPR
+                + "; " + "Beløp: " + sortedPR.getForskuddBeregningResultat().getBelop().intValue() + "; " + "Resultatkode: " + sortedPR
                 .getForskuddBeregningResultat().getResultatKode()
                 + "; " + "Regel: " + sortedPR.getForskuddBeregningResultat().getResultatBeskrivelse()));
   }

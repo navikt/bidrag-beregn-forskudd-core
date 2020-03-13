@@ -10,19 +10,19 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregning;
-import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregningImpl;
 import no.nav.bidrag.beregn.forskudd.core.beregning.grunnlag.BostedStatusKode;
 import no.nav.bidrag.beregn.forskudd.core.beregning.grunnlag.ForskuddBeregningGrunnlag;
 import no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ForskuddBeregningResultat;
 import no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ResultatKode;
+import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.AlderPeriode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.BostatusPeriode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.ForskuddPeriodeGrunnlag;
-import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.Periode;
-import no.nav.bidrag.beregn.forskudd.core.periode.resultat.PeriodeResultat;
-import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.AlderPeriode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.InntektPeriode;
+import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.Periode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.SivilstandPeriode;
+import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.SjablonPeriodeVerdi;
 import no.nav.bidrag.beregn.forskudd.core.periode.resultat.ForskuddPeriodeResultat;
+import no.nav.bidrag.beregn.forskudd.core.periode.resultat.PeriodeResultat;
 
 public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
@@ -36,11 +36,25 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     var justertInntektPeriodeListe = periodeGrunnlag.getBidragMottakerInntektPeriodeListe().stream()
         .map(iP -> new InntektPeriode(PeriodeUtil.justerPeriode(iP.getDatoFraTil()), iP.getBelop())).collect(toCollection(ArrayList::new));
     var justertSivilstandPeriodeListe = periodeGrunnlag.getBidragMottakerSivilstandPeriodeListe().stream()
-        .map(sP -> new SivilstandPeriode(PeriodeUtil.justerPeriode(sP.getDatoFraTil()), sP.getSivilstandKode())).collect(toCollection(ArrayList::new));
+        .map(sP -> new SivilstandPeriode(PeriodeUtil.justerPeriode(sP.getDatoFraTil()), sP.getSivilstandKode()))
+        .collect(toCollection(ArrayList::new));
     var justertBarnPeriodeListe = periodeGrunnlag.getBidragMottakerBarnPeriodeListe().stream()
         .map(PeriodeUtil::justerPeriode).collect(toCollection(ArrayList::new));
     var justertBostatusPeriodeListe = periodeGrunnlag.getSoknadBarn().getSoknadBarnBostatusPeriodeListe().stream()
-        .map(bP -> new BostatusPeriode(PeriodeUtil.justerPeriode(bP.getDatoFraTil()), bP.getBostedStatusKode())).collect(toCollection(ArrayList::new));
+        .map(bP -> new BostatusPeriode(PeriodeUtil.justerPeriode(bP.getDatoFraTil()), bP.getBostedStatusKode()))
+        .collect(toCollection(ArrayList::new));
+    var justertSjablon0005PeriodeListe = periodeGrunnlag.getSjablonPeriodeListe().stream().filter(sP -> sP.getSjablonType().equals("0005"))
+        .map(sP -> new SjablonPeriodeVerdi(PeriodeUtil.justerPeriode(sP.getDatoFraTil()), sP.getSjablonVerdi())).collect(toCollection(ArrayList::new));
+    var justertSjablon0013PeriodeListe = periodeGrunnlag.getSjablonPeriodeListe().stream().filter(sP -> sP.getSjablonType().equals("0013"))
+        .map(sP -> new SjablonPeriodeVerdi(PeriodeUtil.justerPeriode(sP.getDatoFraTil()), sP.getSjablonVerdi())).collect(toCollection(ArrayList::new));
+    var justertSjablon0033PeriodeListe = periodeGrunnlag.getSjablonPeriodeListe().stream().filter(sP -> sP.getSjablonType().equals("0033"))
+        .map(sP -> new SjablonPeriodeVerdi(PeriodeUtil.justerPeriode(sP.getDatoFraTil()), sP.getSjablonVerdi())).collect(toCollection(ArrayList::new));
+    var justertSjablon0034PeriodeListe = periodeGrunnlag.getSjablonPeriodeListe().stream().filter(sP -> sP.getSjablonType().equals("0034"))
+        .map(sP -> new SjablonPeriodeVerdi(PeriodeUtil.justerPeriode(sP.getDatoFraTil()), sP.getSjablonVerdi())).collect(toCollection(ArrayList::new));
+    var justertSjablon0035PeriodeListe = periodeGrunnlag.getSjablonPeriodeListe().stream().filter(sP -> sP.getSjablonType().equals("0035"))
+        .map(sP -> new SjablonPeriodeVerdi(PeriodeUtil.justerPeriode(sP.getDatoFraTil()), sP.getSjablonVerdi())).collect(toCollection(ArrayList::new));
+    var justertSjablon0036PeriodeListe = periodeGrunnlag.getSjablonPeriodeListe().stream().filter(sP -> sP.getSjablonType().equals("0036"))
+        .map(sP -> new SjablonPeriodeVerdi(PeriodeUtil.justerPeriode(sP.getDatoFraTil()), sP.getSjablonVerdi())).collect(toCollection(ArrayList::new));
 
     // Bygger opp liste over perioder
     List<Periode> perioder = new Periodiserer()
@@ -50,6 +64,12 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
         .addBruddpunkter(justertBarnPeriodeListe)
         .addBruddpunkter(justertBostatusPeriodeListe)
         .addBruddpunkter(periodeGrunnlag.getSoknadBarn().getFodselDato(), periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil())
+        .addBruddpunkter(justertSjablon0005PeriodeListe)
+        .addBruddpunkter(justertSjablon0013PeriodeListe)
+        .addBruddpunkter(justertSjablon0033PeriodeListe)
+        .addBruddpunkter(justertSjablon0034PeriodeListe)
+        .addBruddpunkter(justertSjablon0035PeriodeListe)
+        .addBruddpunkter(justertSjablon0036PeriodeListe)
         .finnPerioder(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil());
 
     // Løper gjennom periodene og finner matchende verdi for hver kategori. Kaller beregningsmodulen for hver beregningsperiode
@@ -69,13 +89,33 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
       var antallBarn = (int) justertBarnPeriodeListe.stream().filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).count();
 
+      var forskuddssats100Prosent = justertSjablon0005PeriodeListe.stream()
+          .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).map(SjablonPeriodeVerdi::getSjablonVerdi).findFirst().orElse(null);
+
+      var multiplikatorMaksInntektsgrense = justertSjablon0013PeriodeListe.stream()
+          .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).map(SjablonPeriodeVerdi::getSjablonVerdi).findFirst().orElse(null);
+
+      var inntektsgrense100ProsentForskudd = justertSjablon0033PeriodeListe.stream()
+          .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).map(SjablonPeriodeVerdi::getSjablonVerdi).findFirst().orElse(null);
+
+      var inntektsgrenseEnslig75ProsentForskudd = justertSjablon0034PeriodeListe.stream()
+          .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).map(SjablonPeriodeVerdi::getSjablonVerdi).findFirst().orElse(null);
+
+      var inntektsgrenseGift75ProsentForskudd = justertSjablon0035PeriodeListe.stream()
+          .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).map(SjablonPeriodeVerdi::getSjablonVerdi).findFirst().orElse(null);
+
+      var inntektsintervallForskudd = justertSjablon0036PeriodeListe.stream()
+          .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).map(SjablonPeriodeVerdi::getSjablonVerdi).findFirst().orElse(null);
+
       // Øk antall barn med 1 hvis søknadsbarnet bor hjemme
       if (BostedStatusKode.MED_FORELDRE.equals(bostedStatusKode)) {
         antallBarn = antallBarn + 1;
       }
 
       periodeResultatListe.add(new PeriodeResultat(beregningsperiode, forskuddBeregning
-          .beregn(new ForskuddBeregningGrunnlag(inntektBelop, sivilstandKode, antallBarn, alder, bostedStatusKode))));
+          .beregn(new ForskuddBeregningGrunnlag(inntektBelop, sivilstandKode, antallBarn, alder, bostedStatusKode, forskuddssats100Prosent,
+              multiplikatorMaksInntektsgrense, inntektsgrense100ProsentForskudd, inntektsgrenseEnslig75ProsentForskudd,
+              inntektsgrenseGift75ProsentForskudd, inntektsintervallForskudd))));
     }
 
     //Slår sammen perioder med samme resultat
@@ -85,7 +125,8 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
   // Slår sammen perioder hvis Beløp, ResultatKode og ResultatBeskrivelse er like i tilgrensende perioder
   private ForskuddPeriodeResultat mergePerioder(ArrayList<PeriodeResultat> periodeResultatListe) {
     var filtrertPeriodeResultatListe = new ArrayList<PeriodeResultat>();
-    var periodeResultatForrige = new PeriodeResultat(new Periode(LocalDate.MIN, LocalDate.MAX), new ForskuddBeregningResultat(BigDecimal.ZERO, ResultatKode.AVSLAG, ""));
+    var periodeResultatForrige = new PeriodeResultat(new Periode(LocalDate.MIN, LocalDate.MAX),
+        new ForskuddBeregningResultat(BigDecimal.ZERO, ResultatKode.AVSLAG, ""));
     var datoFra = periodeResultatListe.get(0).getDatoFraTil().getDatoFra();
     var mergePerioder = false;
     int count = 0;
