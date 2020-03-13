@@ -12,6 +12,7 @@ import no.nav.bidrag.beregn.forskudd.core.dto.ForskuddPeriodeGrunnlagDto;
 import no.nav.bidrag.beregn.forskudd.core.dto.ForskuddPeriodeResultatDto;
 import no.nav.bidrag.beregn.forskudd.core.dto.PeriodeDto;
 import no.nav.bidrag.beregn.forskudd.core.dto.PeriodeResultatDto;
+import no.nav.bidrag.beregn.forskudd.core.dto.SjablontallDto;
 import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnDto;
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.BostatusPeriode;
@@ -19,6 +20,7 @@ import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.ForskuddPeriodeGrunnl
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.InntektPeriode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.Periode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.SivilstandPeriode;
+import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.SjablonPeriode;
 import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.SoknadBarn;
 import no.nav.bidrag.beregn.forskudd.core.periode.resultat.ForskuddPeriodeResultat;
 import no.nav.bidrag.beregn.forskudd.core.periode.resultat.PeriodeResultat;
@@ -41,6 +43,7 @@ public class ForskuddCoreImpl implements ForskuddCore {
     fPG.setBidragMottakerInntektPeriodeListe(mapInntektPeriodeListe(grunnlag.getBidragMottakerInntektPeriodeListe()));
     fPG.setBidragMottakerSivilstandPeriodeListe(mapSivilstandPeriodeListe(grunnlag.getBidragMottakerSivilstandPeriodeListe()));
     fPG.setBidragMottakerBarnPeriodeListe(mapBarnPeriodeListe(grunnlag.getBidragMottakerBarnPeriodeListe()));
+    fPG.setSjablonPeriodeListe(mapSjablonPeriodeListe(grunnlag.getSjablontallListe()));
     return fPG;
   }
 
@@ -69,11 +72,11 @@ public class ForskuddCoreImpl implements ForskuddCore {
     return iPL;
   }
 
-  private List<SivilstandPeriode> mapSivilstandPeriodeListe(List<BidragMottakerSivilstandPeriodeDto> bidragMottakerSivilstandPeriodeListeDto) {
-    List<SivilstandPeriode> sPL = new ArrayList<>();
-    for (BidragMottakerSivilstandPeriodeDto mottakerSivilstandPeriodeDto : bidragMottakerSivilstandPeriodeListeDto) {
-      sPL.add(new SivilstandPeriode(new Periode(mottakerSivilstandPeriodeDto.getDatoFraTil().getDatoFra(), mottakerSivilstandPeriodeDto.getDatoFraTil().getDatoTil()),
-          SivilstandKode.valueOf(mottakerSivilstandPeriodeDto.getSivilstandKode())));
+  private List<SjablonPeriode> mapSjablonPeriodeListe(List<SjablontallDto> sjablontallListeDto) {
+    List<SjablonPeriode> sPL = new ArrayList<>();
+    for (SjablontallDto sjablonTallDto : sjablontallListeDto) {
+      sPL.add(new SjablonPeriode(new Periode(sjablonTallDto.getDatoFraTil().getDatoFra(), sjablonTallDto.getDatoFraTil().getDatoTil()),
+          sjablonTallDto.getTypeSjablon(), sjablonTallDto.getVerdi().intValue()));
     }
     return sPL;
   }
@@ -84,6 +87,15 @@ public class ForskuddCoreImpl implements ForskuddCore {
       bPL.add(new Periode(mottakerBarnPeriodeDto.getDatoFra(), mottakerBarnPeriodeDto.getDatoTil()));
     }
     return bPL;
+  }
+
+  private List<SivilstandPeriode> mapSivilstandPeriodeListe(List<BidragMottakerSivilstandPeriodeDto> bidragMottakerSivilstandPeriodeListeDto) {
+    List<SivilstandPeriode> sPL = new ArrayList<>();
+    for (BidragMottakerSivilstandPeriodeDto mottakerSivilstandPeriodeDto : bidragMottakerSivilstandPeriodeListeDto) {
+      sPL.add(new SivilstandPeriode(new Periode(mottakerSivilstandPeriodeDto.getDatoFraTil().getDatoFra(), mottakerSivilstandPeriodeDto.getDatoFraTil().getDatoTil()),
+          SivilstandKode.valueOf(mottakerSivilstandPeriodeDto.getSivilstandKode())));
+    }
+    return sPL;
   }
 
   private ForskuddPeriodeResultatDto mapFraCore(ForskuddPeriodeResultat resultat) {

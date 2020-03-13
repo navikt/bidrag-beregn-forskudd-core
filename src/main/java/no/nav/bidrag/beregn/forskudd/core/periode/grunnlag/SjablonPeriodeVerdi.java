@@ -1,23 +1,17 @@
 package no.nav.bidrag.beregn.forskudd.core.periode.grunnlag;
 
-public class SjablonPeriode {
+public class SjablonPeriodeVerdi implements PeriodisertGrunnlag {
 
   private final Periode datoFraTil;
-  private final String sjablonType;
   private final Integer sjablonVerdi;
 
-  public SjablonPeriode(Periode datoFraTil, String sjablonType, Integer sjablonVerdi) {
+  public SjablonPeriodeVerdi(Periode datoFraTil, Integer sjablonVerdi) {
     this.datoFraTil = datoFraTil;
-    this.sjablonType = sjablonType;
     this.sjablonVerdi = sjablonVerdi;
   }
 
   public Periode getDatoFraTil() {
     return datoFraTil;
-  }
-
-  public String getSjablonType() {
-    return sjablonType;
   }
 
   public Integer getSjablonVerdi() { return sjablonVerdi; }
