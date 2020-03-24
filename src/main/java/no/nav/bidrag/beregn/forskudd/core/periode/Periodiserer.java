@@ -10,8 +10,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.Periode;
-import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.PeriodisertGrunnlag;
 
 public class Periodiserer {
 
@@ -23,14 +21,13 @@ public class Periodiserer {
     return this;
   }
 
-  private Periodiserer addBruddpunkter(Periode periode) {
+  private void addBruddpunkter(Periode periode) {
     addBruddpunkt(periode.getDatoFra());
     if (periode.getDatoTil() == null) {
       aapenSluttdato = true;
     } else {
       addBruddpunkt(periode.getDatoTil());
     }
-    return this;
   }
 
   public Periodiserer addBruddpunkter(PeriodisertGrunnlag grunnlag) {
@@ -64,6 +61,7 @@ public class Periodiserer {
     return this;
   }
 
+  // Setter perioder basert på fra- og til-dato
   public List<Periode> finnPerioder(LocalDate beregnDatoFra, LocalDate beregnDatoTil) {
     var sortertBruddpunktListe = bruddpunkter.stream().filter((dato) -> dato.isAfter(beregnDatoFra.minusDays(1)))
         .filter((dato) -> dato.isBefore(beregnDatoTil.plusDays(1))).sorted().collect(toList());

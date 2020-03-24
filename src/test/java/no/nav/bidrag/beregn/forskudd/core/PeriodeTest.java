@@ -3,7 +3,7 @@ package no.nav.bidrag.beregn.forskudd.core;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.Periode;
+import no.nav.bidrag.beregn.forskudd.core.periode.Periode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

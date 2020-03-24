@@ -1,5 +1,8 @@
 package no.nav.bidrag.beregn.forskudd.core;
 
+import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.AVSLAG;
+import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_100_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_75_PROSENT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
@@ -9,19 +12,18 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ForskuddBeregningResultat;
-import no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ResultatKode;
-import no.nav.bidrag.beregn.forskudd.core.dto.BidragMottakerInntektPeriodeDto;
-import no.nav.bidrag.beregn.forskudd.core.dto.BidragMottakerSivilstandPeriodeDto;
-import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeDto;
-import no.nav.bidrag.beregn.forskudd.core.dto.ForskuddPeriodeGrunnlagDto;
-import no.nav.bidrag.beregn.forskudd.core.dto.PeriodeDto;
-import no.nav.bidrag.beregn.forskudd.core.dto.SjablontallDto;
-import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnDto;
+import no.nav.bidrag.beregn.forskudd.core.beregning.ResultatBeregning;
+import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat;
+import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode;
+import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
+import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore;
+import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore;
+import no.nav.bidrag.beregn.forskudd.core.dto.PeriodeCore;
+import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore;
+import no.nav.bidrag.beregn.forskudd.core.dto.SjablonPeriodeCore;
+import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore;
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode;
-import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.Periode;
-import no.nav.bidrag.beregn.forskudd.core.periode.resultat.ForskuddPeriodeResultat;
-import no.nav.bidrag.beregn.forskudd.core.periode.resultat.PeriodeResultat;
+import no.nav.bidrag.beregn.forskudd.core.periode.Periode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,8 +40,8 @@ public class ForskuddCoreTest {
   @Mock
   private ForskuddPeriode forskuddPeriodeMock;
 
-  private ForskuddPeriodeGrunnlagDto forskuddPeriodeGrunnlagDto;
-  private ForskuddPeriodeResultat forskuddPeriodeResultat;
+  private BeregnForskuddGrunnlagCore beregnForskuddGrunnlagCore;
+  private BeregnForskuddResultat forskuddPeriodeResultat;
 
   @BeforeEach
   void initMocksAndService() {
@@ -49,90 +51,96 @@ public class ForskuddCoreTest {
   @Test
   @DisplayName("skal beregne forskudd")
   void skalBeregneForskudd() {
-    byggForskuddPeriodeGrunnlagDto();
+    byggForskuddPeriodeGrunnlagCore();
     byggForskuddPeriodeResultat();
 
     when(forskuddPeriodeMock.beregnPerioder(any())).thenReturn(forskuddPeriodeResultat);
-    var forskuddPeriodeResultatDto = forskuddCore.beregnForskudd(forskuddPeriodeGrunnlagDto);
+    var beregnForskuddResultatCore = forskuddCore.beregnForskudd(beregnForskuddGrunnlagCore);
 
     assertAll(
-        () -> assertThat(forskuddPeriodeResultatDto).isNotNull(),
-        () -> assertThat(forskuddPeriodeResultatDto.getPeriodeResultatListe().size()).isEqualTo(3),
+        () -> assertThat(beregnForskuddResultatCore).isNotNull(),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().size()).isEqualTo(3),
 
         () -> assertThat(
-            forskuddPeriodeResultatDto.getPeriodeResultatListe().get(0).getDatoFraTil().getDatoFra().equals(LocalDate.parse("2017-01-01"))),
+            beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoFra()
+                .equals(LocalDate.parse("2017-01-01"))),
         () -> assertThat(
-            forskuddPeriodeResultatDto.getPeriodeResultatListe().get(0).getDatoFraTil().getDatoTil().equals(LocalDate.parse("2018-01-01"))),
+            beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoTil()
+                .equals(LocalDate.parse("2018-01-01"))),
         () -> assertThat(
-            forskuddPeriodeResultatDto.getPeriodeResultatListe().get(0).getForskuddBeregningResultat().getBelop().equals(BigDecimal.valueOf(1600))),
-        () -> assertThat(forskuddPeriodeResultatDto.getPeriodeResultatListe().get(0).getForskuddBeregningResultat().getResultatKode()
+            beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBelop().equals(BigDecimal.valueOf(1600))),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()
             .equals("INNVILGET_100_PROSENT")),
         () -> assertThat(
-            forskuddPeriodeResultatDto.getPeriodeResultatListe().get(0).getForskuddBeregningResultat().getResultatBeskrivelse().equals("REGEL 1")),
+            beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBeskrivelse().equals("REGEL 1")),
 
         () -> assertThat(
-            forskuddPeriodeResultatDto.getPeriodeResultatListe().get(1).getDatoFraTil().getDatoFra().equals(LocalDate.parse("2018-01-01"))),
+            beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getPeriodeDatoFra()
+                .equals(LocalDate.parse("2018-01-01"))),
         () -> assertThat(
-            forskuddPeriodeResultatDto.getPeriodeResultatListe().get(1).getDatoFraTil().getDatoTil().equals(LocalDate.parse("2019-01-01"))),
+            beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getPeriodeDatoTil()
+                .equals(LocalDate.parse("2019-01-01"))),
         () -> assertThat(
-            forskuddPeriodeResultatDto.getPeriodeResultatListe().get(1).getForskuddBeregningResultat().getBelop().equals(BigDecimal.valueOf(1200))),
-        () -> assertThat(forskuddPeriodeResultatDto.getPeriodeResultatListe().get(1).getForskuddBeregningResultat().getResultatKode()
+            beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatBelop().equals(BigDecimal.valueOf(1200))),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode()
             .equals("INNVILGET_75_PROSENT")),
         () -> assertThat(
-            forskuddPeriodeResultatDto.getPeriodeResultatListe().get(1).getForskuddBeregningResultat().getResultatBeskrivelse().equals("REGEL 2")),
+            beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatBeskrivelse().equals("REGEL 2")),
 
         () -> assertThat(
-            forskuddPeriodeResultatDto.getPeriodeResultatListe().get(2).getDatoFraTil().getDatoFra().equals(LocalDate.parse("2019-01-01"))),
+            beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getPeriodeDatoFra()
+                .equals(LocalDate.parse("2019-01-01"))),
         () -> assertThat(
-            forskuddPeriodeResultatDto.getPeriodeResultatListe().get(2).getDatoFraTil().getDatoTil().equals(LocalDate.parse("2020-01-01"))),
+            beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getPeriodeDatoTil()
+                .equals(LocalDate.parse("2020-01-01"))),
         () -> assertThat(
-            forskuddPeriodeResultatDto.getPeriodeResultatListe().get(2).getForskuddBeregningResultat().getBelop().equals(BigDecimal.valueOf(0))),
+            beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBelop().equals(BigDecimal.valueOf(0))),
         () -> assertThat(
-            forskuddPeriodeResultatDto.getPeriodeResultatListe().get(2).getForskuddBeregningResultat().getResultatKode().equals("AVSLAG")),
+            beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode().equals("AVSLAG")),
         () -> assertThat(
-            forskuddPeriodeResultatDto.getPeriodeResultatListe().get(2).getForskuddBeregningResultat().getResultatBeskrivelse().equals("REGEL 11"))
+            beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBeskrivelse().equals("REGEL 11"))
     );
   }
 
-  private void byggForskuddPeriodeGrunnlagDto() {
-    var bostatusPeriodeDto = new BostatusPeriodeDto(new PeriodeDto(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "MED_FORELDRE");
-    var bostatusPeriodeDtoListe = new ArrayList<BostatusPeriodeDto>();
-    bostatusPeriodeDtoListe.add(bostatusPeriodeDto);
-    var soknadBarnDto = new SoknadBarnDto(LocalDate.parse("2006-05-12"), bostatusPeriodeDtoListe);
+  private void byggForskuddPeriodeGrunnlagCore() {
+    var bostatusPeriode = new BostatusPeriodeCore(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "MED_FORELDRE");
+    var bostatusPeriodeListe = new ArrayList<BostatusPeriodeCore>();
+    bostatusPeriodeListe.add(bostatusPeriode);
+    var soknadBarn = new SoknadBarnCore(LocalDate.parse("2006-05-12"), bostatusPeriodeListe);
 
-    var bidragMottakerInntektPeriodeDto = new BidragMottakerInntektPeriodeDto(
-        new PeriodeDto(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), BigDecimal.valueOf(0));
-    var bidragMottakerInntektPeriodeDtoListe = new ArrayList<BidragMottakerInntektPeriodeDto>();
-    bidragMottakerInntektPeriodeDtoListe.add(bidragMottakerInntektPeriodeDto);
+    var bidragMottakerInntektPeriode = new InntektPeriodeCore(
+        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), BigDecimal.valueOf(0));
+    var bidragMottakerInntektPeriodeListe = new ArrayList<InntektPeriodeCore>();
+    bidragMottakerInntektPeriodeListe.add(bidragMottakerInntektPeriode);
 
-    var bidragMottakerSivilstandPeriodeDto = new BidragMottakerSivilstandPeriodeDto(
-        new PeriodeDto(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "GIFT");
-    var bidragMottakerSivilstandPeriodeDtoListe = new ArrayList<BidragMottakerSivilstandPeriodeDto>();
-    bidragMottakerSivilstandPeriodeDtoListe.add(bidragMottakerSivilstandPeriodeDto);
+    var bidragMottakerSivilstandPeriode = new SivilstandPeriodeCore(
+        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "GIFT");
+    var bidragMottakerSivilstandPeriodeListe = new ArrayList<SivilstandPeriodeCore>();
+    bidragMottakerSivilstandPeriodeListe.add(bidragMottakerSivilstandPeriode);
 
-    var periodeDtoListe = new ArrayList<PeriodeDto>();
-    periodeDtoListe.add(new PeriodeDto(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")));
+    var bidragMottakerBarnPeriodeListe = new ArrayList<PeriodeCore>();
+    bidragMottakerBarnPeriodeListe.add(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")));
 
-    var sjablontallDto = new SjablontallDto("0013", new PeriodeDto(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")),
+    var sjablonPeriode = new SjablonPeriodeCore(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "0013",
         BigDecimal.valueOf(0));
-    var sjablontallDtoListe = new ArrayList<SjablontallDto>();
-    sjablontallDtoListe.add(sjablontallDto);
+    var sjablonPeriodeListe = new ArrayList<SjablonPeriodeCore>();
+    sjablonPeriodeListe.add(sjablonPeriode);
 
-    forskuddPeriodeGrunnlagDto = new ForskuddPeriodeGrunnlagDto(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01"), soknadBarnDto,
-        bidragMottakerInntektPeriodeDtoListe, bidragMottakerSivilstandPeriodeDtoListe, periodeDtoListe, sjablontallDtoListe);
+    beregnForskuddGrunnlagCore = new BeregnForskuddGrunnlagCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01"), soknadBarn,
+        bidragMottakerInntektPeriodeListe, bidragMottakerSivilstandPeriodeListe, bidragMottakerBarnPeriodeListe, sjablonPeriodeListe);
   }
 
   private void byggForskuddPeriodeResultat() {
-    List<PeriodeResultat> periodeResultatListe = new ArrayList<>();
+    List<ResultatPeriode> periodeResultatListe = new ArrayList<>();
     periodeResultatListe
-        .add(new PeriodeResultat(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")), new ForskuddBeregningResultat(
-            BigDecimal.valueOf(1600), ResultatKode.INNVILGET_100_PROSENT, "REGEL 1")));
+        .add(new ResultatPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")), new ResultatBeregning(
+            BigDecimal.valueOf(1600), INNVILGET_100_PROSENT, "REGEL 1")));
     periodeResultatListe
-        .add(new PeriodeResultat(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")), new ForskuddBeregningResultat(
-            BigDecimal.valueOf(1200), ResultatKode.INNVILGET_75_PROSENT, "REGEL 2")));
+        .add(new ResultatPeriode(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")), new ResultatBeregning(
+            BigDecimal.valueOf(1200), INNVILGET_75_PROSENT, "REGEL 2")));
     periodeResultatListe
-        .add(new PeriodeResultat(new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")), new ForskuddBeregningResultat(
-            BigDecimal.valueOf(0), ResultatKode.AVSLAG, "REGEL 11")));
-    forskuddPeriodeResultat = new ForskuddPeriodeResultat(periodeResultatListe);
+        .add(new ResultatPeriode(new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")), new ResultatBeregning(
+            BigDecimal.valueOf(0), AVSLAG, "REGEL 11")));
+    forskuddPeriodeResultat = new BeregnForskuddResultat(periodeResultatListe);
   }
 }
