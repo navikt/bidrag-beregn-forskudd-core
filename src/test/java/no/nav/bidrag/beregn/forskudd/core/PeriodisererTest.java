@@ -1,18 +1,20 @@
 package no.nav.bidrag.beregn.forskudd.core;
 
+import static no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode.MED_ANDRE_ENN_FORELDRE;
+import static no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode.MED_FORELDRE;
+import static no.nav.bidrag.beregn.forskudd.core.bo.SivilstandKode.ENSLIG;
+import static no.nav.bidrag.beregn.forskudd.core.bo.SivilstandKode.GIFT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import no.nav.bidrag.beregn.forskudd.core.beregning.grunnlag.SivilstandKode;
-import no.nav.bidrag.beregn.forskudd.core.beregning.grunnlag.BostedStatusKode;
+import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode;
+import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode;
+import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode;
+import no.nav.bidrag.beregn.forskudd.core.periode.Periode;
 import no.nav.bidrag.beregn.forskudd.core.periode.Periodiserer;
-import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.BostatusPeriode;
-import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.InntektPeriode;
-import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.Periode;
-import no.nav.bidrag.beregn.forskudd.core.periode.grunnlag.SivilstandPeriode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -50,7 +52,7 @@ class PeriodisererTest {
   void testPeriodiseringMedGrunnlag() {
     List<Periode> perioder = new Periodiserer()
         .addBruddpunkter(new InntektPeriode(new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-03-01")), BigDecimal.valueOf(1000)))
-        .addBruddpunkter(new SivilstandPeriode(new Periode(LocalDate.parse("2019-02-01"), LocalDate.parse("2019-04-01")), SivilstandKode.GIFT))
+        .addBruddpunkter(new SivilstandPeriode(new Periode(LocalDate.parse("2019-02-01"), LocalDate.parse("2019-04-01")), GIFT))
         .finnPerioder(LocalDate.parse("2000-01-01"), LocalDate.parse("2100-01-01"));
 
     assertAll(
@@ -72,7 +74,7 @@ class PeriodisererTest {
   void testDuplikatePerioder() {
     List<Periode> perioder = new Periodiserer()
         .addBruddpunkter(new InntektPeriode(new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-04-01")), BigDecimal.valueOf(1000)))
-        .addBruddpunkter(new SivilstandPeriode(new Periode(LocalDate.parse("2019-02-01"), LocalDate.parse("2019-04-01")), SivilstandKode.GIFT))
+        .addBruddpunkter(new SivilstandPeriode(new Periode(LocalDate.parse("2019-02-01"), LocalDate.parse("2019-04-01")), GIFT))
         .finnPerioder(LocalDate.parse("2000-01-01"), LocalDate.parse("2100-01-01"));
 
     assertAll(
@@ -90,7 +92,7 @@ class PeriodisererTest {
   @Test
   void testPeriodiseringMedGrunnlagOgAapenSlutt() {
     List<Periode> perioder = new Periodiserer()
-        .addBruddpunkter(new SivilstandPeriode(new Periode(LocalDate.parse("2019-02-01"), null), SivilstandKode.GIFT))
+        .addBruddpunkter(new SivilstandPeriode(new Periode(LocalDate.parse("2019-02-01"), null), GIFT))
         .finnPerioder(LocalDate.parse("2000-01-01"), LocalDate.parse("2100-01-01"));
 
     assertAll(
@@ -108,14 +110,14 @@ class PeriodisererTest {
         .addBruddpunkter(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")), BigDecimal.valueOf(250000)))
         .addBruddpunkter(new InntektPeriode(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")), BigDecimal.valueOf(400000)))
         .addBruddpunkter(new InntektPeriode(new Periode(LocalDate.parse("2019-01-01"), null), BigDecimal.valueOf(500000)))
-        .addBruddpunkter(new SivilstandPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-17")), SivilstandKode.GIFT))
-        .addBruddpunkter(new SivilstandPeriode(new Periode(LocalDate.parse("2018-04-17"), null), SivilstandKode.ENSLIG))
+        .addBruddpunkter(new SivilstandPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-17")), GIFT))
+        .addBruddpunkter(new SivilstandPeriode(new Periode(LocalDate.parse("2018-04-17"), null), ENSLIG))
         .addBruddpunkter(new Periode(LocalDate.parse("2017-01-01"), null))
         .addBruddpunkter(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-06-16")))
         .addBruddpunkter(new Periode(LocalDate.parse("2019-03-31"), null))
-        .addBruddpunkter(new BostatusPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-08-16")), BostedStatusKode.MED_FORELDRE))
-        .addBruddpunkter(new BostatusPeriode(new Periode(LocalDate.parse("2018-08-16"), LocalDate.parse("2018-11-13")), BostedStatusKode.MED_ANDRE_ENN_FORELDRE))
-        .addBruddpunkter(new BostatusPeriode(new Periode(LocalDate.parse("2018-11-13"), null), BostedStatusKode.MED_FORELDRE))
+        .addBruddpunkter(new BostatusPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-08-16")), MED_FORELDRE))
+        .addBruddpunkter(new BostatusPeriode(new Periode(LocalDate.parse("2018-08-16"), LocalDate.parse("2018-11-13")), MED_ANDRE_ENN_FORELDRE))
+        .addBruddpunkter(new BostatusPeriode(new Periode(LocalDate.parse("2018-11-13"), null), MED_FORELDRE))
         .finnPerioder(LocalDate.parse("2000-01-01"), LocalDate.parse("2100-01-01"));
 
     assertAll(

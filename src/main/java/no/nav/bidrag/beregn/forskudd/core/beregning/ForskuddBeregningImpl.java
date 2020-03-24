@@ -1,27 +1,26 @@
 package no.nav.bidrag.beregn.forskudd.core.beregning;
 
-import static no.nav.bidrag.beregn.forskudd.core.beregning.grunnlag.BostedStatusKode.ENSLIG_ASYLANT;
-import static no.nav.bidrag.beregn.forskudd.core.beregning.grunnlag.BostedStatusKode.MED_FORELDRE;
-import static no.nav.bidrag.beregn.forskudd.core.beregning.grunnlag.SivilstandKode.ENSLIG;
-import static no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ResultatKode.AVSLAG;
-import static no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ResultatKode.INNVILGET_100_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ResultatKode.INNVILGET_125_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ResultatKode.INNVILGET_200_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ResultatKode.INNVILGET_250_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ResultatKode.INNVILGET_50_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ResultatKode.INNVILGET_75_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode.ENSLIG_ASYLANT;
+import static no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode.MED_FORELDRE;
+import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.AVSLAG;
+import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_100_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_125_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_200_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_250_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_50_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_75_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.bo.SivilstandKode.ENSLIG;
 
 import com.google.common.base.Preconditions;
 import java.math.BigDecimal;
-import no.nav.bidrag.beregn.forskudd.core.beregning.grunnlag.ForskuddBeregningGrunnlag;
-import no.nav.bidrag.beregn.forskudd.core.beregning.grunnlag.SivilstandKode;
-import no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ForskuddBeregningResultat;
-import no.nav.bidrag.beregn.forskudd.core.beregning.resultat.ResultatKode;
+import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning;
+import no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode;
+import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandKode;
 
 public class ForskuddBeregningImpl implements ForskuddBeregning {
 
   @Override
-  public ForskuddBeregningResultat beregn(ForskuddBeregningGrunnlag grunnlag) {
+  public ResultatBeregning beregn(GrunnlagBeregning grunnlag) {
 
     Preconditions.checkNotNull(grunnlag, "Grunnlag kan ikke være null");
 
@@ -34,18 +33,18 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
     String regel;
 
     // Søknadsbarn er over 18 år (REGEL 1)
-    if (grunnlag.getSoknadBarnAlder().compareTo(18) >= 0) {
+    if (grunnlag.getSoknadBarnAlder() >= 18) {
       resultatKode = AVSLAG;
       regel = "REGEL 1";
 
       // Søknadsbarn er enslig asylant (REGEL 2/3)
-    } else if (grunnlag.getSoknadBarnBostedStatusKode().equals(ENSLIG_ASYLANT)) {
-      resultatKode = (grunnlag.getSoknadBarnAlder().compareTo(11) >= 0) ? INNVILGET_250_PROSENT : INNVILGET_200_PROSENT;
+    } else if (grunnlag.getSoknadBarnBostatusKode().equals(ENSLIG_ASYLANT)) {
+      resultatKode = (grunnlag.getSoknadBarnAlder() >= 11) ? INNVILGET_250_PROSENT : INNVILGET_200_PROSENT;
       regel = (resultatKode.equals(INNVILGET_250_PROSENT) ? "REGEL 2" : "REGEL 3");
 
       // Søknadsbarn bor alene eller ikke med foreldre (REGEL 4/5)
-    } else if (!(grunnlag.getSoknadBarnBostedStatusKode().equals(MED_FORELDRE))) {
-      resultatKode = (grunnlag.getSoknadBarnAlder().compareTo(11) >= 0) ? INNVILGET_125_PROSENT : INNVILGET_100_PROSENT;
+    } else if (!(grunnlag.getSoknadBarnBostatusKode().equals(MED_FORELDRE))) {
+      resultatKode = (grunnlag.getSoknadBarnAlder() >= 11) ? INNVILGET_125_PROSENT : INNVILGET_100_PROSENT;
       regel = (resultatKode.equals(INNVILGET_125_PROSENT) ? "REGEL 4" : "REGEL 5");
 
       // Over maks inntektsgrense for forskudd (REGEL 6)
@@ -55,7 +54,7 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
 
       // Under maks inntektsgrense for fullt forskudd (REGEL 7/8)
     } else if (erUnderInntektsGrense(grunnlag.getInntektsgrense100ProsentForskudd(), grunnlag.getBidragMottakerInntekt())) {
-      resultatKode = (grunnlag.getSoknadBarnAlder().compareTo(11) >= 0) ? INNVILGET_125_PROSENT : INNVILGET_100_PROSENT;
+      resultatKode = (grunnlag.getSoknadBarnAlder() >= 11) ? INNVILGET_125_PROSENT : INNVILGET_100_PROSENT;
       regel = (resultatKode.equals(INNVILGET_125_PROSENT) ? "REGEL 7" : "REGEL 8");
 
       // Resterende regler (gift/enslig) (REGEL 9/10/11/12/13/14/15/16)
@@ -65,13 +64,13 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
               grunnlag.getInntektsgrenseGift75ProsentForskudd()) + inntektsIntervallTotal,
           grunnlag.getBidragMottakerInntekt())) ? INNVILGET_75_PROSENT : INNVILGET_50_PROSENT;
       if (grunnlag.getBidragMottakerSivilstandKode().equals(ENSLIG)) {
-        if (grunnlag.getAntallBarnIHusstand().equals(1)) {
+        if (grunnlag.getAntallBarnIHusstand() == 1) {
           regel = (resultatKode.equals(INNVILGET_75_PROSENT) ? "REGEL 9" : "REGEL 10");
         } else {
           regel = (resultatKode.equals(INNVILGET_75_PROSENT) ? "REGEL 11" : "REGEL 12");
         }
       } else {
-        if (grunnlag.getAntallBarnIHusstand().equals(1)) {
+        if (grunnlag.getAntallBarnIHusstand() == 1) {
           regel = (resultatKode.equals(INNVILGET_75_PROSENT) ? "REGEL 13" : "REGEL 14");
         } else {
           regel = (resultatKode.equals(INNVILGET_75_PROSENT) ? "REGEL 15" : "REGEL 16");
@@ -79,7 +78,7 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
       }
     }
 
-    return new ForskuddBeregningResultat(beregnForskudd(resultatKode, grunnlag.getForskuddssats100Prosent()), resultatKode, regel);
+    return new ResultatBeregning(beregnForskudd(resultatKode, grunnlag.getForskuddssats100Prosent()), resultatKode, regel);
   }
 
   private static BigDecimal beregnForskudd(ResultatKode resultatKode, Integer forskuddssats100Prosent) {

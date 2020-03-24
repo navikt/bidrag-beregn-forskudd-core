@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.forskudd.core.periode.grunnlag;
+package no.nav.bidrag.beregn.forskudd.core.periode;
 
 public interface PeriodisertGrunnlag {
 

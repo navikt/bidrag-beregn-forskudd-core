@@ -1,11 +1,11 @@
 package no.nav.bidrag.beregn.forskudd.core;
 
-import no.nav.bidrag.beregn.forskudd.core.dto.ForskuddPeriodeGrunnlagDto;
-import no.nav.bidrag.beregn.forskudd.core.dto.ForskuddPeriodeResultatDto;
+import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
+import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddResultatCore;
 
 public interface ForskuddCore {
 
-  ForskuddPeriodeResultatDto beregnForskudd(ForskuddPeriodeGrunnlagDto grunnlag);
+  BeregnForskuddResultatCore beregnForskudd(BeregnForskuddGrunnlagCore grunnlag);
 
   static ForskuddCore getInstance() {
     return new ForskuddCoreImpl();
