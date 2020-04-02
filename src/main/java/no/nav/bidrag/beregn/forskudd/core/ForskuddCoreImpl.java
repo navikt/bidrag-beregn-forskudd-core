@@ -1,7 +1,9 @@
 package no.nav.bidrag.beregn.forskudd.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import no.nav.bidrag.beregn.forskudd.core.bo.Avvik;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddGrunnlag;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode;
@@ -12,6 +14,7 @@ import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandKode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SjablonPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SoknadBarn;
+import no.nav.bidrag.beregn.forskudd.core.dto.AvvikCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddResultatCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore;
@@ -31,8 +34,12 @@ public class ForskuddCoreImpl implements ForskuddCore {
 
   public BeregnForskuddResultatCore beregnForskudd(BeregnForskuddGrunnlagCore grunnlag) {
     var beregnForskuddGrunnlag = mapTilBusinessObject(grunnlag);
-    var forskuddPeriodeResultat = forskuddPeriode.beregnPerioder(beregnForskuddGrunnlag);
-    return mapFraBusinessObject(forskuddPeriodeResultat);
+    var beregnForskuddResultat = new BeregnForskuddResultat(Collections.emptyList());
+    var avvikListe = forskuddPeriode.validerInput(beregnForskuddGrunnlag);
+    if (avvikListe.isEmpty()) {
+      beregnForskuddResultat = forskuddPeriode.beregnPerioder(beregnForskuddGrunnlag);
+    }
+    return mapFraBusinessObject(avvikListe, beregnForskuddResultat);
   }
 
   private BeregnForskuddGrunnlag mapTilBusinessObject(BeregnForskuddGrunnlagCore grunnlag) {
@@ -105,8 +112,16 @@ public class ForskuddCoreImpl implements ForskuddCore {
     return sjablonPeriodeListe;
   }
 
-  private BeregnForskuddResultatCore mapFraBusinessObject(BeregnForskuddResultat resultat) {
-    return new BeregnForskuddResultatCore(mapResultatPeriode(resultat.getResultatPeriodeListe()));
+  private BeregnForskuddResultatCore mapFraBusinessObject(List<Avvik> avvikListe, BeregnForskuddResultat resultat) {
+    return new BeregnForskuddResultatCore(mapResultatPeriode(resultat.getResultatPeriodeListe()), mapAvvik(avvikListe));
+  }
+
+  private List<AvvikCore> mapAvvik(List<Avvik> avvikListe) {
+    var avvikCoreListe = new ArrayList<AvvikCore>();
+    for (Avvik avvik : avvikListe) {
+      avvikCoreListe.add(new AvvikCore(avvik.getAvvikTekst(), avvik.getAvvikType().toString()));
+    }
+    return avvikCoreListe;
   }
 
   private List<ResultatPeriodeCore> mapResultatPeriode(List<ResultatPeriode> periodeResultatListe) {

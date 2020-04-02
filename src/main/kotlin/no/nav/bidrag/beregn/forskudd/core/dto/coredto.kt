@@ -43,7 +43,8 @@ data class SjablonPeriodeCore(
 
 // Resultat
 data class BeregnForskuddResultatCore(
-    val resultatPeriodeListe: List<ResultatPeriodeCore>
+    val resultatPeriodeListe: List<ResultatPeriodeCore>,
+    val avvikListe: List<AvvikCore>
 )
 
 data class ResultatPeriodeCore(
@@ -55,6 +56,11 @@ data class ResultatBeregningCore(
     val resultatBelop: BigDecimal,
     val resultatKode: String,
     val resultatBeskrivelse: String
+)
+
+data class AvvikCore(
+    val avvikTekst: String,
+    val avvikType: String
 )
 
 

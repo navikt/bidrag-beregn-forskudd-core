@@ -13,6 +13,8 @@ import java.util.List;
 import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregning;
 import no.nav.bidrag.beregn.forskudd.core.beregning.ResultatBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.AlderPeriode;
+import no.nav.bidrag.beregn.forskudd.core.bo.Avvik;
+import no.nav.bidrag.beregn.forskudd.core.bo.AvvikType;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddGrunnlag;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode;
@@ -38,8 +40,8 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     var justertSivilstandPeriodeListe = periodeGrunnlag.getBidragMottakerSivilstandPeriodeListe().stream()
         .map(sP -> new SivilstandPeriode(PeriodeUtil.justerPeriode(sP.getDatoFraTil()), sP.getSivilstandKode()))
         .collect(toCollection(ArrayList::new));
-    var justertBarnPeriodeListe = periodeGrunnlag.getBidragMottakerBarnPeriodeListe().stream()
-        .map(PeriodeUtil::justerPeriode).collect(toCollection(ArrayList::new));
+    var justertBarnPeriodeListe = periodeGrunnlag.getBidragMottakerBarnPeriodeListe().stream().map(PeriodeUtil::justerPeriode)
+        .collect(toCollection(ArrayList::new));
     var justertBostatusPeriodeListe = periodeGrunnlag.getSoknadBarn().getSoknadBarnBostatusPeriodeListe().stream()
         .map(bP -> new BostatusPeriode(PeriodeUtil.justerPeriode(bP.getDatoFraTil()), bP.getBostatusKode()))
         .collect(toCollection(ArrayList::new));
@@ -188,5 +190,114 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     }
 
     return bruddAlderListe;
+  }
+
+  public List<Avvik> validerInput(BeregnForskuddGrunnlag periodeGrunnlag) {
+    var avvikListe = new ArrayList<Avvik>();
+
+    // Sjekk perioder for inntekt
+    var bidragMottakerInntektPeriodeListe = new ArrayList<Periode>();
+    for (InntektPeriode bidragMottakerInntektPeriode : periodeGrunnlag.getBidragMottakerInntektPeriodeListe()) {
+      bidragMottakerInntektPeriodeListe.add(bidragMottakerInntektPeriode.getDatoFraTil());
+    }
+    avvikListe.addAll(validerInput("bidragMottakerInntektPeriodeListe", bidragMottakerInntektPeriodeListe, true, true, true));
+
+    // Sjekk perioder for sivilstand
+    var bidragMottakerSivilstandPeriodeListe = new ArrayList<Periode>();
+    for (SivilstandPeriode bidragMottakerSivilstandPeriode : periodeGrunnlag.getBidragMottakerSivilstandPeriodeListe()) {
+      bidragMottakerSivilstandPeriodeListe.add(bidragMottakerSivilstandPeriode.getDatoFraTil());
+    }
+    avvikListe.addAll(validerInput("bidragMottakerSivilstandPeriodeListe", bidragMottakerSivilstandPeriodeListe, true, true, true));
+
+    // Sjekk perioder for bostatus
+    var soknadBarnBostatusPeriodeListe = new ArrayList<Periode>();
+    for (BostatusPeriode soknadBarnBostatusPeriode : periodeGrunnlag.getSoknadBarn().getSoknadBarnBostatusPeriodeListe()) {
+      soknadBarnBostatusPeriodeListe.add(soknadBarnBostatusPeriode.getDatoFraTil());
+    }
+    avvikListe.addAll(validerInput("soknadBarnBostatusPeriodeListe", soknadBarnBostatusPeriodeListe, true, true, true));
+
+    // Sjekk perioder for barn
+    if (periodeGrunnlag.getBidragMottakerBarnPeriodeListe() != null) {
+      var bidragMottakerBarnPeriodeListe = new ArrayList<Periode>();
+
+      for (Periode bidragMottakerBarnPeriode : periodeGrunnlag.getBidragMottakerBarnPeriodeListe()) {
+        bidragMottakerBarnPeriodeListe.add(bidragMottakerBarnPeriode.getDatoFraTil());
+      }
+      avvikListe.addAll(validerInput("bidragMottakerBarnPeriodeListe", bidragMottakerBarnPeriodeListe, false, false, false));
+    }
+
+    // Sjekk beregn dato fra/til 
+    avvikListe.addAll(validerBeregnPeriodeInput(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil()));
+
+    return avvikListe;
+  }
+
+  private List<Avvik> validerInput(String dataElement, List<Periode> periodeListe, boolean sjekkOverlapp, boolean sjekkOpphold, boolean sjekkNull) {
+    var avvikListe = new ArrayList<Avvik>();
+    int indeks = 0;
+    Periode forrigePeriode = null;
+
+    for (Periode dennePeriode : periodeListe) {
+      indeks++;
+
+      //Sjekk om perioder overlapper
+      if (sjekkOverlapp) {
+        if (PeriodeUtil.perioderOverlapper(forrigePeriode, dennePeriode)) {
+          var feilmelding = "Overlappende perioder i " + dataElement + ": periodeDatoTil=" + forrigePeriode.getDatoTil() + ", periodeDatoFra=" +
+              dennePeriode.getDatoFra();
+          avvikListe.add(new Avvik(feilmelding, AvvikType.PERIODER_OVERLAPPER));
+        }
+      }
+
+      //Sjekk om det er opphold mellom perioder
+      if (sjekkOpphold) {
+        if (PeriodeUtil.perioderHarOpphold(forrigePeriode, dennePeriode)) {
+          var feilmelding = "Opphold mellom perioder i " + dataElement + ": periodeDatoTil=" + forrigePeriode.getDatoTil() + ", periodeDatoFra=" +
+              dennePeriode.getDatoFra();
+          avvikListe.add(new Avvik(feilmelding, AvvikType.PERIODER_HAR_OPPHOLD));
+        }
+      }
+
+      //Sjekk om dato er null
+      if (sjekkNull) {
+        if ((indeks != periodeListe.size()) && (dennePeriode.getDatoTil() == null)) {
+          var feilmelding = "periodeDatoTil kan ikke være null i " + dataElement + ": periodeDatoFra=" + dennePeriode.getDatoFra() +
+              ", periodeDatoTil=" + dennePeriode.getDatoTil();
+          avvikListe.add(new Avvik(feilmelding, AvvikType.NULL_VERDI_I_DATO));
+        }
+        if ((indeks != 1) && (dennePeriode.getDatoFra() == null)) {
+          var feilmelding = "periodeDatoFra kan ikke være null i " + dataElement + ": periodeDatoFra=" + dennePeriode.getDatoFra() +
+              ", periodeDatoTil=" + dennePeriode.getDatoTil();
+          avvikListe.add(new Avvik(feilmelding, AvvikType.NULL_VERDI_I_DATO));
+        }
+      }
+
+      //Sjekk om dato fra er etter dato til
+      if (!(PeriodeUtil.datoTilErEtterDatoFra(dennePeriode))) {
+        var feilmelding = "periodeDatoTil må være etter periodeDatoFra i " + dataElement + ": periodeDatoFra=" + dennePeriode.getDatoFra() +
+            ", periodeDatoTil=" + dennePeriode.getDatoTil();
+        avvikListe.add(new Avvik(feilmelding, AvvikType.DATO_FRA_ETTER_DATO_TIL));
+      }
+
+      forrigePeriode = new Periode(dennePeriode.getDatoFra(), dennePeriode.getDatoTil());
+    }
+
+    return avvikListe;
+  }
+
+  private List<Avvik> validerBeregnPeriodeInput(LocalDate beregnDatoFra, LocalDate beregnDatoTil) {
+    var avvikListe = new ArrayList<Avvik>();
+
+    if (beregnDatoFra == null) {
+      avvikListe.add(new Avvik("beregnDatoFra kan ikke være null", AvvikType.NULL_VERDI_I_DATO));
+    }
+    if (beregnDatoTil == null) {
+      avvikListe.add(new Avvik("beregnDatoTil kan ikke være null", AvvikType.NULL_VERDI_I_DATO));
+    }
+    if (!(PeriodeUtil.datoTilErEtterDatoFra(new Periode(beregnDatoFra, beregnDatoTil)))) {
+      avvikListe.add(new Avvik("beregnDatoTil må være etter beregnDatoFra", AvvikType.DATO_FRA_ETTER_DATO_TIL));
+    }
+
+    return avvikListe;
   }
 }

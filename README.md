@@ -12,3 +12,4 @@ Versjon | Endringstype      | Beskrivelse
 0.0.2   |  Endring          | Lagt til Kotlin + nytt ytre lag for å skille mellom ekstern og intern DTO
 0.0.3   |  Endring          | Lagt til håndtering av sjablonverdier mottatt fra kallende tjeneste
 0.0.4   |  Endring          | Gjort om dataklasser til Kotlin, omstrukturert og lagd mer logiske navn
+0.0.5   |  Endring          | Lagt inn avvikshåndtering / inputkontroll
