@@ -86,6 +86,13 @@ data class ResultatPeriode(
 )
 
 
+// Avvik periode
+data class Avvik(
+    val avvikTekst: String,
+    val avvikType: AvvikType
+)
+
+
 // Grunnlag beregning
 data class GrunnlagBeregning(
     val bidragMottakerInntekt: BigDecimal,
@@ -123,4 +130,12 @@ enum class BostatusKode {
 enum class SivilstandKode {
   GIFT,
   ENSLIG
+}
+
+enum class AvvikType {
+  PERIODER_OVERLAPPER,
+  PERIODER_HAR_OPPHOLD,
+  NULL_VERDI_I_DATO,
+  DATO_FRA_ETTER_DATO_TIL,
+  INPUT_DATA_MANGLER
 }

@@ -13,6 +13,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import no.nav.bidrag.beregn.forskudd.core.beregning.ResultatBeregning;
+import no.nav.bidrag.beregn.forskudd.core.bo.Avvik;
+import no.nav.bidrag.beregn.forskudd.core.bo.AvvikType;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
@@ -42,6 +44,7 @@ public class ForskuddCoreTest {
 
   private BeregnForskuddGrunnlagCore beregnForskuddGrunnlagCore;
   private BeregnForskuddResultat forskuddPeriodeResultat;
+  private List<Avvik> avvikListe;
 
   @BeforeEach
   void initMocksAndService() {
@@ -49,7 +52,7 @@ public class ForskuddCoreTest {
   }
 
   @Test
-  @DisplayName("skal beregne forskudd")
+  @DisplayName("Skal beregne forskudd")
   void skalBeregneForskudd() {
     byggForskuddPeriodeGrunnlagCore();
     byggForskuddPeriodeResultat();
@@ -59,6 +62,8 @@ public class ForskuddCoreTest {
 
     assertAll(
         () -> assertThat(beregnForskuddResultatCore).isNotNull(),
+        () -> assertThat(beregnForskuddResultatCore.getAvvikListe()).isEmpty(),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe()).isNotEmpty(),
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().size()).isEqualTo(3),
 
         () -> assertThat(
@@ -102,6 +107,26 @@ public class ForskuddCoreTest {
     );
   }
 
+  @Test
+  @DisplayName("Skal ikke beregne forskudd ved avvik")
+  void skalIkkeBeregneForskuddVedAvvik() {
+    byggForskuddPeriodeGrunnlagCore();
+    byggAvvik();
+
+    when(forskuddPeriodeMock.validerInput(any())).thenReturn(avvikListe);
+    var beregnForskuddResultatCore = forskuddCore.beregnForskudd(beregnForskuddGrunnlagCore);
+
+    assertAll(
+        () -> assertThat(beregnForskuddResultatCore).isNotNull(),
+        () -> assertThat(beregnForskuddResultatCore.getAvvikListe()).isNotEmpty(),
+        () -> assertThat(beregnForskuddResultatCore.getAvvikListe()).hasSize(1),
+        () -> assertThat(beregnForskuddResultatCore.getAvvikListe().get(0).getAvvikTekst()).isEqualTo("beregnDatoTil må være etter beregnDatoFra"),
+        () -> assertThat(beregnForskuddResultatCore.getAvvikListe().get(0).getAvvikType()).isEqualTo(AvvikType.DATO_FRA_ETTER_DATO_TIL.toString()),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe()).isEmpty()
+    );
+  }
+
+
   private void byggForskuddPeriodeGrunnlagCore() {
     var bostatusPeriode = new BostatusPeriodeCore(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "MED_FORELDRE");
     var bostatusPeriodeListe = new ArrayList<BostatusPeriodeCore>();
@@ -142,5 +167,10 @@ public class ForskuddCoreTest {
         .add(new ResultatPeriode(new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")), new ResultatBeregning(
             BigDecimal.valueOf(0), AVSLAG, "REGEL 11")));
     forskuddPeriodeResultat = new BeregnForskuddResultat(periodeResultatListe);
+  }
+
+  private void byggAvvik() {
+    avvikListe = new ArrayList<>();
+    avvikListe.add(new Avvik("beregnDatoTil må være etter beregnDatoFra", AvvikType.DATO_FRA_ETTER_DATO_TIL));
   }
 }
