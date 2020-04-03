@@ -134,7 +134,7 @@ public class ForskuddCoreTest {
     var soknadBarn = new SoknadBarnCore(LocalDate.parse("2006-05-12"), bostatusPeriodeListe);
 
     var bidragMottakerInntektPeriode = new InntektPeriodeCore(
-        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), BigDecimal.valueOf(0));
+        new PeriodeCore(LocalDate.parse("2017-01-01"), null), BigDecimal.valueOf(0));
     var bidragMottakerInntektPeriodeListe = new ArrayList<InntektPeriodeCore>();
     bidragMottakerInntektPeriodeListe.add(bidragMottakerInntektPeriode);
 
