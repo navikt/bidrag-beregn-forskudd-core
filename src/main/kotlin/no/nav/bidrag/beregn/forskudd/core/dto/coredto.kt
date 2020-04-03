@@ -67,5 +67,5 @@ data class AvvikCore(
 // Felles
 data class PeriodeCore(
     val periodeDatoFra: LocalDate,
-    val periodeDatoTil: LocalDate
+    val periodeDatoTil: LocalDate?
 )
