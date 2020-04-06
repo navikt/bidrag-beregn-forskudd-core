@@ -16,9 +16,9 @@ class PeriodeUtil {
     return (dato == null || dato.getDayOfMonth() == 1) ? dato : dato.with(firstDayOfNextMonth());
   }
 
-  // Sjekk om 2 perioder overlapper (FraDato i Periode2 er mindre enn TilDato i Periode1)
-  // Periode1 == null indikerer at Periode2 er den første perioden. Ingen kontroll nødvendig
-  // Periode2 == null indikerer at Periode1 er den siste perioden. Ingen kontroll nødvendig
+  // Sjekk om 2 perioder overlapper (datoFra i periode2 er mindre enn datoTil i periode1)
+  // periode1 == null indikerer at periode2 er den første perioden. Ingen kontroll nødvendig
+  // periode2 == null indikerer at periode1 er den siste perioden. Ingen kontroll nødvendig
   static boolean perioderOverlapper(Periode periode1, Periode periode2) {
     if (periode1 == null || periode2 == null) {
       return false;
@@ -29,9 +29,9 @@ class PeriodeUtil {
     return (periode2.getDatoFra().isBefore(periode1.getDatoTil()));
   }
 
-  // Sjekk om det er opphold (gap) mellom 2 perioder (FraDato i Periode2 er større enn TilDato i Periode1)
-  // Periode1 == null indikerer at Periode2 er den første perioden. Ingen kontroll nødvendig
-  // Periode2 == null indikerer at Periode1 er den siste perioden. Ingen kontroll nødvendig
+  // Sjekk om det er opphold (gap) mellom 2 perioder (datoFra i periode2 er større enn datoTil i periode1)
+  // periode1 == null indikerer at periode2 er den første perioden. Ingen kontroll nødvendig
+  // periode2 == null indikerer at periode1 er den siste perioden. Ingen kontroll nødvendig
   static boolean perioderHarOpphold(Periode periode1, Periode periode2) {
     if (periode1 == null || periode2 == null) {
       return false;
