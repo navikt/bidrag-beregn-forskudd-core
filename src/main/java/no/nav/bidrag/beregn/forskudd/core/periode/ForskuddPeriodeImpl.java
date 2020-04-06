@@ -45,6 +45,8 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     var justertBostatusPeriodeListe = periodeGrunnlag.getSoknadBarn().getSoknadBarnBostatusPeriodeListe().stream()
         .map(bP -> new BostatusPeriode(PeriodeUtil.justerPeriode(bP.getDatoFraTil()), bP.getBostatusKode()))
         .collect(toCollection(ArrayList::new));
+
+    // Danner lister for hver sjablontype
     var justertSjablon0005PeriodeListe = justerSjablonPeriodeListe(periodeGrunnlag.getSjablonPeriodeListe(), "0005");
     var justertSjablon0013PeriodeListe = justerSjablonPeriodeListe(periodeGrunnlag.getSjablonPeriodeListe(), "0013");
     var justertSjablon0033PeriodeListe = justerSjablonPeriodeListe(periodeGrunnlag.getSjablonPeriodeListe(), "0033");
@@ -52,7 +54,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     var justertSjablon0035PeriodeListe = justerSjablonPeriodeListe(periodeGrunnlag.getSjablonPeriodeListe(), "0035");
     var justertSjablon0036PeriodeListe = justerSjablonPeriodeListe(periodeGrunnlag.getSjablonPeriodeListe(), "0036");
 
-    // Bygger opp liste over perioder
+    // Bygger opp liste over perioder, basert på alle typer inputparametre
     List<Periode> perioder = new Periodiserer()
         .addBruddpunkt(periodeGrunnlag.getBeregnDatoFra()) //For å sikre bruddpunkt på start beregning fra dato
         .addBruddpunkter(justertInntektPeriodeListe)
@@ -69,7 +71,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
         .addBruddpunkter(justertSjablon0036PeriodeListe)
         .finnPerioder(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil());
 
-    // Løper gjennom periodene og finner matchende verdi for hver kategori. Kaller beregningsmodulen for hver beregningsperiode
+    // Løper gjennom periodene og finner matchende verdi for hver kategori
     for (Periode beregningsperiode : perioder) {
       var inntektBelop = justertInntektPeriodeListe.stream()
           .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).map(InntektPeriode::getInntektBelop).findFirst().orElse(null);
@@ -98,6 +100,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
         antallBarn = antallBarn + 1;
       }
 
+      // Kaller beregningsmodulen for hver beregningsperiode
       periodeResultatListe.add(new ResultatPeriode(beregningsperiode, forskuddBeregning
           .beregn(new GrunnlagBeregning(inntektBelop, sivilstandKode, antallBarn, alder, bostatusKode, forskuddssats100Prosent,
               multiplikatorMaksInntektsgrense, inntektsgrense100ProsentForskudd, inntektsgrenseEnslig75ProsentForskudd,
@@ -115,7 +118,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
         .collect(toCollection(ArrayList::new));
   }
 
-  // Henter sjablonverdi
+  // Henter sjablonverdi for aktuell periode
   private Integer hentSjablonVerdi(List<SjablonPeriodeVerdi> sjablonListe, Periode beregningsperiode) {
     return sjablonListe.stream().filter(periodeListe -> periodeListe.getDatoFraTil().overlapperMed(beregningsperiode))
         .map(SjablonPeriodeVerdi::getSjablonVerdi).findFirst().orElse(null);
@@ -192,6 +195,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     return bruddAlderListe;
   }
 
+  // Validerer at input-verdier til forskuddsberegning er gyldige
   public List<Avvik> validerInput(BeregnForskuddGrunnlag periodeGrunnlag) {
     var avvikListe = new ArrayList<Avvik>();
 
@@ -232,6 +236,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     return avvikListe;
   }
 
+  // Validerer at datoer er gyldige
   private List<Avvik> validerInput(String dataElement, List<Periode> periodeListe, boolean sjekkOverlapp, boolean sjekkOpphold, boolean sjekkNull) {
     var avvikListe = new ArrayList<Avvik>();
     int indeks = 0;
@@ -285,6 +290,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     return avvikListe;
   }
 
+  // Validerer at beregningsperiode fra/til er gyldig
   private List<Avvik> validerBeregnPeriodeInput(LocalDate beregnDatoFra, LocalDate beregnDatoTil) {
     var avvikListe = new ArrayList<Avvik>();
 
