@@ -1,7 +1,5 @@
 package no.nav.bidrag.beregn.forskudd.core.bo
 
-import no.nav.bidrag.beregn.forskudd.core.periode.Periode
-import no.nav.bidrag.beregn.forskudd.core.periode.PeriodisertGrunnlag
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -21,56 +19,6 @@ data class SoknadBarn(
     val soknadBarnBostatusPeriodeListe: List<BostatusPeriode>
 )
 
-data class BostatusPeriode(
-    val bostatusDatoFraTil: Periode,
-    val bostatusKode: BostatusKode) : PeriodisertGrunnlag {
-
-  override fun getDatoFraTil(): Periode {
-    return bostatusDatoFraTil
-  }
-}
-
-data class InntektPeriode(
-    val inntektDatoFraTil: Periode,
-    val inntektBelop: BigDecimal) : PeriodisertGrunnlag {
-
-  override fun getDatoFraTil(): Periode {
-    return inntektDatoFraTil
-  }
-}
-
-data class SivilstandPeriode(
-    val sivilstandDatoFraTil: Periode,
-    val sivilstandKode: SivilstandKode) : PeriodisertGrunnlag {
-
-  override fun getDatoFraTil(): Periode {
-    return sivilstandDatoFraTil
-  }
-}
-
-data class SjablonPeriode(
-    val sjablonDatoFraTil: Periode,
-    val sjablonType: String,
-    val sjablonVerdi: Int
-)
-
-data class SjablonPeriodeVerdi(
-    val sjablonDatoFraTil: Periode,
-    val sjablonVerdi: Int) : PeriodisertGrunnlag {
-
-  override fun getDatoFraTil(): Periode {
-    return sjablonDatoFraTil
-  }
-}
-
-data class AlderPeriode(
-    val alderDatoFraTil: Periode,
-    val alder: Int) : PeriodisertGrunnlag {
-
-  override fun getDatoFraTil(): Periode {
-    return alderDatoFraTil
-  }
-}
 
 
 // Resultat periode

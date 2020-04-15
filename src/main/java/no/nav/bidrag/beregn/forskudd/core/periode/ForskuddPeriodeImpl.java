@@ -20,6 +20,8 @@ import no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode;
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode;
+import no.nav.bidrag.beregn.forskudd.core.bo.Periode;
+import no.nav.bidrag.beregn.forskudd.core.bo.Periodiserer;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode;
@@ -35,15 +37,13 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     var periodeResultatListe = new ArrayList<ResultatPeriode>();
 
     // Justerer datoer på grunnlagslistene
-    var justertInntektPeriodeListe = periodeGrunnlag.getBidragMottakerInntektPeriodeListe().stream()
-        .map(iP -> new InntektPeriode(PeriodeUtil.justerPeriode(iP.getDatoFraTil()), iP.getInntektBelop())).collect(toCollection(ArrayList::new));
-    var justertSivilstandPeriodeListe = periodeGrunnlag.getBidragMottakerSivilstandPeriodeListe().stream()
-        .map(sP -> new SivilstandPeriode(PeriodeUtil.justerPeriode(sP.getDatoFraTil()), sP.getSivilstandKode()))
+    var justertInntektPeriodeListe = periodeGrunnlag.getBidragMottakerInntektPeriodeListe().stream().map(InntektPeriode::new)
         .collect(toCollection(ArrayList::new));
-    var justertBarnPeriodeListe = periodeGrunnlag.getBidragMottakerBarnPeriodeListe().stream().map(PeriodeUtil::justerPeriode)
+    var justertSivilstandPeriodeListe = periodeGrunnlag.getBidragMottakerSivilstandPeriodeListe().stream().map(SivilstandPeriode::new)
         .collect(toCollection(ArrayList::new));
-    var justertBostatusPeriodeListe = periodeGrunnlag.getSoknadBarn().getSoknadBarnBostatusPeriodeListe().stream()
-        .map(bP -> new BostatusPeriode(PeriodeUtil.justerPeriode(bP.getDatoFraTil()), bP.getBostatusKode()))
+    var justertBarnPeriodeListe = periodeGrunnlag.getBidragMottakerBarnPeriodeListe().stream().map(Periode::new)
+        .collect(toCollection(ArrayList::new));
+    var justertBostatusPeriodeListe = periodeGrunnlag.getSoknadBarn().getSoknadBarnBostatusPeriodeListe().stream().map(BostatusPeriode::new)
         .collect(toCollection(ArrayList::new));
 
     // Danner lister for hver sjablontype
@@ -113,8 +113,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
   // Justerer sjablonperiodelister
   private ArrayList<SjablonPeriodeVerdi> justerSjablonPeriodeListe(List<SjablonPeriode> sjablonPeriode, String sjablonType) {
-    return sjablonPeriode.stream().filter(sP -> sP.getSjablonType().equals(sjablonType))
-        .map(sP -> new SjablonPeriodeVerdi(PeriodeUtil.justerPeriode(sP.getSjablonDatoFraTil()), sP.getSjablonVerdi()))
+    return sjablonPeriode.stream().filter(sP -> sP.getSjablonType().equals(sjablonType)).map(SjablonPeriodeVerdi::new)
         .collect(toCollection(ArrayList::new));
   }
 
@@ -247,7 +246,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
       //Sjekk om perioder overlapper
       if (sjekkOverlapp) {
-        if (PeriodeUtil.perioderOverlapper(forrigePeriode, dennePeriode)) {
+        if (dennePeriode.perioderOverlapper(forrigePeriode)) {
           var feilmelding = "Overlappende perioder i " + dataElement + ": periodeDatoTil=" + forrigePeriode.getDatoTil() + ", periodeDatoFra=" +
               dennePeriode.getDatoFra();
           avvikListe.add(new Avvik(feilmelding, AvvikType.PERIODER_OVERLAPPER));
@@ -256,7 +255,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
       //Sjekk om det er opphold mellom perioder
       if (sjekkOpphold) {
-        if (PeriodeUtil.perioderHarOpphold(forrigePeriode, dennePeriode)) {
+        if (dennePeriode.perioderHarOpphold(forrigePeriode)) {
           var feilmelding = "Opphold mellom perioder i " + dataElement + ": periodeDatoTil=" + forrigePeriode.getDatoTil() + ", periodeDatoFra=" +
               dennePeriode.getDatoFra();
           avvikListe.add(new Avvik(feilmelding, AvvikType.PERIODER_HAR_OPPHOLD));
@@ -278,7 +277,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
       }
 
       //Sjekk om dato fra er etter dato til
-      if (!(PeriodeUtil.datoTilErEtterDatoFra(dennePeriode))) {
+      if (!(dennePeriode.datoTilErEtterDatoFra())) {
         var feilmelding = "periodeDatoTil må være etter periodeDatoFra i " + dataElement + ": periodeDatoFra=" + dennePeriode.getDatoFra() +
             ", periodeDatoTil=" + dennePeriode.getDatoTil();
         avvikListe.add(new Avvik(feilmelding, AvvikType.DATO_FRA_ETTER_DATO_TIL));
@@ -300,7 +299,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     if (beregnDatoTil == null) {
       avvikListe.add(new Avvik("beregnDatoTil kan ikke være null", AvvikType.NULL_VERDI_I_DATO));
     }
-    if (!(PeriodeUtil.datoTilErEtterDatoFra(new Periode(beregnDatoFra, beregnDatoTil)))) {
+    if (!new Periode(beregnDatoFra, beregnDatoTil).datoTilErEtterDatoFra()) {
       avvikListe.add(new Avvik("beregnDatoTil må være etter beregnDatoFra", AvvikType.DATO_FRA_ETTER_DATO_TIL));
     }
 
