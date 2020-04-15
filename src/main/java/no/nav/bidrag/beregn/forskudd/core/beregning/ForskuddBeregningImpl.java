@@ -14,6 +14,7 @@ import static no.nav.bidrag.beregn.forskudd.core.bo.SivilstandKode.ENSLIG;
 import com.google.common.base.Preconditions;
 import java.math.BigDecimal;
 import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning;
+import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandKode;
 

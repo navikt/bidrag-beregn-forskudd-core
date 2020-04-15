@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregning;
-import no.nav.bidrag.beregn.forskudd.core.beregning.ResultatBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.AlderPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.Avvik;
 import no.nav.bidrag.beregn.forskudd.core.bo.AvvikType;
@@ -21,6 +20,7 @@ import no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode;
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode;
+import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SjablonPeriode;
@@ -28,7 +28,7 @@ import no.nav.bidrag.beregn.forskudd.core.bo.SjablonPeriodeVerdi;
 
 public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
-  private ForskuddBeregning forskuddBeregning = ForskuddBeregning.getInstance();
+  private final ForskuddBeregning forskuddBeregning = ForskuddBeregning.getInstance();
 
   public BeregnForskuddResultat beregnPerioder(BeregnForskuddGrunnlag periodeGrunnlag) {
 

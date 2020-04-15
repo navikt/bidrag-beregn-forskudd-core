@@ -3,7 +3,7 @@ package no.nav.bidrag.beregn.forskudd.core;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
-import no.nav.bidrag.beregn.forskudd.core.beregning.ResultatBeregning;
+import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

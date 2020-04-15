@@ -1,11 +1,9 @@
 package no.nav.bidrag.beregn.forskudd.core.bo
 
-import no.nav.bidrag.beregn.forskudd.core.beregning.ResultatBeregning
 import no.nav.bidrag.beregn.forskudd.core.periode.Periode
 import no.nav.bidrag.beregn.forskudd.core.periode.PeriodisertGrunnlag
 import java.math.BigDecimal
 import java.time.LocalDate
-
 
 // Grunnlag periode
 data class BeregnForskuddGrunnlag(

@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregning;
-import no.nav.bidrag.beregn.forskudd.core.beregning.ResultatBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode;
 import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning;
+import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandKode;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +29,7 @@ class ForskuddBeregningTest {
 
   private GrunnlagBeregning grunnlag;
 
-  private ForskuddBeregning forskuddBeregning = ForskuddBeregning.getInstance();
+  private final ForskuddBeregning forskuddBeregning = ForskuddBeregning.getInstance();
   private final static Integer FORSKUDDSSATS_100_PROSENT = 1600;
   private final static Integer MULTIPLIKATOR_MAKS_INNTEKTSGRENSE = 320;
   private final static Integer INNTEKTSGRENSE_100_PROSENT = 270200;
