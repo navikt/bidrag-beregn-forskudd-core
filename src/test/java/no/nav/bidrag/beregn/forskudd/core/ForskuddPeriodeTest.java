@@ -27,7 +27,6 @@ import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SjablonPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SoknadBarn;
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
@@ -105,13 +104,12 @@ class ForskuddPeriodeTest {
 
   @Test
   @DisplayName("Test utvidet grunnlag med avvik")
-  @Disabled
   void testUtvidetGrunnlagMedAvvik() {
     lagGrunnlagMedAvvik();
     var avvikListe = forskuddPeriode.validerInput(grunnlag);
     assertAll(
         () -> assertThat(avvikListe).isNotEmpty(),
-        () -> assertThat(avvikListe).hasSize(6),
+        () -> assertThat(avvikListe).hasSize(5),
 
         () -> assertThat(avvikListe.get(0).getAvvikTekst())
             .isEqualTo("Overlappende perioder i bidragMottakerInntektPeriodeListe: periodeDatoTil=2018-01-02, periodeDatoFra=2018-01-01"),
@@ -125,16 +123,12 @@ class ForskuddPeriodeTest {
             .isEqualTo("Opphold mellom perioder i bidragMottakerSivilstandPeriodeListe: periodeDatoTil=2018-04-01, periodeDatoFra=2018-04-17"),
         () -> assertThat(avvikListe.get(2).getAvvikType()).isEqualTo(AvvikType.PERIODER_HAR_OPPHOLD),
 
-        () -> assertThat(avvikListe.get(3).getAvvikTekst())
-            .isEqualTo("periodeDatoFra kan ikke være null i soknadBarnBostatusPeriodeListe: periodeDatoFra=null, periodeDatoTil=2018-11-13"),
-        () -> assertThat(avvikListe.get(3).getAvvikType()).isEqualTo(AvvikType.NULL_VERDI_I_DATO),
-
-        () -> assertThat(avvikListe.get(4).getAvvikTekst()).isEqualTo(
+        () -> assertThat(avvikListe.get(3).getAvvikTekst()).isEqualTo(
             "periodeDatoTil må være etter periodeDatoFra i bidragMottakerBarnPeriodeListe: periodeDatoFra=2019-03-31, periodeDatoTil=2018-06-17"),
-        () -> assertThat(avvikListe.get(4).getAvvikType()).isEqualTo(AvvikType.DATO_FRA_ETTER_DATO_TIL),
+        () -> assertThat(avvikListe.get(3).getAvvikType()).isEqualTo(AvvikType.DATO_FRA_ETTER_DATO_TIL),
 
-        () -> assertThat(avvikListe.get(5).getAvvikTekst()).isEqualTo("beregnDatoTil må være etter beregnDatoFra"),
-        () -> assertThat(avvikListe.get(5).getAvvikType()).isEqualTo(AvvikType.DATO_FRA_ETTER_DATO_TIL)
+        () -> assertThat(avvikListe.get(4).getAvvikTekst()).isEqualTo("beregnDatoTil må være etter beregnDatoFra"),
+        () -> assertThat(avvikListe.get(4).getAvvikType()).isEqualTo(AvvikType.DATO_FRA_ETTER_DATO_TIL)
     );
     printAvvikListe(avvikListe);
   }
@@ -185,12 +179,12 @@ class ForskuddPeriodeTest {
     var sBBostedStatusListe = new ArrayList<BostatusPeriode>();
     sBBostedStatusListe.add(new BostatusPeriode(new Periode(LocalDate.parse("2006-12-19"), LocalDate.parse("2018-08-16")), MED_FORELDRE));
     sBBostedStatusListe
-        .add(new BostatusPeriode(new Periode(null, LocalDate.parse("2018-11-13")), MED_ANDRE_ENN_FORELDRE));
+        .add(new BostatusPeriode(new Periode(LocalDate.parse("2018-08-16"), LocalDate.parse("2018-11-13")), MED_ANDRE_ENN_FORELDRE));
     sBBostedStatusListe.add(new BostatusPeriode(new Periode(LocalDate.parse("2018-11-13"), null), MED_FORELDRE));
     var soknadBarn = new SoknadBarn(sBFodselsdato, sBBostedStatusListe);
 
     var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe.add(new InntektPeriode(new Periode(null, LocalDate.parse("2018-01-02")), BigDecimal.valueOf(250000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-02")), BigDecimal.valueOf(250000)));
     bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2018-01-01"), null), BigDecimal.valueOf(400000)));
     bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2019-01-01"), null), BigDecimal.valueOf(500000)));
 

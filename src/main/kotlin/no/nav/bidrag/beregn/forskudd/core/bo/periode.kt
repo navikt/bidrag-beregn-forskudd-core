@@ -25,11 +25,11 @@ data class Periode(
                 && (datoTil == null || datoTil.isAfter(annenPeriode.datoFra)))
     }
 
-    fun perioderOverlapper(forrigePeriode: Periode): Boolean {
+    fun perioderOverlapper(forrigePeriode: Periode?): Boolean {
         return PeriodeUtil.perioderOverlapper(forrigePeriode, this)
     }
 
-    fun perioderHarOpphold(forrigePeriode: Periode): Boolean {
+    fun perioderHarOpphold(forrigePeriode: Periode?): Boolean {
         return PeriodeUtil.perioderHarOpphold(forrigePeriode, this)
     }
 
