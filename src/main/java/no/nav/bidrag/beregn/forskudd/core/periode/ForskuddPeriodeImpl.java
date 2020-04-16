@@ -21,7 +21,6 @@ import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.Periode;
-import no.nav.bidrag.beregn.forskudd.core.bo.Periodiserer;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode;
@@ -246,7 +245,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
       //Sjekk om perioder overlapper
       if (sjekkOverlapp) {
-        if (dennePeriode.perioderOverlapper(forrigePeriode)) {
+        if (dennePeriode.overlapper(forrigePeriode)) {
           var feilmelding = "Overlappende perioder i " + dataElement + ": periodeDatoTil=" + forrigePeriode.getDatoTil() + ", periodeDatoFra=" +
               dennePeriode.getDatoFra();
           avvikListe.add(new Avvik(feilmelding, AvvikType.PERIODER_OVERLAPPER));
@@ -255,7 +254,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
       //Sjekk om det er opphold mellom perioder
       if (sjekkOpphold) {
-        if (dennePeriode.perioderHarOpphold(forrigePeriode)) {
+        if (dennePeriode.harOpphold(forrigePeriode)) {
           var feilmelding = "Opphold mellom perioder i " + dataElement + ": periodeDatoTil=" + forrigePeriode.getDatoTil() + ", periodeDatoFra=" +
               dennePeriode.getDatoFra();
           avvikListe.add(new Avvik(feilmelding, AvvikType.PERIODER_HAR_OPPHOLD));

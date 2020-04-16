@@ -21,10 +21,11 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 Versjon | Endringstype      | Beskrivelse
 --------|-------------------|------------
-0.0.7   |  Endring          | Lagt til dokumentasjon av modulen i README.md
-0.0.6   |  Endring          | Justert coredto til å tillate null-verdi på periodeDatoTil
-0.0.5   |  Endring          | Lagt inn avvikshåndtering / inputkontroll
-0.0.4   |  Endring          | Gjort om dataklasser til Kotlin, omstrukturert og lagd mer logiske navn
-0.0.3   |  Endring          | Lagt til håndtering av sjablonverdier mottatt fra kallende tjeneste
-0.0.2   |  Endring          | Lagt til Kotlin + nytt ytre lag for å skille mellom ekstern og intern DTO
-0.0.1   |  Opprettet        | Første versjon
+0.0.8   | Endring           | Refaktorert kode og skrevet om dataklasser
+0.0.7   | Endring           | Lagt til dokumentasjon av modulen i README.md
+0.0.6   | Endring           | Justert coredto til å tillate null-verdi på periodeDatoTil
+0.0.5   | Endring           | Lagt inn avvikshåndtering / inputkontroll
+0.0.4   | Endring           | Gjort om dataklasser til Kotlin, omstrukturert og lagd mer logiske navn
+0.0.3   | Endring           | Lagt til håndtering av sjablonverdier mottatt fra kallende tjeneste
+0.0.2   | Endring           | Lagt til Kotlin + nytt ytre lag for å skille mellom ekstern og intern DTO
+0.0.1   | Opprettet         | Første versjon
