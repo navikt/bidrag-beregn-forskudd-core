@@ -9,6 +9,7 @@ import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode;
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode;
+import no.nav.bidrag.beregn.forskudd.core.bo.Periode;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandKode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode;
@@ -26,7 +27,6 @@ import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.SjablonPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore;
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode;
-import no.nav.bidrag.beregn.forskudd.core.periode.Periode;
 
 public class ForskuddCoreImpl implements ForskuddCore {
 
