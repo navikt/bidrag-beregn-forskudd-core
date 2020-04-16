@@ -33,17 +33,19 @@ data class Periode(
     }
 
     // Sjekk om perioden overlapper (datoFra i denne perioden er yngre enn datoTil i forrige periode)
-    // Hvis forrige periode er null, indikerer at dette er den første perioden. Ingen kontroll nødvendig
+    // Hvis forrige periode er null, er dette den første perioden. Ingen kontroll nødvendig
     fun overlapper(forrigePeriode: Periode?): Boolean {
-        if (forrigePeriode?.datoTil == null) {
-            return false
-        }
+        if (forrigePeriode?.datoTil == null) return false
 
         return datoFra.isBefore(forrigePeriode.datoTil)
     }
 
-    fun perioderHarOpphold(forrigePeriode: Periode?): Boolean {
-        return PeriodeUtil.perioderHarOpphold(forrigePeriode, this)
+    // Sjekk om det er opphold (gap) mellom periodene (datoFra i denne perioden er eldre enn datoTil i forrige periode)
+    // Hvis forrige periode er null, er dette den første perioden. Ingen kontroll nødvendig
+    fun harOpphold(forrigePeriode: Periode?): Boolean {
+        if (forrigePeriode == null) return false
+
+        return forrigePeriode.datoTil != null && datoFra.isAfter(forrigePeriode.datoTil)
     }
 
     fun datoTilErEtterDatoFra(): Boolean {
@@ -120,18 +122,6 @@ data class AlderPeriode(
 }
 
 object PeriodeUtil {
-
-    // Sjekk om det er opphold (gap) mellom 2 perioder (datoFra i periode2 er større enn datoTil i periode1)
-    // periode1 == null indikerer at periode2 er den første perioden. Ingen kontroll nødvendig
-    // periode2 == null indikerer at periode1 er den siste perioden. Ingen kontroll nødvendig
-    fun perioderHarOpphold(periode1: Periode?, periode2: Periode?): Boolean {
-        if (periode1 == null || periode2 == null) {
-            return false
-        }
-        return if (periode1.datoTil == null || periode2.datoFra == null) {
-            false
-        } else periode2.datoFra.isAfter(periode1.datoTil)
-    }
 
     // Sjekk om datoFra >= datoTil
     fun datoTilErEtterDatoFra(periode: Periode): Boolean {

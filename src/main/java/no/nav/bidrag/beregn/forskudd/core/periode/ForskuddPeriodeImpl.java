@@ -255,7 +255,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
       //Sjekk om det er opphold mellom perioder
       if (sjekkOpphold) {
-        if (dennePeriode.perioderHarOpphold(forrigePeriode)) {
+        if (dennePeriode.harOpphold(forrigePeriode)) {
           var feilmelding = "Opphold mellom perioder i " + dataElement + ": periodeDatoTil=" + forrigePeriode.getDatoTil() + ", periodeDatoFra=" +
               dennePeriode.getDatoFra();
           avvikListe.add(new Avvik(feilmelding, AvvikType.PERIODER_HAR_OPPHOLD));
