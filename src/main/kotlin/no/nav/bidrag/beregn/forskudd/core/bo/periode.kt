@@ -32,7 +32,7 @@ data class Periode(
                 && (datoTil == null || datoTil.isAfter(annenPeriode.datoFra)))
     }
 
-    // Sjekk om perioden overlapper (datoFra i denne perioden er yngre enn datoTil i forrige periode)
+    // Sjekk om perioden overlapper (datoFra i denne perioden kommer tidligere enn datoTil i forrige periode)
     // Hvis forrige periode er null, er dette den første perioden. Ingen kontroll nødvendig
     fun overlapper(forrigePeriode: Periode?): Boolean {
         if (forrigePeriode?.datoTil == null) return false
@@ -40,7 +40,7 @@ data class Periode(
         return datoFra.isBefore(forrigePeriode.datoTil)
     }
 
-    // Sjekk om det er opphold (gap) mellom periodene (datoFra i denne perioden er eldre enn datoTil i forrige periode)
+    // Sjekk om det er opphold (gap) mellom periodene (datoFra i denne perioden kommer senere enn datoTil i forrige periode)
     // Hvis forrige periode er null, er dette den første perioden. Ingen kontroll nødvendig
     fun harOpphold(forrigePeriode: Periode?): Boolean {
         if (forrigePeriode == null) return false
@@ -48,8 +48,9 @@ data class Periode(
         return forrigePeriode.datoTil != null && datoFra.isAfter(forrigePeriode.datoTil)
     }
 
+    // Sjekk om datoFra er tidligere eller lik datoTil
     fun datoTilErEtterDatoFra(): Boolean {
-        return PeriodeUtil.datoTilErEtterDatoFra(this)
+        return datoTil == null || datoTil.isAfter(datoFra)
     }
 
     // Juster datoer i perioden
@@ -57,7 +58,7 @@ data class Periode(
         val fraDato = justerDato(datoFra)
         val tilDato = justerDato(datoTil)
 
-        return Periode(fraDato ?: datoFra, tilDato)
+        return Periode(fraDato as LocalDate, tilDato)
     }
 }
 
@@ -118,16 +119,6 @@ data class AlderPeriode(
 
     override fun getDatoFraTil(): Periode {
         return alderDatoFraTil
-    }
-}
-
-object PeriodeUtil {
-
-    // Sjekk om datoFra >= datoTil
-    fun datoTilErEtterDatoFra(periode: Periode): Boolean {
-        return if (periode.datoFra == null || periode.datoTil == null) {
-            true
-        } else periode.datoTil.isAfter(periode.datoFra)
     }
 }
 
