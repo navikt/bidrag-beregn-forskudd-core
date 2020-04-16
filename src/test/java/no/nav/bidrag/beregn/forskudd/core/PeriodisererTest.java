@@ -13,8 +13,8 @@ import java.util.List;
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.Periode;
-import no.nav.bidrag.beregn.forskudd.core.bo.Periodiserer;
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode;
+import no.nav.bidrag.beregn.forskudd.core.periode.Periodiserer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
