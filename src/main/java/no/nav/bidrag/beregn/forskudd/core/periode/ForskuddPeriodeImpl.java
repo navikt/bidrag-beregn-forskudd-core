@@ -246,7 +246,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
       //Sjekk om perioder overlapper
       if (sjekkOverlapp) {
-        if (dennePeriode.perioderOverlapper(forrigePeriode)) {
+        if (dennePeriode.overlapper(forrigePeriode)) {
           var feilmelding = "Overlappende perioder i " + dataElement + ": periodeDatoTil=" + forrigePeriode.getDatoTil() + ", periodeDatoFra=" +
               dennePeriode.getDatoFra();
           avvikListe.add(new Avvik(feilmelding, AvvikType.PERIODER_OVERLAPPER));
