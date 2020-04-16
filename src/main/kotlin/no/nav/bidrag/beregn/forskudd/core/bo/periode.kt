@@ -3,7 +3,6 @@ package no.nav.bidrag.beregn.forskudd.core.bo
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
-import java.util.stream.Collectors
 
 interface PeriodisertGrunnlag {
     fun getDatoFraTil(): Periode
