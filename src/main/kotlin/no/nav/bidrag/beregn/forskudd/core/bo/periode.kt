@@ -13,7 +13,14 @@ data class Periode(
         var datoFra: LocalDate,
         val datoTil: LocalDate?
 ) : PeriodisertGrunnlag {
-    constructor(periode: Periode) : this(PeriodeUtil.justerDato(periode.datoFra) ?: periode.datoFra, PeriodeUtil.justerDato(periode.datoTil))
+    companion object {
+        // Juster dato til den første i neste måned (hvis ikke dato er den første i inneværende måned)
+        internal fun justerDato(dato: LocalDate?): LocalDate? {
+            return if (dato == null || dato.dayOfMonth == 1) dato else dato.with(TemporalAdjusters.firstDayOfNextMonth())
+        }
+    }
+
+    constructor(periode: Periode) : this(justerDato(periode.datoFra) ?: periode.datoFra, justerDato(periode.datoTil))
 
     override fun getDatoFraTil(): Periode {
         return this
@@ -37,13 +44,20 @@ data class Periode(
         return PeriodeUtil.datoTilErEtterDatoFra(this)
     }
 
+    // Juster datoer i perioden
+    internal fun justerDatoer(): Periode {
+        val fraDato = justerDato(datoFra)
+        val tilDato = justerDato(datoTil)
+
+        return Periode(fraDato ?: datoFra, tilDato)
+    }
 }
 
 data class BostatusPeriode(
         val bostatusDatoFraTil: Periode,
         val bostatusKode: BostatusKode
 ) : PeriodisertGrunnlag {
-    constructor(bostatusPeriode: BostatusPeriode) : this(PeriodeUtil.justerPeriode(bostatusPeriode.bostatusDatoFraTil), bostatusPeriode.bostatusKode)
+    constructor(bostatusPeriode: BostatusPeriode) : this(bostatusPeriode.bostatusDatoFraTil.justerDatoer(), bostatusPeriode.bostatusKode)
 
     override fun getDatoFraTil(): Periode {
         return bostatusDatoFraTil
@@ -54,7 +68,7 @@ data class InntektPeriode(
         val inntektDatoFraTil: Periode,
         val inntektBelop: BigDecimal
 ) : PeriodisertGrunnlag {
-    constructor(inntektPeriode: InntektPeriode) : this(PeriodeUtil.justerPeriode(inntektPeriode.inntektDatoFraTil), inntektPeriode.inntektBelop)
+    constructor(inntektPeriode: InntektPeriode) : this(inntektPeriode.inntektDatoFraTil.justerDatoer(), inntektPeriode.inntektBelop)
 
     override fun getDatoFraTil(): Periode {
         return inntektDatoFraTil
@@ -65,9 +79,7 @@ data class SivilstandPeriode(
         val sivilstandDatoFraTil: Periode,
         val sivilstandKode: SivilstandKode
 ) : PeriodisertGrunnlag {
-    constructor(sivilstandPeriode: SivilstandPeriode) : this(
-            PeriodeUtil.justerPeriode(sivilstandPeriode.sivilstandDatoFraTil), sivilstandPeriode.sivilstandKode
-    )
+    constructor(sivilstandPeriode: SivilstandPeriode) : this(sivilstandPeriode.sivilstandDatoFraTil.justerDatoer(), sivilstandPeriode.sivilstandKode)
 
     override fun getDatoFraTil(): Periode {
         return sivilstandDatoFraTil
@@ -84,7 +96,7 @@ data class SjablonPeriodeVerdi(
         val sjablonDatoFraTil: Periode,
         val sjablonVerdi: Int
 ) : PeriodisertGrunnlag {
-    constructor(sjablonPeriode: SjablonPeriode) : this(PeriodeUtil.justerPeriode(sjablonPeriode.sjablonDatoFraTil), sjablonPeriode.sjablonVerdi)
+    constructor(sjablonPeriode: SjablonPeriode) : this(sjablonPeriode.sjablonDatoFraTil.justerDatoer(), sjablonPeriode.sjablonVerdi)
 
     override fun getDatoFraTil(): Periode {
         return sjablonDatoFraTil
@@ -102,18 +114,6 @@ data class AlderPeriode(
 }
 
 object PeriodeUtil {
-    // Juster periode
-    fun justerPeriode(periode: Periode): Periode {
-        val fraDato = justerDato(periode.datoFra)
-        val tilDato = justerDato(periode.datoTil)
-
-        return Periode(fraDato ?: periode.datoFra, tilDato)
-    }
-
-    // Juster dato til den første i neste måned (hvis ikke dato er den første i inneværende måned)
-    internal fun justerDato(dato: LocalDate?): LocalDate? {
-        return if (dato == null || dato.dayOfMonth == 1) dato else dato.with(TemporalAdjusters.firstDayOfNextMonth())
-    }
 
     // Sjekk om 2 perioder overlapper (datoFra i periode2 er mindre enn datoTil i periode1)
     // periode1 == null indikerer at periode2 er den første perioden. Ingen kontroll nødvendig
