@@ -29,15 +29,13 @@ import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 @DisplayName("ForskuddCore (dto test)")
 public class ForskuddCoreTest {
 
-  @InjectMocks
-  private final ForskuddCore forskuddCore = ForskuddCore.getInstance();
+  private ForskuddCore forskuddCore;
 
   @Mock
   private ForskuddPeriode forskuddPeriodeMock;
@@ -49,6 +47,7 @@ public class ForskuddCoreTest {
   @BeforeEach
   void initMocksAndService() {
     MockitoAnnotations.initMocks(this);
+    forskuddCore = new ForskuddCoreImpl(forskuddPeriodeMock);
   }
 
   @Test

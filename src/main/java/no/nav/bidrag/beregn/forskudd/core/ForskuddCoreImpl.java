@@ -30,7 +30,11 @@ import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode;
 
 public class ForskuddCoreImpl implements ForskuddCore {
 
-  private final ForskuddPeriode forskuddPeriode = ForskuddPeriode.getInstance();
+  private final ForskuddPeriode forskuddPeriode;
+
+  public ForskuddCoreImpl(ForskuddPeriode forskuddPeriode) {
+    this.forskuddPeriode = forskuddPeriode;
+  }
 
   public BeregnForskuddResultatCore beregnForskudd(BeregnForskuddGrunnlagCore grunnlag) {
     var beregnForskuddGrunnlag = mapTilBusinessObject(grunnlag);

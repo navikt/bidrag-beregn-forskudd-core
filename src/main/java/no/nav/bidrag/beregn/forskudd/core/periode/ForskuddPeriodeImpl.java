@@ -30,7 +30,11 @@ import no.nav.bidrag.beregn.forskudd.core.bo.SjablonPeriodeVerdi;
 
 public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
-  private final ForskuddBeregning forskuddBeregning = ForskuddBeregning.getInstance();
+  private final ForskuddBeregning forskuddBeregning;
+
+  public ForskuddPeriodeImpl(ForskuddBeregning forskuddBeregning) {
+    this.forskuddBeregning = forskuddBeregning;
+  }
 
   public BeregnForskuddResultat beregnPerioder(BeregnForskuddGrunnlag periodeGrunnlag) {
 
