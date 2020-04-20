@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.forskudd.core.bo
 
+import no.nav.bidrag.beregn.felles.bo.Periode
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -83,5 +84,4 @@ enum class AvvikType {
   PERIODER_HAR_OPPHOLD,
   NULL_VERDI_I_DATO,
   DATO_FRA_ETTER_DATO_TIL,
-  INPUT_DATA_MANGLER
 }
