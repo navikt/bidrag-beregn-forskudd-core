@@ -12,10 +12,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import no.nav.bidrag.beregn.felles.bo.Periode;
 import no.nav.bidrag.beregn.forskudd.core.bo.Avvik;
 import no.nav.bidrag.beregn.forskudd.core.bo.AvvikType;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat;
-import no.nav.bidrag.beregn.forskudd.core.bo.Periode;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
@@ -29,15 +29,13 @@ import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 @DisplayName("ForskuddCore (dto test)")
 public class ForskuddCoreTest {
 
-  @InjectMocks
-  private final ForskuddCore forskuddCore = ForskuddCore.getInstance();
+  private ForskuddCore forskuddCore;
 
   @Mock
   private ForskuddPeriode forskuddPeriodeMock;
@@ -49,6 +47,7 @@ public class ForskuddCoreTest {
   @BeforeEach
   void initMocksAndService() {
     MockitoAnnotations.initMocks(this);
+    forskuddCore = new ForskuddCoreImpl(forskuddPeriodeMock);
   }
 
   @Test
