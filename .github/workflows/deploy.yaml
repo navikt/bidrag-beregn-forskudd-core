@@ -20,6 +20,9 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+      - uses: navikt/bidrag-maven/setup@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: navikt/bidrag-maven/verify-dependencies@v1
       - run: mvn -B install -e
       - uses: navikt/bidrag-release/prepare-mvn-pkg@v3
