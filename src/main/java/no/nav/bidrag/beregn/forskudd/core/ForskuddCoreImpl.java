@@ -32,7 +32,7 @@ public class ForskuddCoreImpl implements ForskuddCore {
 
   private final ForskuddPeriode forskuddPeriode;
 
-  public ForskuddCoreImpl(ForskuddPeriode forskuddPeriode) {
+  ForskuddCoreImpl(ForskuddPeriode forskuddPeriode) {
     this.forskuddPeriode = forskuddPeriode;
   }
 
