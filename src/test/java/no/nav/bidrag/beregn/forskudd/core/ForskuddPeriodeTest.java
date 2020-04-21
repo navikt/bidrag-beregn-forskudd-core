@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.forskudd.core;
 
+import static java.util.Collections.emptyList;
 import static no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode.MED_ANDRE_ENN_FORELDRE;
 import static no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode.MED_FORELDRE;
 import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_100_PROSENT;
@@ -21,8 +22,10 @@ import no.nav.bidrag.beregn.forskudd.core.bo.Avvik;
 import no.nav.bidrag.beregn.forskudd.core.bo.AvvikType;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddGrunnlag;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat;
+import no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode;
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode;
+import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandKode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SjablonPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SoknadBarn;
@@ -33,7 +36,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 @TestMethodOrder(OrderAnnotation.class)
-@DisplayName("ForskuddsperiodeberegningTest")
+@DisplayName("ForskuddPeriodeTest")
 class ForskuddPeriodeTest {
 
   private BeregnForskuddGrunnlag grunnlag;
@@ -48,55 +51,67 @@ class ForskuddPeriodeTest {
     assertAll(
         () -> assertThat(resultat).isNotNull(),
         () -> assertThat(resultat.getResultatPeriodeListe()).isNotEmpty(),
-        () -> assertThat(resultat.getResultatPeriodeListe().size()).isEqualTo(8),
+        () -> assertThat(resultat.getResultatPeriodeListe().size()).isEqualTo(9),
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-01-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2017-12-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode())
-            .isEqualTo(INNVILGET_100_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_100_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 8"),
+
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntekt())
+            .isEqualTo(BigDecimal.valueOf(250000)),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerSivilstandKode())
+            .isEqualTo(SivilstandKode.GIFT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getAntallBarnIHusstand() == 2),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSoknadBarnAlder() == 10),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSoknadBarnBostatusKode())
+            .isEqualTo(BostatusKode.MED_FORELDRE),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getForskuddssats100Prosent() == 1600),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getMultiplikatorMaksInntektsgrense() == 320),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getInntektsgrense100ProsentForskudd() == 270200),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getInntektsgrenseEnslig75ProsentForskudd() == 419700),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getInntektsgrenseGift75ProsentForskudd() == 336500),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getInntektsintervallForskudd() == 61700),
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-12-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2018-01-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode())
-            .isEqualTo(INNVILGET_125_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_125_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 7"),
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2018-01-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2018-05-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode())
-            .isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 15"),
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2018-05-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2018-09-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatKode())
-            .isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2018-07-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
 
-        () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2018-09-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2018-12-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatBeregning().getResultatKode())
-            .isEqualTo(INNVILGET_125_PROSENT),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 4"),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2018-07-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2018-09-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
 
-        () -> assertThat(resultat.getResultatPeriodeListe().get(5).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2018-12-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(5).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2019-01-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(5).getResultatBeregning().getResultatKode())
-            .isEqualTo(INNVILGET_75_PROSENT),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(5).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(5).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2018-09-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(5).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2018-12-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(5).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_125_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(5).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 4"),
 
-        () -> assertThat(resultat.getResultatPeriodeListe().get(6).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2019-01-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(6).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2019-04-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(6).getResultatBeregning().getResultatKode())
-            .isEqualTo(INNVILGET_50_PROSENT),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(6).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 12"),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(6).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2018-12-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(6).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2019-01-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(6).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(6).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
 
-        () -> assertThat(resultat.getResultatPeriodeListe().get(7).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2019-04-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(7).getResultatDatoFraTil().getDatoTil()).isNull(),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(7).getResultatBeregning().getResultatKode())
-            .isEqualTo(INNVILGET_75_PROSENT),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(7).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11")
+        () -> assertThat(resultat.getResultatPeriodeListe().get(7).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2019-01-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(7).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2019-04-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(7).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_50_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(7).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 12"),
+
+        () -> assertThat(resultat.getResultatPeriodeListe().get(8).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2019-04-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(8).getResultatDatoFraTil().getDatoTil()).isNull(),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(8).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(8).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11")
     );
     printGrunnlagResultat(resultat);
   }
@@ -132,6 +147,39 @@ class ForskuddPeriodeTest {
     );
     printAvvikListe(avvikListe);
   }
+
+  @Test
+  @DisplayName("Test grunnlag uten barn")
+  void testGrunnlagUtenBarn() {
+    lagGrunnlagUtenBarn();
+    var resultat = forskuddPeriode.beregnPerioder(grunnlag);
+    assertAll(
+        () -> assertThat(resultat).isNotNull(),
+        () -> assertThat(resultat.getResultatPeriodeListe()).isNotEmpty(),
+        () -> assertThat(resultat.getResultatPeriodeListe().size()).isEqualTo(1),
+
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-01-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoTil()).isNull(),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_100_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 8"),
+
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntekt())
+            .isEqualTo(BigDecimal.valueOf(250000)),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerSivilstandKode())
+            .isEqualTo(SivilstandKode.GIFT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getAntallBarnIHusstand() == 2),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSoknadBarnAlder() == 10),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSoknadBarnBostatusKode())
+            .isEqualTo(BostatusKode.MED_FORELDRE),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getForskuddssats100Prosent() == 1600),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getMultiplikatorMaksInntektsgrense() == 320),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getInntektsgrense100ProsentForskudd() == 270200),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getInntektsgrenseEnslig75ProsentForskudd() == 419700),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getInntektsgrenseGift75ProsentForskudd() == 336500),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getInntektsintervallForskudd() == 61700)
+    );
+  }
+
 
   private void lagGrunnlag() {
     var beregnDatoFra = LocalDate.parse("2017-01-01");
@@ -206,6 +254,33 @@ class ForskuddPeriodeTest {
     sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null), "0036", 61700));
 
     grunnlag = new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bmInntektListe, bmSivilstandListe, bmBarnListe,
+        sjablonPeriodeListe);
+  }
+
+  private void lagGrunnlagUtenBarn() {
+    var beregnDatoFra = LocalDate.parse("2017-01-01");
+    var beregnDatoTil = LocalDate.parse("2017-02-01");
+
+    var sBFodselsdato = LocalDate.parse("2006-12-19");
+    var sBBostedStatusListe = new ArrayList<BostatusPeriode>();
+    sBBostedStatusListe.add(new BostatusPeriode(new Periode(LocalDate.parse("2006-12-19"), null), MED_FORELDRE));
+    var soknadBarn = new SoknadBarn(sBFodselsdato, sBBostedStatusListe);
+
+    var bmInntektListe = new ArrayList<InntektPeriode>();
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), BigDecimal.valueOf(250000)));
+
+    var bmSivilstandListe = new ArrayList<SivilstandPeriode>();
+    bmSivilstandListe.add(new SivilstandPeriode(new Periode(LocalDate.parse("2017-01-01"), null), GIFT));
+
+    var sjablonPeriodeListe = new ArrayList<SjablonPeriode>();
+    sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null), "0005", 1600));
+    sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null), "0013", 320));
+    sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null), "0033", 270200));
+    sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null), "0034", 419700));
+    sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null), "0035", 336500));
+    sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null), "0036", 61700));
+
+    grunnlag = new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bmInntektListe, bmSivilstandListe, emptyList(),
         sjablonPeriodeListe);
   }
 
