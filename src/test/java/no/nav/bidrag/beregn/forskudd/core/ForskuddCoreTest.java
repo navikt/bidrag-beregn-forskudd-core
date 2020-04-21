@@ -16,8 +16,11 @@ import no.nav.bidrag.beregn.felles.bo.Periode;
 import no.nav.bidrag.beregn.forskudd.core.bo.Avvik;
 import no.nav.bidrag.beregn.forskudd.core.bo.AvvikType;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat;
+import no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode;
+import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode;
+import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandKode;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore;
@@ -65,44 +68,58 @@ public class ForskuddCoreTest {
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe()).isNotEmpty(),
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().size()).isEqualTo(3),
 
-        () -> assertThat(
-            beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoFra()
-                .equals(LocalDate.parse("2017-01-01"))),
-        () -> assertThat(
-            beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoTil()
-                .equals(LocalDate.parse("2018-01-01"))),
-        () -> assertThat(
-            beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBelop().equals(BigDecimal.valueOf(1600))),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()
-            .equals("INNVILGET_100_PROSENT")),
-        () -> assertThat(
-            beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBeskrivelse().equals("REGEL 1")),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoFra())
+            .isEqualTo(LocalDate.parse("2017-01-01")),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoTil())
+            .isEqualTo(LocalDate.parse("2018-01-01")),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBelop())
+            .isEqualTo(BigDecimal.valueOf(1600)),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode())
+            .isEqualTo("INNVILGET_100_PROSENT"),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBeskrivelse())
+            .isEqualTo("REGEL 1"),
 
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntekt())
+            .isEqualTo(BigDecimal.valueOf(500000)),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerSivilstandKode())
+            .isEqualTo(SivilstandKode.ENSLIG.toString()),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getAntallBarnIHusstand() == 2),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSoknadBarnAlder() == 10),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSoknadBarnBostatusKode())
+            .isEqualTo(BostatusKode.MED_FORELDRE.toString()),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getForskuddssats100Prosent() == 1600),
         () -> assertThat(
-            beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getPeriodeDatoFra()
-                .equals(LocalDate.parse("2018-01-01"))),
+            beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getMultiplikatorMaksInntektsgrense() == 320),
         () -> assertThat(
-            beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getPeriodeDatoTil()
-                .equals(LocalDate.parse("2019-01-01"))),
+            beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getInntektsgrense100ProsentForskudd() == 270200),
         () -> assertThat(
-            beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatBelop().equals(BigDecimal.valueOf(1200))),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode()
-            .equals("INNVILGET_75_PROSENT")),
+            beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getInntektsgrenseEnslig75ProsentForskudd() == 419700),
         () -> assertThat(
-            beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatBeskrivelse().equals("REGEL 2")),
+            beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getInntektsgrenseGift75ProsentForskudd() == 336500),
+        () -> assertThat(
+            beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getInntektsintervallForskudd() == 61700),
 
-        () -> assertThat(
-            beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getPeriodeDatoFra()
-                .equals(LocalDate.parse("2019-01-01"))),
-        () -> assertThat(
-            beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getPeriodeDatoTil()
-                .equals(LocalDate.parse("2020-01-01"))),
-        () -> assertThat(
-            beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBelop().equals(BigDecimal.valueOf(0))),
-        () -> assertThat(
-            beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode().equals("AVSLAG")),
-        () -> assertThat(
-            beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBeskrivelse().equals("REGEL 11"))
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getPeriodeDatoFra())
+            .isEqualTo(LocalDate.parse("2018-01-01")),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getPeriodeDatoTil())
+            .isEqualTo(LocalDate.parse("2019-01-01")),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatBelop())
+            .isEqualTo(BigDecimal.valueOf(1200)),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode())
+            .isEqualTo("INNVILGET_75_PROSENT"),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatBeskrivelse())
+            .isEqualTo("REGEL 2"),
+
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getPeriodeDatoFra())
+            .isEqualTo(LocalDate.parse("2019-01-01")),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getPeriodeDatoTil())
+            .isEqualTo(LocalDate.parse("2020-01-01")),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBelop())
+            .isEqualTo(BigDecimal.valueOf(0)),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode())
+            .isEqualTo("AVSLAG"),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBeskrivelse())
+            .isEqualTo("REGEL 11")
     );
   }
 
@@ -156,15 +173,24 @@ public class ForskuddCoreTest {
 
   private void byggForskuddPeriodeResultat() {
     List<ResultatPeriode> periodeResultatListe = new ArrayList<>();
-    periodeResultatListe
-        .add(new ResultatPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")), new ResultatBeregning(
-            BigDecimal.valueOf(1600), INNVILGET_100_PROSENT, "REGEL 1")));
-    periodeResultatListe
-        .add(new ResultatPeriode(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")), new ResultatBeregning(
-            BigDecimal.valueOf(1200), INNVILGET_75_PROSENT, "REGEL 2")));
-    periodeResultatListe
-        .add(new ResultatPeriode(new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")), new ResultatBeregning(
-            BigDecimal.valueOf(0), AVSLAG, "REGEL 11")));
+    periodeResultatListe.add(new ResultatPeriode(
+        new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
+        new ResultatBeregning(BigDecimal.valueOf(1600), INNVILGET_100_PROSENT, "REGEL 1"),
+        new GrunnlagBeregning(BigDecimal.valueOf(500000), SivilstandKode.ENSLIG, 2, 10, BostatusKode.MED_FORELDRE,
+            1600, 320, 270200, 419700,
+            336500, 61700)));
+    periodeResultatListe.add(new ResultatPeriode(
+        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
+        new ResultatBeregning(BigDecimal.valueOf(1200), INNVILGET_75_PROSENT, "REGEL 2"),
+        new GrunnlagBeregning(BigDecimal.valueOf(500000), SivilstandKode.ENSLIG, 2, 10, BostatusKode.MED_FORELDRE,
+            1600, 320, 270200, 419700,
+            336500, 61700)));
+    periodeResultatListe.add(new ResultatPeriode(
+        new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")),
+        new ResultatBeregning(BigDecimal.valueOf(0), AVSLAG, "REGEL 11"),
+        new GrunnlagBeregning(BigDecimal.valueOf(500000), SivilstandKode.ENSLIG, 2, 10, BostatusKode.MED_FORELDRE,
+            1600, 320, 270200, 419700,
+            336500, 61700)));
     forskuddPeriodeResultat = new BeregnForskuddResultat(periodeResultatListe);
   }
 

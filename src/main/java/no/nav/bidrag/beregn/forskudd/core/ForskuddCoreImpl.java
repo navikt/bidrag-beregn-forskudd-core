@@ -22,6 +22,7 @@ import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.PeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatBeregningCore;
+import no.nav.bidrag.beregn.forskudd.core.dto.ResultatGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.SjablonPeriodeCore;
@@ -132,11 +133,17 @@ public class ForskuddCoreImpl implements ForskuddCore {
     var resultatPeriodeCoreListe = new ArrayList<ResultatPeriodeCore>();
     for (ResultatPeriode periodeResultat : periodeResultatListe) {
       var forskuddBeregningResultat = periodeResultat.getResultatBeregning();
+      var forskuddResultatGrunnlag = periodeResultat.getResultatGrunnlag();
       resultatPeriodeCoreListe.add(new ResultatPeriodeCore(
           new PeriodeCore(periodeResultat.getResultatDatoFraTil().getDatoFra(), periodeResultat.getResultatDatoFraTil().getDatoTil()),
           new ResultatBeregningCore(forskuddBeregningResultat.getResultatBelop(), forskuddBeregningResultat.getResultatKode().toString(),
-              forskuddBeregningResultat.getResultatBeskrivelse())));
-    }
+              forskuddBeregningResultat.getResultatBeskrivelse()),
+          new ResultatGrunnlagCore(forskuddResultatGrunnlag.getBidragMottakerInntekt(),
+              forskuddResultatGrunnlag.getBidragMottakerSivilstandKode().toString(), forskuddResultatGrunnlag.getAntallBarnIHusstand(),
+              forskuddResultatGrunnlag.getSoknadBarnAlder(), forskuddResultatGrunnlag.getSoknadBarnBostatusKode().toString(),
+              forskuddResultatGrunnlag.getForskuddssats100Prosent(), forskuddResultatGrunnlag.getMultiplikatorMaksInntektsgrense(),
+              forskuddResultatGrunnlag.getInntektsgrense100ProsentForskudd(), forskuddResultatGrunnlag.getInntektsgrenseEnslig75ProsentForskudd(),
+              forskuddResultatGrunnlag.getInntektsgrenseGift75ProsentForskudd(), forskuddResultatGrunnlag.getInntektsintervallForskudd())));    }
     return resultatPeriodeCoreListe;
   }
 }

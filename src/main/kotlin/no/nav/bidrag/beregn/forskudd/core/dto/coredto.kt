@@ -49,13 +49,27 @@ data class BeregnForskuddResultatCore(
 
 data class ResultatPeriodeCore(
     val resultatDatoFraTil: PeriodeCore,
-    val resultatBeregning: ResultatBeregningCore
-)
+    val resultatBeregning: ResultatBeregningCore,
+    val resultatGrunnlag: ResultatGrunnlagCore)
 
 data class ResultatBeregningCore(
     val resultatBelop: BigDecimal,
     val resultatKode: String,
     val resultatBeskrivelse: String
+)
+
+data class ResultatGrunnlagCore(
+    val bidragMottakerInntekt: BigDecimal,
+    val bidragMottakerSivilstandKode: String,
+    val antallBarnIHusstand: Int,
+    val soknadBarnAlder: Int,
+    val soknadBarnBostatusKode: String,
+    val forskuddssats100Prosent: Int,
+    val multiplikatorMaksInntektsgrense: Int,
+    val inntektsgrense100ProsentForskudd: Int,
+    val inntektsgrenseEnslig75ProsentForskudd: Int,
+    val inntektsgrenseGift75ProsentForskudd: Int,
+    val inntektsintervallForskudd: Int
 )
 
 data class AvvikCore(

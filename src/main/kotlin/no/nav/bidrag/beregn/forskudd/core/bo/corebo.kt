@@ -29,8 +29,8 @@ data class BeregnForskuddResultat(
 
 data class ResultatPeriode(
     val resultatDatoFraTil: Periode,
-    val resultatBeregning: ResultatBeregning
-)
+    val resultatBeregning: ResultatBeregning,
+    val resultatGrunnlag: GrunnlagBeregning)
 
 
 // Avvik periode
@@ -53,6 +53,14 @@ data class GrunnlagBeregning(
     val inntektsgrenseEnslig75ProsentForskudd: Int,
     val inntektsgrenseGift75ProsentForskudd: Int,
     val inntektsintervallForskudd: Int
+)
+
+
+// Resultat beregning
+data class ResultatBeregning(
+    val resultatBelop: BigDecimal,
+    val resultatKode: ResultatKode,
+    val resultatBeskrivelse: String
 )
 
 
