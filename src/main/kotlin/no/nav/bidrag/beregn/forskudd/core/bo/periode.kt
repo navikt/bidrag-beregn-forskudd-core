@@ -1,8 +1,11 @@
 package no.nav.bidrag.beregn.forskudd.core.bo
 
-import java.math.BigDecimal
 import no.nav.bidrag.beregn.felles.bo.Periode
 import no.nav.bidrag.beregn.felles.bo.PeriodisertGrunnlag
+import no.nav.bidrag.beregn.felles.enums.BostatusKode
+import no.nav.bidrag.beregn.felles.enums.SivilstandKode
+import java.math.BigDecimal
+
 
 data class BostatusPeriode(
         val bostatusDatoFraTil: Periode,

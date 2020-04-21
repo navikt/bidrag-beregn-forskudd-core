@@ -21,6 +21,7 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 Versjon | Endringstype      | Beskrivelse
 --------|-------------------|------------
+0.1.1   | Endring           | Flyttet ENUMs til felles
 0.1.0   | Endring           | Lagt til grunnlaget for beregningen som en del av resulatet, samt fjernet merge av like perioder
 0.0.8   | Endring           | Refaktorert kode og skrevet om dataklasser
 0.0.7   | Endring           | Lagt til dokumentasjon av modulen i README.md

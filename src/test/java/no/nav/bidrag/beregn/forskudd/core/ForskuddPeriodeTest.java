@@ -1,14 +1,14 @@
 package no.nav.bidrag.beregn.forskudd.core;
 
 import static java.util.Collections.emptyList;
-import static no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode.MED_ANDRE_ENN_FORELDRE;
-import static no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode.MED_FORELDRE;
+import static no.nav.bidrag.beregn.felles.enums.BostatusKode.MED_ANDRE_ENN_FORELDRE;
+import static no.nav.bidrag.beregn.felles.enums.BostatusKode.MED_FORELDRE;
+import static no.nav.bidrag.beregn.felles.enums.SivilstandKode.ENSLIG;
+import static no.nav.bidrag.beregn.felles.enums.SivilstandKode.GIFT;
 import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_100_PROSENT;
 import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_125_PROSENT;
 import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_50_PROSENT;
 import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_75_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.bo.SivilstandKode.ENSLIG;
-import static no.nav.bidrag.beregn.forskudd.core.bo.SivilstandKode.GIFT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -18,14 +18,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import no.nav.bidrag.beregn.felles.bo.Periode;
+import no.nav.bidrag.beregn.felles.enums.AvvikType;
+import no.nav.bidrag.beregn.felles.enums.BostatusKode;
+import no.nav.bidrag.beregn.felles.enums.SivilstandKode;
 import no.nav.bidrag.beregn.forskudd.core.bo.Avvik;
-import no.nav.bidrag.beregn.forskudd.core.bo.AvvikType;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddGrunnlag;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat;
-import no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode;
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode;
-import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandKode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SjablonPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SoknadBarn;

@@ -1,7 +1,8 @@
 package no.nav.bidrag.beregn.forskudd.core.beregning;
 
-import static no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode.ENSLIG_ASYLANT;
-import static no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode.MED_FORELDRE;
+import static no.nav.bidrag.beregn.felles.enums.BostatusKode.ENSLIG_ASYLANT;
+import static no.nav.bidrag.beregn.felles.enums.BostatusKode.MED_FORELDRE;
+import static no.nav.bidrag.beregn.felles.enums.SivilstandKode.ENSLIG;
 import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.AVSLAG;
 import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_100_PROSENT;
 import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_125_PROSENT;
@@ -9,14 +10,13 @@ import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_200_P
 import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_250_PROSENT;
 import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_50_PROSENT;
 import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_75_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.bo.SivilstandKode.ENSLIG;
 
 import com.google.common.base.Preconditions;
 import java.math.BigDecimal;
+import no.nav.bidrag.beregn.felles.enums.SivilstandKode;
 import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode;
-import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandKode;
 
 public class ForskuddBeregningImpl implements ForskuddBeregning {
 
