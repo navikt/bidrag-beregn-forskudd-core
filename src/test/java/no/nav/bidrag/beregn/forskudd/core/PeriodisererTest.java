@@ -1,9 +1,9 @@
 package no.nav.bidrag.beregn.forskudd.core;
 
-import static no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode.MED_ANDRE_ENN_FORELDRE;
-import static no.nav.bidrag.beregn.forskudd.core.bo.BostatusKode.MED_FORELDRE;
-import static no.nav.bidrag.beregn.forskudd.core.bo.SivilstandKode.ENSLIG;
-import static no.nav.bidrag.beregn.forskudd.core.bo.SivilstandKode.GIFT;
+import static no.nav.bidrag.beregn.felles.enums.BostatusKode.MED_ANDRE_ENN_FORELDRE;
+import static no.nav.bidrag.beregn.felles.enums.BostatusKode.MED_FORELDRE;
+import static no.nav.bidrag.beregn.felles.enums.SivilstandKode.ENSLIG;
+import static no.nav.bidrag.beregn.felles.enums.SivilstandKode.GIFT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 

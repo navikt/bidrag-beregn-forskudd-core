@@ -1,6 +1,9 @@
 package no.nav.bidrag.beregn.forskudd.core.bo
 
 import no.nav.bidrag.beregn.felles.bo.Periode
+import no.nav.bidrag.beregn.felles.enums.AvvikType
+import no.nav.bidrag.beregn.felles.enums.BostatusKode
+import no.nav.bidrag.beregn.felles.enums.SivilstandKode
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -73,23 +76,4 @@ enum class ResultatKode {
   INNVILGET_125_PROSENT,
   INNVILGET_200_PROSENT,
   INNVILGET_250_PROSENT
-}
-
-enum class BostatusKode {
-  ALENE,
-  MED_FORELDRE,
-  MED_ANDRE_ENN_FORELDRE,
-  ENSLIG_ASYLANT
-}
-
-enum class SivilstandKode {
-  GIFT,
-  ENSLIG
-}
-
-enum class AvvikType {
-  PERIODER_OVERLAPPER,
-  PERIODER_HAR_OPPHOLD,
-  NULL_VERDI_I_DATO,
-  DATO_FRA_ETTER_DATO_TIL,
 }
