@@ -26,6 +26,7 @@ import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddGrunnlag;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode;
+import no.nav.bidrag.beregn.forskudd.core.bo.InntektType;
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SjablonPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SoknadBarn;
@@ -180,6 +181,46 @@ class ForskuddPeriodeTest {
     );
   }
 
+  @Test
+  @DisplayName("Test grunnlag med flere inntekter i samme periode")
+  void testGrunnlagMedFlereInntekterISammePeriode() {
+    lagGrunnlagMedFlereInntekterISammePeriode();
+    var resultat = forskuddPeriode.beregnPerioder(grunnlag);
+    assertAll(
+        () -> assertThat(resultat).isNotNull(),
+        () -> assertThat(resultat.getResultatPeriodeListe()).isNotEmpty(),
+        () -> assertThat(resultat.getResultatPeriodeListe().size()).isEqualTo(4),
+
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-01-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoTil()).isNull(),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_100_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 8"),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntekt())
+            .isEqualTo(BigDecimal.valueOf(410000)),
+
+        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-04-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getDatoTil()).isNull(),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_100_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 8"),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntekt())
+            .isEqualTo(BigDecimal.valueOf(425000)),
+
+        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-06-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoTil()).isNull(),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_100_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 8"),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntekt())
+            .isEqualTo(BigDecimal.valueOf(415000)),
+
+        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-09-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoTil()).isNull(),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_100_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 8"),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntekt())
+            .isEqualTo(BigDecimal.valueOf(400000))
+        );
+  }
+
 
   private void lagGrunnlag() {
     var beregnDatoFra = LocalDate.parse("2017-01-01");
@@ -194,9 +235,11 @@ class ForskuddPeriodeTest {
     var soknadBarn = new SoknadBarn(sBFodselsdato, sBBostedStatusListe);
 
     var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")), BigDecimal.valueOf(250000)));
-    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")), BigDecimal.valueOf(400000)));
-    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2019-01-01"), null), BigDecimal.valueOf(500000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")), InntektType.LØNNSINNTEKT,
+        BigDecimal.valueOf(250000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")), InntektType.LØNNSINNTEKT,
+        BigDecimal.valueOf(400000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2019-01-01"), null), InntektType.LØNNSINNTEKT, BigDecimal.valueOf(500000)));
 
     var bmSivilstandListe = new ArrayList<SivilstandPeriode>();
     bmSivilstandListe.add(new SivilstandPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-17")), GIFT));
@@ -232,9 +275,10 @@ class ForskuddPeriodeTest {
     var soknadBarn = new SoknadBarn(sBFodselsdato, sBBostedStatusListe);
 
     var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-02")), BigDecimal.valueOf(250000)));
-    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2018-01-01"), null), BigDecimal.valueOf(400000)));
-    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2019-01-01"), null), BigDecimal.valueOf(500000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-02")), InntektType.LØNNSINNTEKT,
+        BigDecimal.valueOf(250000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2018-01-01"), null), InntektType.LØNNSINNTEKT, BigDecimal.valueOf(400000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2019-01-01"), null), InntektType.LØNNSINNTEKT, BigDecimal.valueOf(500000)));
 
     var bmSivilstandListe = new ArrayList<SivilstandPeriode>();
     bmSivilstandListe.add(new SivilstandPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-01")), GIFT));
@@ -267,7 +311,7 @@ class ForskuddPeriodeTest {
     var soknadBarn = new SoknadBarn(sBFodselsdato, sBBostedStatusListe);
 
     var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), BigDecimal.valueOf(250000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.LØNNSINNTEKT, BigDecimal.valueOf(250000)));
 
     var bmSivilstandListe = new ArrayList<SivilstandPeriode>();
     bmSivilstandListe.add(new SivilstandPeriode(new Periode(LocalDate.parse("2017-01-01"), null), GIFT));
@@ -283,6 +327,42 @@ class ForskuddPeriodeTest {
     grunnlag = new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bmInntektListe, bmSivilstandListe, emptyList(),
         sjablonPeriodeListe);
   }
+
+
+  private void lagGrunnlagMedFlereInntekterISammePeriode() {
+    var beregnDatoFra = LocalDate.parse("2017-01-01");
+    var beregnDatoTil = LocalDate.parse("2018-01-01");
+
+    var sBFodselsdato = LocalDate.parse("2007-12-19");
+    var sBBostedStatusListe = new ArrayList<BostatusPeriode>();
+    sBBostedStatusListe.add(new BostatusPeriode(new Periode(LocalDate.parse("2017-01-01"), null), MED_FORELDRE));
+    var soknadBarn = new SoknadBarn(sBFodselsdato, sBBostedStatusListe);
+
+    var bmInntektListe = new ArrayList<InntektPeriode>();
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.LØNNSINNTEKT, BigDecimal.valueOf(400000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2017-06-01")), InntektType.KAPITALINNTEKT,
+        BigDecimal.valueOf(10000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-04-01"), LocalDate.parse("2017-09-01")), InntektType.BARNETRYGD,
+        BigDecimal.valueOf(15000)));
+
+    var bmSivilstandListe = new ArrayList<SivilstandPeriode>();
+    bmSivilstandListe.add(new SivilstandPeriode(new Periode(LocalDate.parse("2017-01-01"), null), ENSLIG));
+
+    var bmBarnListe = new ArrayList<Periode>();
+    bmBarnListe.add(new Periode(LocalDate.parse("2017-01-01"), null));
+
+    var sjablonPeriodeListe = new ArrayList<SjablonPeriode>();
+    sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null), "0005", 1600));
+    sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null), "0013", 320));
+    sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null), "0033", 270200));
+    sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null), "0034", 419700));
+    sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null), "0035", 336500));
+    sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null), "0036", 61700));
+
+    grunnlag = new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bmInntektListe, bmSivilstandListe, bmBarnListe,
+        sjablonPeriodeListe);
+  }
+
 
   private void printGrunnlagResultat(BeregnForskuddResultat resultat) {
     resultat.getResultatPeriodeListe().stream().sorted(Comparator.comparing(pR -> pR.getResultatDatoFraTil().getDatoFra()))

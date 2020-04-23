@@ -11,6 +11,7 @@ import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddGrunnlag;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode;
+import no.nav.bidrag.beregn.forskudd.core.bo.InntektType;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SjablonPeriode;
@@ -82,6 +83,7 @@ public class ForskuddCoreImpl implements ForskuddCore {
       bidragMottakerInntektPeriodeListe.add(new InntektPeriode(
           new Periode(bidragMottakerInntektPeriodeCore.getInntektDatoFraTil().getPeriodeDatoFra(),
               bidragMottakerInntektPeriodeCore.getInntektDatoFraTil().getPeriodeDatoTil()),
+          InntektType.valueOf(bidragMottakerInntektPeriodeCore.getInntektType()),
           bidragMottakerInntektPeriodeCore.getInntektBelop()));
     }
     return bidragMottakerInntektPeriodeListe;

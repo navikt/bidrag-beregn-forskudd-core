@@ -19,6 +19,7 @@ import no.nav.bidrag.beregn.felles.enums.SivilstandKode;
 import no.nav.bidrag.beregn.forskudd.core.bo.Avvik;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning;
+import no.nav.bidrag.beregn.forskudd.core.bo.InntektType;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
@@ -150,12 +151,12 @@ public class ForskuddCoreTest {
     var soknadBarn = new SoknadBarnCore(LocalDate.parse("2006-05-12"), bostatusPeriodeListe);
 
     var bidragMottakerInntektPeriode = new InntektPeriodeCore(
-        new PeriodeCore(LocalDate.parse("2017-01-01"), null), BigDecimal.valueOf(0));
+        new PeriodeCore(LocalDate.parse("2017-01-01"), null), InntektType.LØNNSINNTEKT.toString(), BigDecimal.valueOf(0));
     var bidragMottakerInntektPeriodeListe = new ArrayList<InntektPeriodeCore>();
     bidragMottakerInntektPeriodeListe.add(bidragMottakerInntektPeriode);
 
     var bidragMottakerSivilstandPeriode = new SivilstandPeriodeCore(
-        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "GIFT");
+        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), SivilstandKode.GIFT.toString());
     var bidragMottakerSivilstandPeriodeListe = new ArrayList<SivilstandPeriodeCore>();
     bidragMottakerSivilstandPeriodeListe.add(bidragMottakerSivilstandPeriode);
 

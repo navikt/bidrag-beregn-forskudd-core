@@ -26,6 +26,7 @@ data class BostatusPeriodeCore(
 
 data class InntektPeriodeCore(
     val inntektDatoFraTil: PeriodeCore,
+    val inntektType: String,
     val inntektBelop: BigDecimal
 )
 

@@ -4,6 +4,7 @@ import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
 import static java.time.temporal.TemporalAdjusters.firstDayOfNextMonth;
 import static java.util.stream.Collectors.toCollection;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -89,7 +90,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     // Løper gjennom periodene og finner matchende verdi for hver kategori
     for (Periode beregningsperiode : perioder) {
       var inntektBelop = justertInntektPeriodeListe.stream().filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
-          .map(InntektPeriode::getInntektBelop).findFirst().orElse(null);
+          .map(InntektPeriode::getInntektBelop).reduce(BigDecimal.ZERO, BigDecimal::add);
 
       var sivilstandKode = justertSivilstandPeriodeListe.stream().filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
           .map(SivilstandPeriode::getSivilstandKode).findFirst().orElse(null);
@@ -190,7 +191,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     for (InntektPeriode bidragMottakerInntektPeriode : periodeGrunnlag.getBidragMottakerInntektPeriodeListe()) {
       bidragMottakerInntektPeriodeListe.add(bidragMottakerInntektPeriode.getDatoFraTil());
     }
-    avvikListe.addAll(validerInput("bidragMottakerInntektPeriodeListe", bidragMottakerInntektPeriodeListe, true, true, true));
+    avvikListe.addAll(validerInput("bidragMottakerInntektPeriodeListe", bidragMottakerInntektPeriodeListe, false, true, true));
 
     // Sjekk perioder for sivilstand
     var bidragMottakerSivilstandPeriodeListe = new ArrayList<Periode>();
