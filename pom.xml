@@ -40,14 +40,6 @@
     <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
   </properties>
 
-  <repositories>
-    <!-- Skal brukes hvis bygget kjøres fra en Github Action -->
-    <repository>
-      <id>github-package-registry-navikt</id>
-      <url>https://maven.pkg.github.com/navikt/maven-release</url>
-    </repository>
-  </repositories>
-
   <distributionManagement>
     <repository>
       <id>github</id>
