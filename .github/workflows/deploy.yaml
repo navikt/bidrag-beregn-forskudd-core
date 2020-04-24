@@ -20,9 +20,10 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - run: echo ::set-output name=tag::${{ mvn help:evaluate -Dexpression=bidrag-beregn-felles.version -q -DforceStdout }}
-        id: dependency
-      - run: git clone --branch ${{ steps.dependency.outputs.tag }} --depth=1 --single-branch https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/navikt/bidrag-beregn-felles
+#      - run: echo ::set-output name=tag::${{ mvn help:evaluate -Dexpression=bidrag-beregn-felles.version -q -DforceStdout }}
+#        id: dependency
+#      - run: git clone --branch ${{ steps.dependency.outputs.tag }} --depth=1 --single-branch https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/navikt/bidrag-beregn-felles
+      - run: git clone --branch 0.0.4 --depth=1 --single-branch https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/navikt/bidrag-beregn-felles
       - run: cd bidrag-beregn-felles && mvn -B install -e -DskipTests && cd ..
       - uses: navikt/bidrag-maven/verify-dependencies@v1
       - run: mvn -B install -e
