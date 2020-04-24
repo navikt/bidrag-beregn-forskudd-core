@@ -20,9 +20,17 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - uses: navikt/bidrag-maven/setup@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: echo ::set-output name=tag::${ mvn help:evaluate -Dexpression=bidrag-beregn-felles.version  -q -DforceStdout | sed 's/%//' }
+        id: dependency
+      - name: Checkout tagged version of bidrag-beregn-felles
+        uses: actions/checkout@v2
+        with:
+          repository: navikt/bidrag-beregn-felles
+          ref: ${{ steps.depencdency.outputs.tag }}
+      - run: env
+      - run: cd bidrag-beregn-felles
+      - run: mvn -B install -e -DskipTests
+      - uses: actions/checkout@v2
       - uses: navikt/bidrag-maven/verify-dependencies@v1
       - run: mvn -B install -e
       - uses: navikt/bidrag-release/prepare-mvn-pkg@v3
