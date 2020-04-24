@@ -11,6 +11,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - run: pwd && ls -all
       - uses: actions/setup-java@v1.3.0
         with:
           java-version: '13'
@@ -20,14 +21,15 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - run: echo ::set-output name=tag::${ mvn help:evaluate -Dexpression=bidrag-beregn-felles.version  -q -DforceStdout | sed 's/%//' }
+      - run: echo ::set-output name=tag::${ mvn help:evaluate -Dexpression=bidrag-beregn-felles.version  -q -DforceStdout }
         id: dependency
+      - run: echo "checkout tagged version ${{ steps.depencdency.outputs.tag }}"
       - name: Checkout tagged version of bidrag-beregn-felles
         uses: actions/checkout@v2
         with:
           repository: navikt/bidrag-beregn-felles
           ref: ${{ steps.depencdency.outputs.tag }}
-      - run: env
+      - run: pwd && ls -all
       - run: cd bidrag-beregn-felles
       - run: mvn -B install -e -DskipTests
       - uses: actions/checkout@v2
