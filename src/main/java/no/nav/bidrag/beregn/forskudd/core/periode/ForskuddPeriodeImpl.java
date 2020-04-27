@@ -3,8 +3,8 @@ package no.nav.bidrag.beregn.forskudd.core.periode;
 import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
 import static java.time.temporal.TemporalAdjusters.firstDayOfNextMonth;
 import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toList;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,6 +21,7 @@ import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddGrunnlag;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning;
+import no.nav.bidrag.beregn.forskudd.core.bo.Inntekt;
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode;
@@ -89,8 +90,9 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
     // Løper gjennom periodene og finner matchende verdi for hver kategori
     for (Periode beregningsperiode : perioder) {
-      var inntektBelop = justertInntektPeriodeListe.stream().filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
-          .map(InntektPeriode::getInntektBelop).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+      var inntektListe = justertInntektPeriodeListe.stream().filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
+          .map(inntektPeriode -> new Inntekt(inntektPeriode.getInntektType(), inntektPeriode.getInntektBelop())).collect(toList());
 
       var sivilstandKode = justertSivilstandPeriodeListe.stream().filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
           .map(SivilstandPeriode::getSivilstandKode).findFirst().orElse(null);
@@ -116,7 +118,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
       }
 
       // Kaller beregningsmodulen for hver beregningsperiode
-      var grunnlagBeregning = new GrunnlagBeregning(inntektBelop, sivilstandKode, antallBarn, alder, bostatusKode, forskuddssats100Prosent,
+      var grunnlagBeregning = new GrunnlagBeregning(inntektListe, sivilstandKode, antallBarn, alder, bostatusKode, forskuddssats100Prosent,
           multiplikatorMaksInntektsgrense, inntektsgrense100ProsentForskudd, inntektsgrenseEnslig75ProsentForskudd,
           inntektsgrenseGift75ProsentForskudd, inntektsintervallForskudd);
 

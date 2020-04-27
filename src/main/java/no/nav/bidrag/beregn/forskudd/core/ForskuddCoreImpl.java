@@ -1,5 +1,8 @@
 package no.nav.bidrag.beregn.forskudd.core;
 
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,6 +13,7 @@ import no.nav.bidrag.beregn.forskudd.core.bo.Avvik;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddGrunnlag;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode;
+import no.nav.bidrag.beregn.forskudd.core.bo.Inntekt;
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektType;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode;
@@ -20,6 +24,7 @@ import no.nav.bidrag.beregn.forskudd.core.dto.AvvikCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddResultatCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore;
+import no.nav.bidrag.beregn.forskudd.core.dto.InntektCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.PeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatBeregningCore;
@@ -74,7 +79,8 @@ public class ForskuddCoreImpl implements ForskuddCore {
               bidragMottakerBostatusPeriodeCore.getBostatusDatoFraTil().getPeriodeDatoTil()),
           BostatusKode.valueOf(bidragMottakerBostatusPeriodeCore.getBostatusKode())));
     }
-    return bidragMottakerBostatusPeriodeListe;
+    return bidragMottakerBostatusPeriodeListe.stream()
+        .sorted(comparing(bostatusPeriode -> bostatusPeriode.getBostatusDatoFraTil().getDatoFra())).collect(toList());
   }
 
   private List<InntektPeriode> mapBidragMottakerInntektPeriodeListe(List<InntektPeriodeCore> bidragMottakerInntektPeriodeListeCore) {
@@ -86,7 +92,8 @@ public class ForskuddCoreImpl implements ForskuddCore {
           InntektType.valueOf(bidragMottakerInntektPeriodeCore.getInntektType()),
           bidragMottakerInntektPeriodeCore.getInntektBelop()));
     }
-    return bidragMottakerInntektPeriodeListe;
+    return bidragMottakerInntektPeriodeListe.stream()
+        .sorted(comparing(inntektPeriode -> inntektPeriode.getInntektDatoFraTil().getDatoFra())).collect(toList());
   }
 
   private List<SivilstandPeriode> mapBidragMottakerSivilstandPeriodeListe(List<SivilstandPeriodeCore> bidragMottakerSivilstandPeriodeListeCore) {
@@ -97,7 +104,8 @@ public class ForskuddCoreImpl implements ForskuddCore {
               bidragMottakerSivilstandPeriodeCore.getSivilstandDatoFraTil().getPeriodeDatoTil()),
           SivilstandKode.valueOf(bidragMottakerSivilstandPeriodeCore.getSivilstandKode())));
     }
-    return bidragMottakerSivilstandPeriodeListe;
+    return bidragMottakerSivilstandPeriodeListe.stream()
+        .sorted(comparing(sivilstandPeriode -> sivilstandPeriode.getSivilstandDatoFraTil().getDatoFra())).collect(toList());
   }
 
   private List<Periode> mapBidragMottakerBarnPeriodeListe(List<PeriodeCore> bidragMottakerBarnPeriodeListeCore) {
@@ -106,7 +114,8 @@ public class ForskuddCoreImpl implements ForskuddCore {
       bidragMottakerBarnPeriodeListe
           .add(new Periode(bidragMottakerBarnPeriodeCore.getPeriodeDatoFra(), bidragMottakerBarnPeriodeCore.getPeriodeDatoTil()));
     }
-    return bidragMottakerBarnPeriodeListe;
+    return bidragMottakerBarnPeriodeListe.stream()
+        .sorted(comparing(barnPeriode -> barnPeriode.getDatoFraTil().getDatoFra())).collect(toList());
   }
 
   private List<SjablonPeriode> mapSjablonPeriodeListe(List<SjablonPeriodeCore> sjablonPeriodeListeCore) {
@@ -140,12 +149,22 @@ public class ForskuddCoreImpl implements ForskuddCore {
           new PeriodeCore(periodeResultat.getResultatDatoFraTil().getDatoFra(), periodeResultat.getResultatDatoFraTil().getDatoTil()),
           new ResultatBeregningCore(forskuddBeregningResultat.getResultatBelop(), forskuddBeregningResultat.getResultatKode().toString(),
               forskuddBeregningResultat.getResultatBeskrivelse()),
-          new ResultatGrunnlagCore(forskuddResultatGrunnlag.getBidragMottakerInntekt(),
+          new ResultatGrunnlagCore(mapResultatGrunnlagInntekt(forskuddResultatGrunnlag.getBidragMottakerInntektListe()),
               forskuddResultatGrunnlag.getBidragMottakerSivilstandKode().toString(), forskuddResultatGrunnlag.getAntallBarnIHusstand(),
               forskuddResultatGrunnlag.getSoknadBarnAlder(), forskuddResultatGrunnlag.getSoknadBarnBostatusKode().toString(),
               forskuddResultatGrunnlag.getForskuddssats100Prosent(), forskuddResultatGrunnlag.getMultiplikatorMaksInntektsgrense(),
               forskuddResultatGrunnlag.getInntektsgrense100ProsentForskudd(), forskuddResultatGrunnlag.getInntektsgrenseEnslig75ProsentForskudd(),
-              forskuddResultatGrunnlag.getInntektsgrenseGift75ProsentForskudd(), forskuddResultatGrunnlag.getInntektsintervallForskudd())));    }
+              forskuddResultatGrunnlag.getInntektsgrenseGift75ProsentForskudd(), forskuddResultatGrunnlag.getInntektsintervallForskudd())));
+    }
     return resultatPeriodeCoreListe;
+  }
+
+  private List<InntektCore> mapResultatGrunnlagInntekt(List<Inntekt> resultatGrunnlagInntektListe) {
+    var resultatGrunnlagInntektListeCore = new ArrayList<InntektCore>();
+    for (Inntekt resultatGrunnlagInntekt : resultatGrunnlagInntektListe) {
+      resultatGrunnlagInntektListeCore
+          .add(new InntektCore(resultatGrunnlagInntekt.getInntektType().toString(), resultatGrunnlagInntekt.getInntektBelop()));
+    }
+    return resultatGrunnlagInntektListeCore;
   }
 }

@@ -45,7 +45,7 @@ data class Avvik(
 
 // Grunnlag beregning
 data class GrunnlagBeregning(
-    val bidragMottakerInntekt: BigDecimal,
+    val bidragMottakerInntektListe: List<Inntekt>,
     val bidragMottakerSivilstandKode: SivilstandKode,
     val antallBarnIHusstand: Int,
     val soknadBarnAlder: Int,
@@ -56,6 +56,11 @@ data class GrunnlagBeregning(
     val inntektsgrenseEnslig75ProsentForskudd: Int,
     val inntektsgrenseGift75ProsentForskudd: Int,
     val inntektsintervallForskudd: Int
+)
+
+data class Inntekt(
+    val inntektType: InntektType,
+    val inntektBelop: BigDecimal
 )
 
 

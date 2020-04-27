@@ -3,7 +3,7 @@
 
   <groupId>no.nav.bidrag</groupId>
   <artifactId>bidrag-beregn-forskudd-core</artifactId>
-  <version>0.1.1-SNAPSHOT</version>
+  <version>0.2.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>bidrag-beregn-forskudd-core</name>
   <description>Forskuddsberegning</description>
@@ -35,38 +35,10 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <!-- dependencies -->
-    <bidrag-beregn-felles.version>0.0.4</bidrag-beregn-felles.version>
+    <bidrag-beregn-felles.version>0.0.5</bidrag-beregn-felles.version>
     <guava.version>28.2-jre</guava.version>
     <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
   </properties>
-
-  <repositories>
-    <!-- Mirror foran Maven Central (brukes kun internt) -->
-    <repository>
-      <id>nexus-internal-mirror</id>
-      <url>https://repo.adeo.no/repository/maven-public</url>
-    </repository>
-    <!-- Det generelle interne Nexus-repoet til NAV (brukes kun internt) -->
-    <repository>
-      <id>nexus-internal-releases</id>
-      <url>https://repo.adeo.no/repository/maven-releases</url>
-    </repository>
-    <!-- Skal brukes hvis bygget kjører internt (f.eks. Jenkins, fra utviklerimage, eller via ScaleFT) -->
-    <repository>
-      <id>internal-mirror-github-navikt</id>
-      <url>https://repo.adeo.no/repository/github-package-registry-navikt/</url>
-    </repository>
-    <!-- Skal brukes hvis bygget kjøres fra en Github Action -->
-    <repository>
-      <id>github-package-registry-navikt</id>
-      <url>https://maven.pkg.github.com/navikt/maven-release</url>
-    </repository>
-    <!-- Skal brukes hvis bygget kjører utenfor NAV (f.eks. en ekstern maskin, eller Circle CI) -->
-    <repository>
-      <id>external-mirror-github-navikt</id>
-      <url>https://github-package-registry-mirror-sr4qwz23da-ew.a.run.app/cached/maven-release</url>
-    </repository>
-  </repositories>
 
   <distributionManagement>
     <repository>

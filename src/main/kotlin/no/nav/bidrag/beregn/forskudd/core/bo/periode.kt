@@ -68,10 +68,3 @@ data class AlderPeriode(
     return alderDatoFraTil
   }
 }
-
-enum class InntektType {
-  LØNNSINNTEKT,
-  KAPITALINNTEKT,
-  BARNETRYGD,
-  KONTANTSTØTTE
-}

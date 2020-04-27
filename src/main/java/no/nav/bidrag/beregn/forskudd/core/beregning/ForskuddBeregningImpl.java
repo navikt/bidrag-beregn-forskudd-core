@@ -15,6 +15,7 @@ import com.google.common.base.Preconditions;
 import java.math.BigDecimal;
 import no.nav.bidrag.beregn.felles.enums.SivilstandKode;
 import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning;
+import no.nav.bidrag.beregn.forskudd.core.bo.Inntekt;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode;
 
@@ -33,6 +34,10 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
     ResultatKode resultatKode;
     String regel;
 
+    // Legger sammen inntektene
+    var bidragMottakerInntekt = grunnlag.getBidragMottakerInntektListe().stream().map(Inntekt::getInntektBelop)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
     // Søknadsbarn er over 18 år (REGEL 1)
     if (grunnlag.getSoknadBarnAlder() >= 18) {
       resultatKode = AVSLAG;
@@ -49,12 +54,12 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
       regel = (resultatKode.equals(INNVILGET_125_PROSENT) ? "REGEL 4" : "REGEL 5");
 
       // Over maks inntektsgrense for forskudd (REGEL 6)
-    } else if (!(erUnderInntektsGrense(maksInntektsgrense, grunnlag.getBidragMottakerInntekt()))) {
+    } else if (!(erUnderInntektsGrense(maksInntektsgrense, bidragMottakerInntekt))) {
       resultatKode = AVSLAG;
       regel = "REGEL 6";
 
       // Under maks inntektsgrense for fullt forskudd (REGEL 7/8)
-    } else if (erUnderInntektsGrense(grunnlag.getInntektsgrense100ProsentForskudd(), grunnlag.getBidragMottakerInntekt())) {
+    } else if (erUnderInntektsGrense(grunnlag.getInntektsgrense100ProsentForskudd(), bidragMottakerInntekt)) {
       resultatKode = (grunnlag.getSoknadBarnAlder() >= 11) ? INNVILGET_125_PROSENT : INNVILGET_100_PROSENT;
       regel = (resultatKode.equals(INNVILGET_125_PROSENT) ? "REGEL 7" : "REGEL 8");
 
@@ -62,8 +67,8 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
     } else {
       resultatKode = (erUnderInntektsGrense(
           settInntektsgrense(grunnlag.getBidragMottakerSivilstandKode(), grunnlag.getInntektsgrenseEnslig75ProsentForskudd(),
-              grunnlag.getInntektsgrenseGift75ProsentForskudd()) + inntektsIntervallTotal,
-          grunnlag.getBidragMottakerInntekt())) ? INNVILGET_75_PROSENT : INNVILGET_50_PROSENT;
+              grunnlag.getInntektsgrenseGift75ProsentForskudd()) + inntektsIntervallTotal, bidragMottakerInntekt)) ? INNVILGET_75_PROSENT
+          : INNVILGET_50_PROSENT;
       if (grunnlag.getBidragMottakerSivilstandKode().equals(ENSLIG)) {
         if (grunnlag.getAntallBarnIHusstand() == 1) {
           regel = (resultatKode.equals(INNVILGET_75_PROSENT) ? "REGEL 9" : "REGEL 10");
