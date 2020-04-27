@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.forskudd.core.bo
 import no.nav.bidrag.beregn.felles.bo.Periode
 import no.nav.bidrag.beregn.felles.enums.AvvikType
 import no.nav.bidrag.beregn.felles.enums.BostatusKode
+import no.nav.bidrag.beregn.felles.enums.InntektType
 import no.nav.bidrag.beregn.felles.enums.SivilstandKode
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -45,7 +46,7 @@ data class Avvik(
 
 // Grunnlag beregning
 data class GrunnlagBeregning(
-    val bidragMottakerInntekt: BigDecimal,
+    val bidragMottakerInntektListe: List<Inntekt>,
     val bidragMottakerSivilstandKode: SivilstandKode,
     val antallBarnIHusstand: Int,
     val soknadBarnAlder: Int,
@@ -56,6 +57,11 @@ data class GrunnlagBeregning(
     val inntektsgrenseEnslig75ProsentForskudd: Int,
     val inntektsgrenseGift75ProsentForskudd: Int,
     val inntektsintervallForskudd: Int
+)
+
+data class Inntekt(
+    val inntektType: InntektType,
+    val inntektBelop: BigDecimal
 )
 
 

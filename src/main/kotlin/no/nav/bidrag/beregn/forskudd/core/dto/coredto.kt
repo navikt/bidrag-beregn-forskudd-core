@@ -26,6 +26,7 @@ data class BostatusPeriodeCore(
 
 data class InntektPeriodeCore(
     val inntektDatoFraTil: PeriodeCore,
+    val inntektType: String,
     val inntektBelop: BigDecimal
 )
 
@@ -59,7 +60,7 @@ data class ResultatBeregningCore(
 )
 
 data class ResultatGrunnlagCore(
-    val bidragMottakerInntekt: BigDecimal,
+    val bidragMottakerInntektListe: List<InntektCore>,
     val bidragMottakerSivilstandKode: String,
     val antallBarnIHusstand: Int,
     val soknadBarnAlder: Int,
@@ -71,6 +72,12 @@ data class ResultatGrunnlagCore(
     val inntektsgrenseGift75ProsentForskudd: Int,
     val inntektsintervallForskudd: Int
 )
+
+data class InntektCore(
+    val inntektType: String,
+    val inntektBelop: BigDecimal
+)
+
 
 data class AvvikCore(
     val avvikTekst: String,

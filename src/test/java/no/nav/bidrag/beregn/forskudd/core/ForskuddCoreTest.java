@@ -11,14 +11,17 @@ import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import no.nav.bidrag.beregn.felles.bo.Periode;
 import no.nav.bidrag.beregn.felles.enums.AvvikType;
 import no.nav.bidrag.beregn.felles.enums.BostatusKode;
+import no.nav.bidrag.beregn.felles.enums.InntektType;
 import no.nav.bidrag.beregn.felles.enums.SivilstandKode;
 import no.nav.bidrag.beregn.forskudd.core.bo.Avvik;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning;
+import no.nav.bidrag.beregn.forskudd.core.bo.Inntekt;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
@@ -79,8 +82,13 @@ public class ForskuddCoreTest {
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBeskrivelse())
             .isEqualTo("REGEL 1"),
 
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntekt())
-            .isEqualTo(BigDecimal.valueOf(500000)),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().size())
+            .isEqualTo(1),
+        () -> assertThat(
+            beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
+            .isEqualTo(InntektType.LØNNSINNTEKT.toString()),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0)
+            .getInntektBelop()).isEqualTo(BigDecimal.valueOf(500000)),
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerSivilstandKode())
             .isEqualTo(SivilstandKode.ENSLIG.toString()),
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getAntallBarnIHusstand() == 2),
@@ -144,20 +152,24 @@ public class ForskuddCoreTest {
 
 
   private void byggForskuddPeriodeGrunnlagCore() {
-    var bostatusPeriode = new BostatusPeriodeCore(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "MED_FORELDRE");
+    var bostatusPeriode = new BostatusPeriodeCore(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")),
+        BostatusKode.MED_FORELDRE.toString());
     var bostatusPeriodeListe = new ArrayList<BostatusPeriodeCore>();
     bostatusPeriodeListe.add(bostatusPeriode);
     var soknadBarn = new SoknadBarnCore(LocalDate.parse("2006-05-12"), bostatusPeriodeListe);
 
     var bidragMottakerInntektPeriode = new InntektPeriodeCore(
-        new PeriodeCore(LocalDate.parse("2017-01-01"), null), BigDecimal.valueOf(0));
+        new PeriodeCore(LocalDate.parse("2017-01-01"), null), InntektType.LØNNSINNTEKT.toString(), BigDecimal.valueOf(0));
     var bidragMottakerInntektPeriodeListe = new ArrayList<InntektPeriodeCore>();
     bidragMottakerInntektPeriodeListe.add(bidragMottakerInntektPeriode);
 
-    var bidragMottakerSivilstandPeriode = new SivilstandPeriodeCore(
-        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "GIFT");
+    var bidragMottakerSivilstandPeriode1 = new SivilstandPeriodeCore(
+        new PeriodeCore(LocalDate.parse("2018-01-01"), LocalDate.parse("2020-01-01")), SivilstandKode.GIFT.toString());
+    var bidragMottakerSivilstandPeriode2 = new SivilstandPeriodeCore(
+        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")), SivilstandKode.ENSLIG.toString());
     var bidragMottakerSivilstandPeriodeListe = new ArrayList<SivilstandPeriodeCore>();
-    bidragMottakerSivilstandPeriodeListe.add(bidragMottakerSivilstandPeriode);
+    bidragMottakerSivilstandPeriodeListe.add(bidragMottakerSivilstandPeriode1);
+    bidragMottakerSivilstandPeriodeListe.add(bidragMottakerSivilstandPeriode2);
 
     var bidragMottakerBarnPeriodeListe = new ArrayList<PeriodeCore>();
     bidragMottakerBarnPeriodeListe.add(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")));
@@ -176,21 +188,18 @@ public class ForskuddCoreTest {
     periodeResultatListe.add(new ResultatPeriode(
         new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
         new ResultatBeregning(BigDecimal.valueOf(1600), INNVILGET_100_PROSENT, "REGEL 1"),
-        new GrunnlagBeregning(BigDecimal.valueOf(500000), SivilstandKode.ENSLIG, 2, 10, BostatusKode.MED_FORELDRE,
-            1600, 320, 270200, 419700,
-            336500, 61700)));
+        new GrunnlagBeregning(Arrays.asList(new Inntekt(InntektType.LØNNSINNTEKT, BigDecimal.valueOf(500000))), SivilstandKode.ENSLIG, 2, 10,
+            BostatusKode.MED_FORELDRE, 1600, 320, 270200, 419700, 336500, 61700)));
     periodeResultatListe.add(new ResultatPeriode(
         new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
         new ResultatBeregning(BigDecimal.valueOf(1200), INNVILGET_75_PROSENT, "REGEL 2"),
-        new GrunnlagBeregning(BigDecimal.valueOf(500000), SivilstandKode.ENSLIG, 2, 10, BostatusKode.MED_FORELDRE,
-            1600, 320, 270200, 419700,
-            336500, 61700)));
+        new GrunnlagBeregning(Arrays.asList(new Inntekt(InntektType.LØNNSINNTEKT, BigDecimal.valueOf(500000))), SivilstandKode.ENSLIG, 2, 10,
+            BostatusKode.MED_FORELDRE, 1600, 320, 270200, 419700, 336500, 61700)));
     periodeResultatListe.add(new ResultatPeriode(
         new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")),
         new ResultatBeregning(BigDecimal.valueOf(0), AVSLAG, "REGEL 11"),
-        new GrunnlagBeregning(BigDecimal.valueOf(500000), SivilstandKode.ENSLIG, 2, 10, BostatusKode.MED_FORELDRE,
-            1600, 320, 270200, 419700,
-            336500, 61700)));
+        new GrunnlagBeregning(Arrays.asList(new Inntekt(InntektType.LØNNSINNTEKT, BigDecimal.valueOf(500000))), SivilstandKode.ENSLIG, 2, 10,
+            BostatusKode.MED_FORELDRE, 1600, 320, 270200, 419700, 336500, 61700)));
     forskuddPeriodeResultat = new BeregnForskuddResultat(periodeResultatListe);
   }
 
