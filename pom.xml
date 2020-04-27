@@ -56,6 +56,12 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <!-- Override vulnerable version of snakeyaml -->
+      <dependency>
+        <groupId>org.yaml</groupId>
+        <artifactId>snakeyaml</artifactId>
+        <version>1.26</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
