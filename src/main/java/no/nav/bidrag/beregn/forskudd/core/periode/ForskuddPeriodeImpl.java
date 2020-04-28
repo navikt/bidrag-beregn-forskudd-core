@@ -88,6 +88,17 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
         .addBruddpunkter(justertSjablon0036PeriodeListe)
         .finnPerioder(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil());
 
+    // Hvis det ligger 2 perioder på slutten som i til-dato inneholder hhv. beregningsperiodens til-dato og null slås de sammen
+    if (perioder.size() > 1) {
+      if ((perioder.get(perioder.size() - 2).getDatoTil().equals(periodeGrunnlag.getBeregnDatoTil())) &&
+          (perioder.get(perioder.size() - 1).getDatoTil() == null)) {
+        var nyPeriode = new Periode(perioder.get(perioder.size() - 2).getDatoFra(), null);
+        perioder.remove(perioder.size() - 1);
+        perioder.remove(perioder.size() - 1);
+        perioder.add(nyPeriode);
+      }
+    }
+
     // Løper gjennom periodene og finner matchende verdi for hver kategori
     for (Periode beregningsperiode : perioder) {
 
@@ -193,7 +204,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     for (InntektPeriode bidragMottakerInntektPeriode : periodeGrunnlag.getBidragMottakerInntektPeriodeListe()) {
       bidragMottakerInntektPeriodeListe.add(bidragMottakerInntektPeriode.getDatoFraTil());
     }
-    avvikListe.addAll(validerInput("bidragMottakerInntektPeriodeListe", bidragMottakerInntektPeriodeListe, false, true, true));
+    avvikListe.addAll(validerInput("bidragMottakerInntektPeriodeListe", bidragMottakerInntektPeriodeListe, false, true, false));
 
     // Sjekk perioder for sivilstand
     var bidragMottakerSivilstandPeriodeListe = new ArrayList<Periode>();
@@ -273,9 +284,22 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
         avvikListe.add(new Avvik(feilmelding, AvvikType.DATO_FRA_ETTER_DATO_TIL));
       }
 
-      forrigePeriode = new Periode(dennePeriode.getDatoFra(), dennePeriode.getDatoTil());
+      //Setter forrige periode lik denne periode
+      //Unntak 1: Hvis til-dato i forrige periode er null, beholdes denne (for å unngå feilaktig gap i perioder hvis det er tillatt med overlapp)
+      //Unntak 2: Hvis til-dato i forrige periode er etter fra-dato i denne periode, beholdes denne (for å unngå feilaktig gap i perioder hvis det er
+      //          tillatt med overlapp)
+      if ((forrigePeriode == null) || (dennePeriode.getDatoTil() == null)) {
+        forrigePeriode = new Periode(dennePeriode.getDatoFra(), dennePeriode.getDatoTil());
+      } else {
+        if (forrigePeriode.getDatoTil() == null) {
+          forrigePeriode = new Periode(dennePeriode.getDatoFra(), null);
+        } else if (forrigePeriode.getDatoTil().isAfter(dennePeriode.getDatoTil())) {
+          forrigePeriode = new Periode(dennePeriode.getDatoFra(), forrigePeriode.getDatoTil());
+        } else {
+          forrigePeriode = new Periode(dennePeriode.getDatoFra(), dennePeriode.getDatoTil());
+        }
+      }
     }
-
     return avvikListe;
   }
 
