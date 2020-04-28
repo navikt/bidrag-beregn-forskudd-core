@@ -21,6 +21,7 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 Versjon | Endringstype      | Beskrivelse
 --------|-------------------|------------
+0.2.1   | Endret            | Rettet feil knyttet til periodehåndtering / inntekt
 0.2.0   | Opprettet         | Lagt til mulighet for å ha flere inntekter + sortering av datolister
 0.1.1   | Endret            | Flyttet ENUMs til felles
 0.1.0   | Endret/slettet    | Lagt til grunnlaget for beregningen som en del av resulatet, samt fjernet merge av like perioder
