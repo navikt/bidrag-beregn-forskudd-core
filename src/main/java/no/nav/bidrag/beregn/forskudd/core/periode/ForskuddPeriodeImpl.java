@@ -86,6 +86,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
         .addBruddpunkter(justertSjablon0034PeriodeListe)
         .addBruddpunkter(justertSjablon0035PeriodeListe)
         .addBruddpunkter(justertSjablon0036PeriodeListe)
+        .addBruddpunkt(periodeGrunnlag.getBeregnDatoTil()) //For å sikre bruddpunkt på start-beregning-til-dato
         .finnPerioder(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil());
 
     // Hvis det ligger 2 perioder på slutten som i til-dato inneholder hhv. beregningsperiodens til-dato og null slås de sammen
