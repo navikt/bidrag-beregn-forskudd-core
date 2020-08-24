@@ -21,6 +21,7 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 Versjon | Endringstype      | Beskrivelse
 --------|-------------------|------------
+0.2.4   | Endret            | Forbedret input-kontroll på datoer
 0.2.3   | Endret            | Beregn-til-dato lagt til i periodisering, likt de andre beregningene
 0.2.2   | Endret            | Nyere versjoner av bidrag-beregn-felles og springboot
 0.2.1   | Endret            | Rettet feil knyttet til periodehåndtering / inntekt

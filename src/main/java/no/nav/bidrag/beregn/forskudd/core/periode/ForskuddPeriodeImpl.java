@@ -205,21 +205,24 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     for (InntektPeriode bidragMottakerInntektPeriode : periodeGrunnlag.getBidragMottakerInntektPeriodeListe()) {
       bidragMottakerInntektPeriodeListe.add(bidragMottakerInntektPeriode.getDatoFraTil());
     }
-    avvikListe.addAll(validerInput("bidragMottakerInntektPeriodeListe", bidragMottakerInntektPeriodeListe, false, true, false));
+    avvikListe.addAll(validerInput(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil(), "bidragMottakerInntektPeriodeListe",
+        bidragMottakerInntektPeriodeListe, false, true, false));
 
     // Sjekk perioder for sivilstand
     var bidragMottakerSivilstandPeriodeListe = new ArrayList<Periode>();
     for (SivilstandPeriode bidragMottakerSivilstandPeriode : periodeGrunnlag.getBidragMottakerSivilstandPeriodeListe()) {
       bidragMottakerSivilstandPeriodeListe.add(bidragMottakerSivilstandPeriode.getDatoFraTil());
     }
-    avvikListe.addAll(validerInput("bidragMottakerSivilstandPeriodeListe", bidragMottakerSivilstandPeriodeListe, true, true, true));
+    avvikListe.addAll(validerInput(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil(), "bidragMottakerSivilstandPeriodeListe",
+        bidragMottakerSivilstandPeriodeListe, true, true, true));
 
     // Sjekk perioder for bostatus
     var soknadBarnBostatusPeriodeListe = new ArrayList<Periode>();
     for (BostatusPeriode soknadBarnBostatusPeriode : periodeGrunnlag.getSoknadBarn().getSoknadBarnBostatusPeriodeListe()) {
       soknadBarnBostatusPeriodeListe.add(soknadBarnBostatusPeriode.getDatoFraTil());
     }
-    avvikListe.addAll(validerInput("soknadBarnBostatusPeriodeListe", soknadBarnBostatusPeriodeListe, true, true, true));
+    avvikListe.addAll(validerInput(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil(), "soknadBarnBostatusPeriodeListe",
+        soknadBarnBostatusPeriodeListe, true, true, true));
 
     // Sjekk perioder for barn
     if (periodeGrunnlag.getBidragMottakerBarnPeriodeListe() != null) {
@@ -228,7 +231,8 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
       for (Periode bidragMottakerBarnPeriode : periodeGrunnlag.getBidragMottakerBarnPeriodeListe()) {
         bidragMottakerBarnPeriodeListe.add(bidragMottakerBarnPeriode.getDatoFraTil());
       }
-      avvikListe.addAll(validerInput("bidragMottakerBarnPeriodeListe", bidragMottakerBarnPeriodeListe, false, false, false));
+      avvikListe.addAll(validerInput(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil(), "bidragMottakerBarnPeriodeListe",
+          bidragMottakerBarnPeriodeListe, false, false, false));
     }
 
     // Sjekk beregn dato fra/til 
@@ -238,10 +242,27 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
   }
 
   // Validerer at datoer er gyldige
-  private List<Avvik> validerInput(String dataElement, List<Periode> periodeListe, boolean sjekkOverlapp, boolean sjekkOpphold, boolean sjekkNull) {
+  private List<Avvik> validerInput(LocalDate beregnDatoFra, LocalDate beregnDatoTil, String dataElement, List<Periode> periodeListe,
+      boolean sjekkOverlapp, boolean sjekkOpphold, boolean sjekkNull) {
     var avvikListe = new ArrayList<Avvik>();
-    int indeks = 0;
+    var indeks = 0;
     Periode forrigePeriode = null;
+
+    long listeStorrelse = periodeListe.size();
+    var startDatoIPeriodeListe = periodeListe.stream().findFirst().get().getDatoFra();
+    var sluttDatoIPeriodeListe = periodeListe.stream().skip(listeStorrelse - 1).findFirst().get().getDatoTil();
+
+    //Sjekk at første dato i periodelisten ikke er etter start-dato i perioden det skal beregnes for
+    if (startDatoIPeriodeListe.isAfter(beregnDatoFra)) {
+      var feilmelding = "Første dato i " + dataElement + " (" + startDatoIPeriodeListe + ") " + "er etter beregnDatoFra (" + beregnDatoFra + ")";
+      avvikListe.add(new Avvik(feilmelding, AvvikType.PERIODE_MANGLER_DATA));
+    }
+
+    //Sjekk at siste dato i periodelisten ikke er før slutt-dato i perioden det skal beregnes for
+    if ((sluttDatoIPeriodeListe != null) && (sluttDatoIPeriodeListe.isBefore(beregnDatoFra))) {
+      var feilmelding = "Siste dato i " + dataElement + " (" + sluttDatoIPeriodeListe + ") " + "er før beregnDatoTil (" + beregnDatoTil + ")";
+      avvikListe.add(new Avvik(feilmelding, AvvikType.PERIODE_MANGLER_DATA));
+    }
 
     for (Periode dennePeriode : periodeListe) {
       indeks++;
