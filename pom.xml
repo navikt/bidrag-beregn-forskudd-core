@@ -35,7 +35,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <!-- dependencies -->
-    <bidrag-beregn-felles.version>0.4.4</bidrag-beregn-felles.version>
+    <bidrag-beregn-felles.version>0.4.7</bidrag-beregn-felles.version>
     <guava.version>28.2-jre</guava.version>
     <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
   </properties>
