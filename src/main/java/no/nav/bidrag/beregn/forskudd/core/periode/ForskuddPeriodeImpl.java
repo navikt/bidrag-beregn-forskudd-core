@@ -8,6 +8,7 @@ import static java.util.stream.Collectors.toList;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import no.nav.bidrag.beregn.felles.bo.Periode;
@@ -206,7 +207,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
       bidragMottakerInntektPeriodeListe.add(bidragMottakerInntektPeriode.getDatoFraTil());
     }
     avvikListe.addAll(validerInput(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil(), "bidragMottakerInntektPeriodeListe",
-        bidragMottakerInntektPeriodeListe, false, true, false));
+        bidragMottakerInntektPeriodeListe, false, true, false, true));
 
     // Sjekk perioder for sivilstand
     var bidragMottakerSivilstandPeriodeListe = new ArrayList<Periode>();
@@ -214,7 +215,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
       bidragMottakerSivilstandPeriodeListe.add(bidragMottakerSivilstandPeriode.getDatoFraTil());
     }
     avvikListe.addAll(validerInput(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil(), "bidragMottakerSivilstandPeriodeListe",
-        bidragMottakerSivilstandPeriodeListe, true, true, true));
+        bidragMottakerSivilstandPeriodeListe, true, true, true, true));
 
     // Sjekk perioder for bostatus
     var soknadBarnBostatusPeriodeListe = new ArrayList<Periode>();
@@ -222,7 +223,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
       soknadBarnBostatusPeriodeListe.add(soknadBarnBostatusPeriode.getDatoFraTil());
     }
     avvikListe.addAll(validerInput(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil(), "soknadBarnBostatusPeriodeListe",
-        soknadBarnBostatusPeriodeListe, true, true, true));
+        soknadBarnBostatusPeriodeListe, true, true, true, true));
 
     // Sjekk perioder for barn
     if (periodeGrunnlag.getBidragMottakerBarnPeriodeListe() != null) {
@@ -232,7 +233,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
         bidragMottakerBarnPeriodeListe.add(bidragMottakerBarnPeriode.getDatoFraTil());
       }
       avvikListe.addAll(validerInput(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil(), "bidragMottakerBarnPeriodeListe",
-          bidragMottakerBarnPeriodeListe, false, false, false));
+          bidragMottakerBarnPeriodeListe, false, false, false, false));
     }
 
     // Sjekk beregn dato fra/til 
@@ -243,25 +244,29 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
   // Validerer at datoer er gyldige
   private List<Avvik> validerInput(LocalDate beregnDatoFra, LocalDate beregnDatoTil, String dataElement, List<Periode> periodeListe,
-      boolean sjekkOverlapp, boolean sjekkOpphold, boolean sjekkNull) {
+      boolean sjekkOverlapp, boolean sjekkOpphold, boolean sjekkNull, boolean sjekkBeregnPeriode) {
     var avvikListe = new ArrayList<Avvik>();
     var indeks = 0;
     Periode forrigePeriode = null;
 
-    long listeStorrelse = periodeListe.size();
-    var startDatoIPeriodeListe = periodeListe.stream().findFirst().get().getDatoFra();
-    var sluttDatoIPeriodeListe = periodeListe.stream().skip(listeStorrelse - 1).findFirst().get().getDatoTil();
+    if (sjekkBeregnPeriode) {
+      //Sjekk at første dato i periodelisten ikke er etter start-dato i perioden det skal beregnes for
+      var startDatoIPeriodeListe = periodeListe.stream().findFirst().get().getDatoFra();
 
-    //Sjekk at første dato i periodelisten ikke er etter start-dato i perioden det skal beregnes for
-    if (startDatoIPeriodeListe.isAfter(beregnDatoFra)) {
-      var feilmelding = "Første dato i " + dataElement + " (" + startDatoIPeriodeListe + ") " + "er etter beregnDatoFra (" + beregnDatoFra + ")";
-      avvikListe.add(new Avvik(feilmelding, AvvikType.PERIODE_MANGLER_DATA));
-    }
+      if (startDatoIPeriodeListe.isAfter(beregnDatoFra)) {
+        var feilmelding = "Første dato i " + dataElement + " (" + startDatoIPeriodeListe + ") " + "er etter beregnDatoFra (" + beregnDatoFra + ")";
+        avvikListe.add(new Avvik(feilmelding, AvvikType.PERIODE_MANGLER_DATA));
+      }
 
-    //Sjekk at siste dato i periodelisten ikke er før slutt-dato i perioden det skal beregnes for
-    if ((sluttDatoIPeriodeListe != null) && (sluttDatoIPeriodeListe.isBefore(beregnDatoFra))) {
-      var feilmelding = "Siste dato i " + dataElement + " (" + sluttDatoIPeriodeListe + ") " + "er før beregnDatoTil (" + beregnDatoTil + ")";
-      avvikListe.add(new Avvik(feilmelding, AvvikType.PERIODE_MANGLER_DATA));
+      //Sjekk at siste dato i periodelisten ikke er før slutt-dato i perioden det skal beregnes for
+      var sluttDatoPeriodeListe = periodeListe.stream().map(Periode::getDatoTil).collect(toList());
+      sluttDatoPeriodeListe.sort(Comparator.nullsLast(Comparator.naturalOrder()));
+      var sluttDatoIPeriodeListe = sluttDatoPeriodeListe.get(sluttDatoPeriodeListe.size() - 1);
+
+      if ((sluttDatoIPeriodeListe != null) && (sluttDatoIPeriodeListe.isBefore(beregnDatoTil))) {
+        var feilmelding = "Siste dato i " + dataElement + " (" + sluttDatoIPeriodeListe + ") " + "er før beregnDatoTil (" + beregnDatoTil + ")";
+        avvikListe.add(new Avvik(feilmelding, AvvikType.PERIODE_MANGLER_DATA));
+      }
     }
 
     for (Periode dennePeriode : periodeListe) {

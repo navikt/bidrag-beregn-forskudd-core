@@ -128,30 +128,50 @@ class ForskuddPeriodeTest {
     var avvikListe = forskuddPeriode.validerInput(grunnlag);
     assertAll(
         () -> assertThat(avvikListe).isNotEmpty(),
-        () -> assertThat(avvikListe).hasSize(6),
+        () -> assertThat(avvikListe).hasSize(5),
 
         () -> assertThat(avvikListe.get(0).getAvvikTekst())
-            .isEqualTo("Første dato i bidragMottakerInntektPeriodeListe (2017-06-01) er etter beregnDatoFra (2017-01-01)"),
+            .isEqualTo("Opphold mellom perioder i bidragMottakerInntektPeriodeListe: periodeDatoTil=2018-01-01, periodeDatoFra=2018-01-04"),
+        () -> assertThat(avvikListe.get(0).getAvvikType()).isEqualTo(AvvikType.PERIODER_HAR_OPPHOLD),
+
+        () -> assertThat(avvikListe.get(1).getAvvikTekst())
+            .isEqualTo("Overlappende perioder i bidragMottakerSivilstandPeriodeListe: periodeDatoTil=2018-04-01, periodeDatoFra=2018-03-17"),
+        () -> assertThat(avvikListe.get(1).getAvvikType()).isEqualTo(AvvikType.PERIODER_OVERLAPPER),
+
+        () -> assertThat(avvikListe.get(2).getAvvikTekst())
+            .isEqualTo("periodeDatoTil kan ikke være null i soknadBarnBostatusPeriodeListe: periodeDatoFra=2018-08-16, periodeDatoTil=null"),
+        () -> assertThat(avvikListe.get(2).getAvvikType()).isEqualTo(AvvikType.NULL_VERDI_I_DATO),
+
+        () -> assertThat(avvikListe.get(3).getAvvikTekst()).isEqualTo(
+            "periodeDatoTil må være etter periodeDatoFra i bidragMottakerBarnPeriodeListe: periodeDatoFra=2019-03-31, periodeDatoTil=2018-06-17"),
+        () -> assertThat(avvikListe.get(3).getAvvikType()).isEqualTo(AvvikType.DATO_FRA_ETTER_DATO_TIL),
+
+        () -> assertThat(avvikListe.get(4).getAvvikTekst()).isEqualTo("beregnDatoTil må være etter beregnDatoFra"),
+        () -> assertThat(avvikListe.get(4).getAvvikType()).isEqualTo(AvvikType.DATO_FRA_ETTER_DATO_TIL)
+    );
+    printAvvikListe(avvikListe);
+  }
+
+  @Test
+  @DisplayName("Test utvidet grunnlag med avvik periode mangler data")
+  void testUtvidetGrunnlagMedAvvikPeriodeManglerData() {
+    lagGrunnlag("2016-01-01", "2020-01-01");
+    var avvikListe = forskuddPeriode.validerInput(grunnlag);
+    assertAll(
+        () -> assertThat(avvikListe).isNotEmpty(),
+        () -> assertThat(avvikListe).hasSize(3),
+
+        () -> assertThat(avvikListe.get(0).getAvvikTekst())
+            .isEqualTo("Første dato i bidragMottakerInntektPeriodeListe (2017-01-01) er etter beregnDatoFra (2016-01-01)"),
         () -> assertThat(avvikListe.get(0).getAvvikType()).isEqualTo(AvvikType.PERIODE_MANGLER_DATA),
 
         () -> assertThat(avvikListe.get(1).getAvvikTekst())
-            .isEqualTo("Opphold mellom perioder i bidragMottakerInntektPeriodeListe: periodeDatoTil=2018-01-01, periodeDatoFra=2018-01-04"),
-        () -> assertThat(avvikListe.get(1).getAvvikType()).isEqualTo(AvvikType.PERIODER_HAR_OPPHOLD),
+            .isEqualTo("Første dato i bidragMottakerSivilstandPeriodeListe (2017-01-01) er etter beregnDatoFra (2016-01-01)"),
+        () -> assertThat(avvikListe.get(1).getAvvikType()).isEqualTo(AvvikType.PERIODE_MANGLER_DATA),
 
         () -> assertThat(avvikListe.get(2).getAvvikTekst())
-            .isEqualTo("Overlappende perioder i bidragMottakerSivilstandPeriodeListe: periodeDatoTil=2018-04-01, periodeDatoFra=2018-03-17"),
-        () -> assertThat(avvikListe.get(2).getAvvikType()).isEqualTo(AvvikType.PERIODER_OVERLAPPER),
-
-        () -> assertThat(avvikListe.get(3).getAvvikTekst())
-            .isEqualTo("periodeDatoTil kan ikke være null i soknadBarnBostatusPeriodeListe: periodeDatoFra=2018-08-16, periodeDatoTil=null"),
-        () -> assertThat(avvikListe.get(3).getAvvikType()).isEqualTo(AvvikType.NULL_VERDI_I_DATO),
-
-        () -> assertThat(avvikListe.get(4).getAvvikTekst()).isEqualTo(
-            "periodeDatoTil må være etter periodeDatoFra i bidragMottakerBarnPeriodeListe: periodeDatoFra=2019-03-31, periodeDatoTil=2018-06-17"),
-        () -> assertThat(avvikListe.get(4).getAvvikType()).isEqualTo(AvvikType.DATO_FRA_ETTER_DATO_TIL),
-
-        () -> assertThat(avvikListe.get(5).getAvvikTekst()).isEqualTo("beregnDatoTil må være etter beregnDatoFra"),
-        () -> assertThat(avvikListe.get(5).getAvvikType()).isEqualTo(AvvikType.DATO_FRA_ETTER_DATO_TIL)
+            .isEqualTo("Siste dato i bidragMottakerSivilstandPeriodeListe (2019-08-01) er før beregnDatoTil (2020-01-01)"),
+        () -> assertThat(avvikListe.get(2).getAvvikType()).isEqualTo(AvvikType.PERIODE_MANGLER_DATA)
     );
     printAvvikListe(avvikListe);
   }
@@ -716,10 +736,11 @@ class ForskuddPeriodeTest {
     );
   }
 
-
   private void lagGrunnlag() {
-    var beregnDatoFra = LocalDate.parse("2017-01-01");
-    var beregnDatoTil = LocalDate.parse("2019-08-01");
+    lagGrunnlag("2017-01-01", "2019-08-01");
+  }
+
+  private void lagGrunnlag(String beregnDatoFra, String beregnDatoTil) {
     var sBFodselsdato = LocalDate.parse("2006-12-19");
     var sBBostedStatusListe = new ArrayList<BostatusPeriode>();
     sBBostedStatusListe.add(new BostatusPeriode(new Periode(LocalDate.parse("2006-12-19"), LocalDate.parse("2018-08-16")), MED_FORELDRE));
@@ -737,7 +758,7 @@ class ForskuddPeriodeTest {
 
     var bmSivilstandListe = new ArrayList<SivilstandPeriode>();
     bmSivilstandListe.add(new SivilstandPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-17")), GIFT));
-    bmSivilstandListe.add(new SivilstandPeriode(new Periode(LocalDate.parse("2018-04-17"), null), ENSLIG));
+    bmSivilstandListe.add(new SivilstandPeriode(new Periode(LocalDate.parse("2018-04-17"), LocalDate.parse("2019-08-01")), ENSLIG));
 
     var bmBarnListe = new ArrayList<Periode>();
     bmBarnListe.add(new Periode(LocalDate.parse("2017-01-01"), null));
@@ -752,8 +773,8 @@ class ForskuddPeriodeTest {
     sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null), "0035", 336500));
     sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null), "0036", 61700));
 
-    grunnlag = new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bmInntektListe, bmSivilstandListe, bmBarnListe,
-        sjablonPeriodeListe);
+    grunnlag = new BeregnForskuddGrunnlag(LocalDate.parse(beregnDatoFra), LocalDate.parse(beregnDatoTil), soknadBarn, bmInntektListe,
+        bmSivilstandListe, bmBarnListe, sjablonPeriodeListe);
   }
 
   private void lagGrunnlagMedAvvik() {
@@ -769,7 +790,7 @@ class ForskuddPeriodeTest {
     var soknadBarn = new SoknadBarn(sBFodselsdato, sBBostedStatusListe);
 
     var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-06-01"), LocalDate.parse("2018-01-01")), InntektType.LØNNSINNTEKT,
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")), InntektType.LØNNSINNTEKT,
         BigDecimal.valueOf(250000)));
     bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2018-01-04"), LocalDate.parse("2019-01-01")), InntektType.LØNNSINNTEKT,
         BigDecimal.valueOf(400000)));
@@ -777,7 +798,7 @@ class ForskuddPeriodeTest {
 
     var bmSivilstandListe = new ArrayList<SivilstandPeriode>();
     bmSivilstandListe.add(new SivilstandPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-01")), GIFT));
-    bmSivilstandListe.add(new SivilstandPeriode(new Periode(LocalDate.parse("2018-03-17"), null), ENSLIG));
+    bmSivilstandListe.add(new SivilstandPeriode(new Periode(LocalDate.parse("2018-03-17"), LocalDate.parse("2019-07-01")), ENSLIG));
 
     var bmBarnListe = new ArrayList<Periode>();
     bmBarnListe.add(new Periode(LocalDate.parse("2017-01-01"), null));
