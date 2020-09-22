@@ -26,7 +26,7 @@
 
     <!-- language -->
     <java.version>14</java.version>
-    <kotlin.version>1.3.72</kotlin.version>
+    <kotlin.version>1.4.10</kotlin.version>
 
     <!-- build -->
     <build-helper-maven.version>3.1.0</build-helper-maven.version>
@@ -37,7 +37,7 @@
     <!-- dependencies -->
     <bidrag-beregn-felles.version>0.4.7</bidrag-beregn-felles.version>
     <guava.version>28.2-jre</guava.version>
-    <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
+    <spring-boot.version>2.3.4.RELEASE</spring-boot.version>
   </properties>
 
   <distributionManagement>
@@ -61,6 +61,27 @@
         <groupId>org.yaml</groupId>
         <artifactId>snakeyaml</artifactId>
         <version>1.26</version>
+      </dependency>
+      <!-- align transient versions of kotlin -->
+      <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-stdlib</artifactId>
+        <version>${kotlin.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-stdlib-common</artifactId>
+        <version>${kotlin.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-stdlib-jdk8</artifactId>
+        <version>${kotlin.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-stdlib-jdk7</artifactId>
+        <version>${kotlin.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -110,7 +131,7 @@
 
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-test</artifactId>
+      <artifactId>kotlin-test-junit</artifactId>
       <version>${kotlin.version}</version>
       <scope>test</scope>
     </dependency>
