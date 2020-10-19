@@ -1,12 +1,14 @@
 package no.nav.bidrag.beregn.forskudd.core.bo
 
 import no.nav.bidrag.beregn.felles.bo.Periode
-import no.nav.bidrag.beregn.felles.enums.AvvikType
+import no.nav.bidrag.beregn.felles.bo.Sjablon
+import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
 import no.nav.bidrag.beregn.felles.enums.BostatusKode
 import no.nav.bidrag.beregn.felles.enums.InntektType
 import no.nav.bidrag.beregn.felles.enums.SivilstandKode
 import java.math.BigDecimal
 import java.time.LocalDate
+
 
 // Grunnlag periode
 data class BeregnForskuddGrunnlag(
@@ -25,7 +27,6 @@ data class SoknadBarn(
 )
 
 
-
 // Resultat periode
 data class BeregnForskuddResultat(
     val resultatPeriodeListe: List<ResultatPeriode>
@@ -37,13 +38,6 @@ data class ResultatPeriode(
     val resultatGrunnlag: GrunnlagBeregning)
 
 
-// Avvik periode
-data class Avvik(
-    val avvikTekst: String,
-    val avvikType: AvvikType
-)
-
-
 // Grunnlag beregning
 data class GrunnlagBeregning(
     val bidragMottakerInntektListe: List<Inntekt>,
@@ -51,13 +45,7 @@ data class GrunnlagBeregning(
     val antallBarnIHusstand: Int,
     val soknadBarnAlder: Int,
     val soknadBarnBostatusKode: BostatusKode,
-    val forskuddssats100Prosent: Int,
-    val multiplikatorMaksInntektsgrense: Int,
-    val inntektsgrense100ProsentForskudd: Int,
-    val inntektsgrenseEnslig75ProsentForskudd: Int,
-    val inntektsgrenseGift75ProsentForskudd: Int,
-    val inntektsintervallForskudd: Int
-)
+    val sjablonListe: List<Sjablon>)
 
 data class Inntekt(
     val inntektType: InntektType,

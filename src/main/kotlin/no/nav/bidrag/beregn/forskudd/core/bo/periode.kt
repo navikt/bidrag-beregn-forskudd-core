@@ -43,23 +43,6 @@ data class SivilstandPeriode(
   }
 }
 
-data class SjablonPeriode(
-    val sjablonDatoFraTil: Periode,
-    val sjablonType: String,
-    val sjablonVerdi: Int
-)
-
-data class SjablonPeriodeVerdi(
-    val sjablonDatoFraTil: Periode,
-    val sjablonVerdi: Int
-) : PeriodisertGrunnlag {
-  constructor(sjablonPeriode: SjablonPeriode) : this(sjablonPeriode.sjablonDatoFraTil.justerDatoer(), sjablonPeriode.sjablonVerdi)
-
-  override fun getDatoFraTil(): Periode {
-    return sjablonDatoFraTil
-  }
-}
-
 data class AlderPeriode(
     val alderDatoFraTil: Periode,
     val alder: Int

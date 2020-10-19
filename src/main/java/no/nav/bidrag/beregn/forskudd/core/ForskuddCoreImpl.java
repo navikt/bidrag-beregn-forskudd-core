@@ -6,11 +6,21 @@ import static java.util.stream.Collectors.toList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import no.nav.bidrag.beregn.felles.bo.Avvik;
 import no.nav.bidrag.beregn.felles.bo.Periode;
+import no.nav.bidrag.beregn.felles.bo.Sjablon;
+import no.nav.bidrag.beregn.felles.bo.SjablonInnhold;
+import no.nav.bidrag.beregn.felles.bo.SjablonNokkel;
+import no.nav.bidrag.beregn.felles.bo.SjablonPeriode;
+import no.nav.bidrag.beregn.felles.dto.AvvikCore;
+import no.nav.bidrag.beregn.felles.dto.PeriodeCore;
+import no.nav.bidrag.beregn.felles.dto.SjablonCore;
+import no.nav.bidrag.beregn.felles.dto.SjablonInnholdCore;
+import no.nav.bidrag.beregn.felles.dto.SjablonNokkelCore;
+import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore;
 import no.nav.bidrag.beregn.felles.enums.BostatusKode;
 import no.nav.bidrag.beregn.felles.enums.InntektType;
 import no.nav.bidrag.beregn.felles.enums.SivilstandKode;
-import no.nav.bidrag.beregn.forskudd.core.bo.Avvik;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddGrunnlag;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode;
@@ -18,20 +28,16 @@ import no.nav.bidrag.beregn.forskudd.core.bo.Inntekt;
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode;
-import no.nav.bidrag.beregn.forskudd.core.bo.SjablonPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SoknadBarn;
-import no.nav.bidrag.beregn.forskudd.core.dto.AvvikCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddResultatCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.InntektCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore;
-import no.nav.bidrag.beregn.forskudd.core.dto.PeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatBeregningCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore;
-import no.nav.bidrag.beregn.forskudd.core.dto.SjablonPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore;
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode;
 
@@ -121,9 +127,18 @@ public class ForskuddCoreImpl implements ForskuddCore {
   private List<SjablonPeriode> mapSjablonPeriodeListe(List<SjablonPeriodeCore> sjablonPeriodeListeCore) {
     var sjablonPeriodeListe = new ArrayList<SjablonPeriode>();
     for (SjablonPeriodeCore sjablonPeriodeCore : sjablonPeriodeListeCore) {
+      var sjablonNokkelListe = new ArrayList<SjablonNokkel>();
+      var sjablonInnholdListe = new ArrayList<SjablonInnhold>();
+      for (SjablonNokkelCore sjablonNokkelCore : sjablonPeriodeCore.getSjablonNokkelListe()) {
+        sjablonNokkelListe.add(new SjablonNokkel(sjablonNokkelCore.getSjablonNokkelNavn(), sjablonNokkelCore.getSjablonNokkelVerdi()));
+      }
+      for (SjablonInnholdCore sjablonInnholdCore : sjablonPeriodeCore.getSjablonInnholdListe()) {
+        sjablonInnholdListe.add(new SjablonInnhold(sjablonInnholdCore.getSjablonInnholdNavn(), sjablonInnholdCore.getSjablonInnholdVerdi()));
+      }
       sjablonPeriodeListe.add(new SjablonPeriode(
-          new Periode(sjablonPeriodeCore.getSjablonDatoFraTil().getPeriodeDatoFra(), sjablonPeriodeCore.getSjablonDatoFraTil().getPeriodeDatoTil()),
-          sjablonPeriodeCore.getSjablonType(), sjablonPeriodeCore.getSjablonVerdi().intValue()));
+          new Periode(sjablonPeriodeCore.getSjablonPeriodeDatoFraTil().getPeriodeDatoFra(),
+              sjablonPeriodeCore.getSjablonPeriodeDatoFraTil().getPeriodeDatoTil()),
+          new Sjablon(sjablonPeriodeCore.getSjablonNavn(), sjablonNokkelListe, sjablonInnholdListe)));
     }
     return sjablonPeriodeListe;
   }
@@ -150,11 +165,11 @@ public class ForskuddCoreImpl implements ForskuddCore {
           new ResultatBeregningCore(forskuddBeregningResultat.getResultatBelop(), forskuddBeregningResultat.getResultatKode().toString(),
               forskuddBeregningResultat.getResultatBeskrivelse()),
           new ResultatGrunnlagCore(mapResultatGrunnlagInntekt(forskuddResultatGrunnlag.getBidragMottakerInntektListe()),
-              forskuddResultatGrunnlag.getBidragMottakerSivilstandKode().toString(), forskuddResultatGrunnlag.getAntallBarnIHusstand(),
-              forskuddResultatGrunnlag.getSoknadBarnAlder(), forskuddResultatGrunnlag.getSoknadBarnBostatusKode().toString(),
-              forskuddResultatGrunnlag.getForskuddssats100Prosent(), forskuddResultatGrunnlag.getMultiplikatorMaksInntektsgrense(),
-              forskuddResultatGrunnlag.getInntektsgrense100ProsentForskudd(), forskuddResultatGrunnlag.getInntektsgrenseEnslig75ProsentForskudd(),
-              forskuddResultatGrunnlag.getInntektsgrenseGift75ProsentForskudd(), forskuddResultatGrunnlag.getInntektsintervallForskudd())));
+              forskuddResultatGrunnlag.getBidragMottakerSivilstandKode().toString(),
+              forskuddResultatGrunnlag.getAntallBarnIHusstand(),
+              forskuddResultatGrunnlag.getSoknadBarnAlder(),
+              forskuddResultatGrunnlag.getSoknadBarnBostatusKode().toString(),
+              mapResultatGrunnlagSjabloner(forskuddResultatGrunnlag.getSjablonListe()))));
     }
     return resultatPeriodeCoreListe;
   }
@@ -166,5 +181,23 @@ public class ForskuddCoreImpl implements ForskuddCore {
           .add(new InntektCore(resultatGrunnlagInntekt.getInntektType().toString(), resultatGrunnlagInntekt.getInntektBelop()));
     }
     return resultatGrunnlagInntektListeCore;
+  }
+
+  private List<SjablonCore> mapResultatGrunnlagSjabloner(List<Sjablon> resultatGrunnlagSjablonListe) {
+    var resultatGrunnlagSjablonListeCore = new ArrayList<SjablonCore>();
+    for (Sjablon resultatGrunnlagSjablon : resultatGrunnlagSjablonListe) {
+      var sjablonNokkelListeCore = new ArrayList<SjablonNokkelCore>();
+      var sjablonInnholdListeCore = new ArrayList<SjablonInnholdCore>();
+      for (SjablonNokkel sjablonNokkel : resultatGrunnlagSjablon.getSjablonNokkelListe()) {
+        sjablonNokkelListeCore.add(new SjablonNokkelCore(sjablonNokkel.getSjablonNokkelNavn(), sjablonNokkel.getSjablonNokkelVerdi()));
+      }
+      for (SjablonInnhold sjablonInnhold : resultatGrunnlagSjablon.getSjablonInnholdListe()) {
+        sjablonInnholdListeCore.add(new SjablonInnholdCore(sjablonInnhold.getSjablonInnholdNavn(), sjablonInnhold.getSjablonInnholdVerdi()));
+      }
+      resultatGrunnlagSjablonListeCore
+          .add(new SjablonCore(resultatGrunnlagSjablon.getSjablonNavn(), sjablonNokkelListeCore, sjablonInnholdListeCore));
+    }
+
+    return resultatGrunnlagSjablonListeCore;
   }
 }

@@ -25,8 +25,9 @@ class PeriodisererTest {
   @Test
   void testPeriodiseringMedGrunnlag() {
     List<Periode> perioder = new Periodiserer()
-        .addBruddpunkter(new InntektPeriode(new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-03-01")), InntektType.LØNNSINNTEKT,
-            BigDecimal.valueOf(1000)))
+        .addBruddpunkter(
+            new InntektPeriode(new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-03-01")), InntektType.INNTEKTSOPPL_ARBEIDSGIVER,
+                BigDecimal.valueOf(1000)))
         .addBruddpunkter(new SivilstandPeriode(new Periode(LocalDate.parse("2019-02-01"), LocalDate.parse("2019-04-01")), GIFT))
         .finnPerioder(LocalDate.parse("2000-01-01"), LocalDate.parse("2100-01-01"));
 
@@ -48,8 +49,9 @@ class PeriodisererTest {
   @Test
   void testDuplikatePerioder() {
     List<Periode> perioder = new Periodiserer()
-        .addBruddpunkter(new InntektPeriode(new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-04-01")), InntektType.LØNNSINNTEKT,
-            BigDecimal.valueOf(1000)))
+        .addBruddpunkter(
+            new InntektPeriode(new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-04-01")), InntektType.INNTEKTSOPPL_ARBEIDSGIVER,
+                BigDecimal.valueOf(1000)))
         .addBruddpunkter(new SivilstandPeriode(new Periode(LocalDate.parse("2019-02-01"), LocalDate.parse("2019-04-01")), GIFT))
         .finnPerioder(LocalDate.parse("2000-01-01"), LocalDate.parse("2100-01-01"));
 
@@ -83,11 +85,14 @@ class PeriodisererTest {
   @Test
   void testPeriodiseringMedUtvidetGrunnlag() {
     List<Periode> perioder = new Periodiserer()
-        .addBruddpunkter(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")), InntektType.LØNNSINNTEKT,
-            BigDecimal.valueOf(250000)))
-        .addBruddpunkter(new InntektPeriode(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")), InntektType.LØNNSINNTEKT,
-            BigDecimal.valueOf(400000)))
-        .addBruddpunkter(new InntektPeriode(new Periode(LocalDate.parse("2019-01-01"), null), InntektType.LØNNSINNTEKT, BigDecimal.valueOf(500000)))
+        .addBruddpunkter(
+            new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")), InntektType.INNTEKTSOPPL_ARBEIDSGIVER,
+                BigDecimal.valueOf(250000)))
+        .addBruddpunkter(
+            new InntektPeriode(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")), InntektType.INNTEKTSOPPL_ARBEIDSGIVER,
+                BigDecimal.valueOf(400000)))
+        .addBruddpunkter(
+            new InntektPeriode(new Periode(LocalDate.parse("2019-01-01"), null), InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(500000)))
         .addBruddpunkter(new SivilstandPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-17")), GIFT))
         .addBruddpunkter(new SivilstandPeriode(new Periode(LocalDate.parse("2018-04-17"), null), ENSLIG))
         .addBruddpunkter(new Periode(LocalDate.parse("2017-01-01"), null))
