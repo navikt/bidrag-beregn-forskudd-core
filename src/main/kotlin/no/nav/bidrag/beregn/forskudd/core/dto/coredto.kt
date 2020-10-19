@@ -1,5 +1,9 @@
 package no.nav.bidrag.beregn.forskudd.core.dto
 
+import no.nav.bidrag.beregn.felles.dto.AvvikCore
+import no.nav.bidrag.beregn.felles.dto.PeriodeCore
+import no.nav.bidrag.beregn.felles.dto.SjablonCore
+import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -35,12 +39,6 @@ data class SivilstandPeriodeCore(
     val sivilstandKode: String
 )
 
-data class SjablonPeriodeCore(
-    val sjablonDatoFraTil: PeriodeCore,
-    val sjablonType: String,
-    val sjablonVerdi: BigDecimal
-)
-
 
 // Resultat
 data class BeregnForskuddResultatCore(
@@ -65,28 +63,10 @@ data class ResultatGrunnlagCore(
     val antallBarnIHusstand: Int,
     val soknadBarnAlder: Int,
     val soknadBarnBostatusKode: String,
-    val forskuddssats100Prosent: Int,
-    val multiplikatorMaksInntektsgrense: Int,
-    val inntektsgrense100ProsentForskudd: Int,
-    val inntektsgrenseEnslig75ProsentForskudd: Int,
-    val inntektsgrenseGift75ProsentForskudd: Int,
-    val inntektsintervallForskudd: Int
+    val sjablonListe: List<SjablonCore>
 )
 
 data class InntektCore(
     val inntektType: String,
     val inntektBelop: BigDecimal
-)
-
-
-data class AvvikCore(
-    val avvikTekst: String,
-    val avvikType: String
-)
-
-
-// Felles
-data class PeriodeCore(
-    val periodeDatoFra: LocalDate,
-    val periodeDatoTil: LocalDate?
 )

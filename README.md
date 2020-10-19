@@ -21,6 +21,7 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 Versjon | Endringstype      | Beskrivelse
 --------|-------------------|------------
+0.3.0   | Endret            | Lagt inn ny måte å håndtere sjabloner på og ny validering av datoer + mindre endringer
 0.2.5   | Endret            | Forbedret input-kontroll på datoer (rettelse av feil oppdaget i forrige versjon)
 0.2.4   | Endret            | Forbedret input-kontroll på datoer
 0.2.3   | Endret            | Beregn-til-dato lagt til i periodisering, likt de andre beregningene
