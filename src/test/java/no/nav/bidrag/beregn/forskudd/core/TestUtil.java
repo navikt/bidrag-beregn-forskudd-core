@@ -13,18 +13,15 @@ import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_75_PR
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import no.nav.bidrag.beregn.felles.bo.Avvik;
 import no.nav.bidrag.beregn.felles.bo.Periode;
 import no.nav.bidrag.beregn.felles.bo.Sjablon;
 import no.nav.bidrag.beregn.felles.bo.SjablonInnhold;
-import no.nav.bidrag.beregn.felles.bo.SjablonNokkel;
+import no.nav.bidrag.beregn.felles.bo.SjablonNavnVerdi;
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriode;
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore;
-import no.nav.bidrag.beregn.felles.dto.SjablonCore;
-import no.nav.bidrag.beregn.felles.dto.SjablonInnholdCore;
-import no.nav.bidrag.beregn.felles.dto.SjablonNokkelCore;
+import no.nav.bidrag.beregn.felles.dto.SjablonNavnVerdiCore;
 import no.nav.bidrag.beregn.felles.enums.AvvikType;
 import no.nav.bidrag.beregn.felles.enums.BostatusKode;
 import no.nav.bidrag.beregn.felles.enums.InntektType;
@@ -70,23 +67,28 @@ public class TestUtil {
     return sjablonListe;
   }
 
-  public static List<SjablonCore> byggSjablonCoreListeFraSjablonListe(List<Sjablon> resultatGrunnlagSjablonListe) {
+  public static List<SjablonNavnVerdi> byggSjablonNavnVerdiListe() {
 
-    var resultatGrunnlagSjablonListeCore = new ArrayList<SjablonCore>();
+    var sjablonListe = new ArrayList<SjablonNavnVerdi>();
 
-    for (Sjablon resultatGrunnlagSjablon : resultatGrunnlagSjablonListe) {
-      var sjablonNokkelListeCore = new ArrayList<SjablonNokkelCore>();
-      var sjablonInnholdListeCore = new ArrayList<SjablonInnholdCore>();
-      for (SjablonNokkel sjablonNokkel : resultatGrunnlagSjablon.getSjablonNokkelListe()) {
-        sjablonNokkelListeCore.add(new SjablonNokkelCore(sjablonNokkel.getSjablonNokkelNavn(), sjablonNokkel.getSjablonNokkelVerdi()));
-      }
-      for (SjablonInnhold sjablonInnhold : resultatGrunnlagSjablon.getSjablonInnholdListe()) {
-        sjablonInnholdListeCore.add(new SjablonInnholdCore(sjablonInnhold.getSjablonInnholdNavn(), sjablonInnhold.getSjablonInnholdVerdi()));
-      }
+    // Sjablontall
+    sjablonListe.add(new SjablonNavnVerdi(SjablonTallNavn.FORSKUDDSSATS_BELOP.getNavn(), 1600d));
+    sjablonListe.add(new SjablonNavnVerdi(SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.getNavn(), 320d));
+    sjablonListe.add(new SjablonNavnVerdi(SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP.getNavn(), 270200d));
+    sjablonListe.add(new SjablonNavnVerdi(SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP.getNavn(), 419700d));
+    sjablonListe.add(new SjablonNavnVerdi(SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP.getNavn(), 336500d));
+    sjablonListe.add(new SjablonNavnVerdi(SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP.getNavn(), 61700d));
+
+    return sjablonListe;
+  }
+
+  public static List<SjablonNavnVerdiCore> byggSjablonCoreListeFraSjablonListe(List<SjablonNavnVerdi> resultatGrunnlagSjablonListe) {
+
+    var resultatGrunnlagSjablonListeCore = new ArrayList<SjablonNavnVerdiCore>();
+    for (SjablonNavnVerdi resultatGrunnlagSjablon : resultatGrunnlagSjablonListe) {
       resultatGrunnlagSjablonListeCore
-          .add(new SjablonCore(resultatGrunnlagSjablon.getSjablonNavn(), sjablonNokkelListeCore, sjablonInnholdListeCore));
+          .add(new SjablonNavnVerdiCore(resultatGrunnlagSjablon.getSjablonNavn(), resultatGrunnlagSjablon.getSjablonVerdi()));
     }
-
     return resultatGrunnlagSjablonListeCore;
   }
 
@@ -147,19 +149,19 @@ public class TestUtil {
     List<ResultatPeriode> periodeResultatListe = new ArrayList<>();
     periodeResultatListe.add(new ResultatPeriode(
         new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
-        new ResultatBeregning(BigDecimal.valueOf(1600), INNVILGET_100_PROSENT, "REGEL 1"),
-        new GrunnlagBeregning(Collections.singletonList(new Inntekt(InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(500000))),
-            SivilstandKode.ENSLIG, 2, 10, BostatusKode.MED_FORELDRE, TestUtil.byggSjablonListe())));
+        new ResultatBeregning(BigDecimal.valueOf(1600), INNVILGET_100_PROSENT, "REGEL 1", TestUtil.byggSjablonNavnVerdiListe()),
+        new GrunnlagBeregning(singletonList(new Inntekt(InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(500000))), SivilstandKode.ENSLIG, 2,
+            10, BostatusKode.MED_FORELDRE, TestUtil.byggSjablonListe())));
     periodeResultatListe.add(new ResultatPeriode(
         new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
-        new ResultatBeregning(BigDecimal.valueOf(1200), INNVILGET_75_PROSENT, "REGEL 2"),
-        new GrunnlagBeregning(Collections.singletonList(new Inntekt(InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(500000))),
-            SivilstandKode.ENSLIG, 2, 10, BostatusKode.MED_FORELDRE, TestUtil.byggSjablonListe())));
+        new ResultatBeregning(BigDecimal.valueOf(1200), INNVILGET_75_PROSENT, "REGEL 2", TestUtil.byggSjablonNavnVerdiListe()),
+        new GrunnlagBeregning(singletonList(new Inntekt(InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(500000))), SivilstandKode.ENSLIG, 2,
+            10, BostatusKode.MED_FORELDRE, TestUtil.byggSjablonListe())));
     periodeResultatListe.add(new ResultatPeriode(
         new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")),
-        new ResultatBeregning(BigDecimal.valueOf(0), AVSLAG, "REGEL 11"),
-        new GrunnlagBeregning(Collections.singletonList(new Inntekt(InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(500000))),
-            SivilstandKode.ENSLIG, 2, 10, BostatusKode.MED_FORELDRE, TestUtil.byggSjablonListe())));
+        new ResultatBeregning(BigDecimal.valueOf(0), AVSLAG, "REGEL 11", TestUtil.byggSjablonNavnVerdiListe()),
+        new GrunnlagBeregning(singletonList(new Inntekt(InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(500000))), SivilstandKode.ENSLIG, 2,
+            10, BostatusKode.MED_FORELDRE, TestUtil.byggSjablonListe())));
     return new BeregnForskuddResultat(periodeResultatListe);
   }
 

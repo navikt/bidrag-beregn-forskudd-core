@@ -2,7 +2,7 @@ package no.nav.bidrag.beregn.forskudd.core.dto
 
 import no.nav.bidrag.beregn.felles.dto.AvvikCore
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore
-import no.nav.bidrag.beregn.felles.dto.SjablonCore
+import no.nav.bidrag.beregn.felles.dto.SjablonNavnVerdiCore
 import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -63,7 +63,7 @@ data class ResultatGrunnlagCore(
     val antallBarnIHusstand: Int,
     val soknadBarnAlder: Int,
     val soknadBarnBostatusKode: String,
-    val sjablonListe: List<SjablonCore>
+    val sjablonListe: List<SjablonNavnVerdiCore>
 )
 
 data class InntektCore(

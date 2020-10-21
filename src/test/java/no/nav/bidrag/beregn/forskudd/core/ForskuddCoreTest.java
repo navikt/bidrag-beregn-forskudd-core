@@ -30,9 +30,9 @@ public class ForskuddCoreTest {
   @Mock
   private ForskuddPeriode forskuddPeriodeMock;
 
-  private BeregnForskuddGrunnlagCore beregnForskuddGrunnlagCore = TestUtil.byggForskuddGrunnlagCore();
-  private BeregnForskuddResultat beregnForskuddResultat = TestUtil.byggForskuddResultat();
-  private List<Avvik> avvikListe = TestUtil.byggAvvikListe();
+  private final BeregnForskuddGrunnlagCore beregnForskuddGrunnlagCore = TestUtil.byggForskuddGrunnlagCore();
+  private final BeregnForskuddResultat beregnForskuddResultat = TestUtil.byggForskuddResultat();
+  private final List<Avvik> avvikListe = TestUtil.byggAvvikListe();
 
   @BeforeEach
   void initMocksAndService() {
@@ -78,7 +78,7 @@ public class ForskuddCoreTest {
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSoknadBarnBostatusKode())
             .isEqualTo(BostatusKode.MED_FORELDRE.toString()),
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonCoreListeFraSjablonListe(TestUtil.byggSjablonListe())),
+            .isEqualTo(TestUtil.byggSjablonCoreListeFraSjablonListe(TestUtil.byggSjablonNavnVerdiListe())),
 
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getPeriodeDatoFra())
             .isEqualTo(LocalDate.parse("2018-01-01")),

@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.forskudd.core.bo
 
 import no.nav.bidrag.beregn.felles.bo.Periode
 import no.nav.bidrag.beregn.felles.bo.Sjablon
+import no.nav.bidrag.beregn.felles.bo.SjablonNavnVerdi
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
 import no.nav.bidrag.beregn.felles.enums.BostatusKode
 import no.nav.bidrag.beregn.felles.enums.InntektType
@@ -57,7 +58,8 @@ data class Inntekt(
 data class ResultatBeregning(
     val resultatBelop: BigDecimal,
     val resultatKode: ResultatKode,
-    val resultatBeskrivelse: String
+    val resultatBeskrivelse: String,
+    val sjablonListe: List<SjablonNavnVerdi>
 )
 
 
