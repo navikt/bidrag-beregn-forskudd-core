@@ -12,9 +12,11 @@ import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_50_PR
 import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_75_PROSENT;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import no.nav.bidrag.beregn.felles.SjablonUtil;
 import no.nav.bidrag.beregn.felles.bo.Sjablon;
+import no.nav.bidrag.beregn.felles.bo.SjablonNavnVerdi;
 import no.nav.bidrag.beregn.felles.enums.SivilstandKode;
 import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn;
 import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning;
@@ -94,9 +96,10 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
       }
     }
 
-    return new ResultatBeregning(beregnForskudd(resultatKode, forskuddssats100ProsentBelop), resultatKode, regel);
+    return new ResultatBeregning(beregnForskudd(resultatKode, forskuddssats100ProsentBelop), resultatKode, regel, byggSjablonListe());
   }
 
+  // Henter sjablonverdier
   private void hentSjablonVerdier(List<Sjablon> sjablonListe) {
     forskuddssats100ProsentBelop = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP);
     maksInntektForskuddMottakerMultiplikator = SjablonUtil
@@ -110,6 +113,23 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
         .hentSjablonverdi(sjablonListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP);
   }
 
+  // Mapper ut sjablonverdier til ResultatBeregning (dette for å sikre at kun sjabloner som faktisk er brukt legges ut i grunnlaget for beregning)
+  private List<SjablonNavnVerdi> byggSjablonListe() {
+    var sjablonNavnVerdiListe = new ArrayList<SjablonNavnVerdi>();
+    sjablonNavnVerdiListe.add(new SjablonNavnVerdi(SjablonTallNavn.FORSKUDDSSATS_BELOP.getNavn(), forskuddssats100ProsentBelop));
+    sjablonNavnVerdiListe.add(new SjablonNavnVerdi(SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.getNavn(),
+        maksInntektForskuddMottakerMultiplikator));
+    sjablonNavnVerdiListe.add(new SjablonNavnVerdi(SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP.getNavn(),
+        inntektsgrense100ProsentForskuddBelop));
+    sjablonNavnVerdiListe.add(new SjablonNavnVerdi(SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP.getNavn(),
+        inntektsgrenseEnslig75ProsentForskuddBelop));
+    sjablonNavnVerdiListe.add(new SjablonNavnVerdi(SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP.getNavn(),
+        inntektsgrenseGiftSamboer75ProsentForskuddBelop));
+    sjablonNavnVerdiListe.add(new SjablonNavnVerdi(SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP.getNavn(), inntektsintervallForskuddBelop));
+    return sjablonNavnVerdiListe;
+  }
+
+  // Beregner forskuddsbeløp basert på resultatkode
   private static BigDecimal beregnForskudd(ResultatKode resultatKode, double forskuddssats100ProsentBelop) {
     return switch (resultatKode) {
       case INNVILGET_50_PROSENT -> BigDecimal.valueOf(forskuddssats100ProsentBelop * 0.5);

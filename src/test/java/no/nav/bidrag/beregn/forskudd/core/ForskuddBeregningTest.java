@@ -58,7 +58,8 @@ class ForskuddBeregningTest {
         () -> Assertions.assertThat(resultat).isNotNull(),
         () -> Assertions.assertThat(resultat.getResultatBelop()).isEqualTo(BigDecimal.ZERO),
         () -> Assertions.assertThat(resultat.getResultatKode()).isEqualTo(AVSLAG),
-        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 1")
+        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 1"),
+        () -> Assertions.assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "   * ");
   }
@@ -75,7 +76,8 @@ class ForskuddBeregningTest {
         () -> Assertions.assertThat(resultat.getResultatBelop())
             .isEqualTo(BigDecimal.valueOf(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP) * 2.5)),
         () -> Assertions.assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_250_PROSENT),
-        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 2")
+        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 2"),
+        () -> Assertions.assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "   **");
   }
@@ -92,7 +94,8 @@ class ForskuddBeregningTest {
         () -> Assertions.assertThat(resultat.getResultatBelop())
             .isEqualTo(BigDecimal.valueOf(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP) * 2)),
         () -> Assertions.assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_200_PROSENT),
-        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 3")
+        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 3"),
+        () -> Assertions.assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "   **");
   }
@@ -109,7 +112,8 @@ class ForskuddBeregningTest {
         () -> Assertions.assertThat(resultat.getResultatBelop())
             .isEqualTo(BigDecimal.valueOf(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP) * 1.25)),
         () -> Assertions.assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_125_PROSENT),
-        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 4")
+        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 4"),
+        () -> Assertions.assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "   **");
   }
@@ -126,7 +130,8 @@ class ForskuddBeregningTest {
         () -> Assertions.assertThat(resultat.getResultatBelop())
             .isEqualTo(BigDecimal.valueOf(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP))),
         () -> Assertions.assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_100_PROSENT),
-        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 5")
+        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 5"),
+        () -> Assertions.assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "   **");
   }
@@ -144,7 +149,8 @@ class ForskuddBeregningTest {
         () -> Assertions.assertThat(resultat).isNotNull(),
         () -> Assertions.assertThat(resultat.getResultatBelop()).isEqualTo(BigDecimal.ZERO),
         () -> Assertions.assertThat(resultat.getResultatKode()).isEqualTo(AVSLAG),
-        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 6")
+        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 6"),
+        () -> Assertions.assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "*    ");
   }
@@ -162,7 +168,8 @@ class ForskuddBeregningTest {
         () -> Assertions.assertThat(resultat.getResultatBelop())
             .isEqualTo(BigDecimal.valueOf(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP) * 1.25)),
         () -> Assertions.assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_125_PROSENT),
-        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 7")
+        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 7"),
+        () -> Assertions.assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "*  * ");
   }
@@ -180,7 +187,8 @@ class ForskuddBeregningTest {
         () -> Assertions.assertThat(resultat.getResultatBelop())
             .isEqualTo(BigDecimal.valueOf(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP))),
         () -> Assertions.assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_100_PROSENT),
-        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 8")
+        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 8"),
+        () -> Assertions.assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "*  * ");
   }
@@ -198,7 +206,8 @@ class ForskuddBeregningTest {
         () -> Assertions.assertThat(resultat.getResultatBelop())
             .isEqualTo(BigDecimal.valueOf(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP) * 0.75)),
         () -> Assertions.assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
-        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 9")
+        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 9"),
+        () -> Assertions.assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "***  ");
   }
@@ -216,7 +225,8 @@ class ForskuddBeregningTest {
         () -> Assertions.assertThat(resultat.getResultatBelop())
             .isEqualTo(BigDecimal.valueOf(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP) * 0.5)),
         () -> Assertions.assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_50_PROSENT),
-        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 10")
+        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 10"),
+        () -> Assertions.assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "***  ");
   }
@@ -236,7 +246,8 @@ class ForskuddBeregningTest {
         () -> Assertions.assertThat(resultat.getResultatBelop())
             .isEqualTo(BigDecimal.valueOf(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP) * 0.75)),
         () -> Assertions.assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
-        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 11")
+        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 11"),
+        () -> Assertions.assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "***  ");
   }
@@ -256,7 +267,8 @@ class ForskuddBeregningTest {
         () -> Assertions.assertThat(resultat.getResultatBelop())
             .isEqualTo(BigDecimal.valueOf(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP) * 0.5)),
         () -> Assertions.assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_50_PROSENT),
-        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 12")
+        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 12"),
+        () -> Assertions.assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "***  ");
   }
@@ -274,7 +286,8 @@ class ForskuddBeregningTest {
         () -> Assertions.assertThat(resultat.getResultatBelop())
             .isEqualTo(BigDecimal.valueOf(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP) * 0.75)),
         () -> Assertions.assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
-        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 13")
+        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 13"),
+        () -> Assertions.assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "***  ");
   }
@@ -292,7 +305,8 @@ class ForskuddBeregningTest {
         () -> Assertions.assertThat(resultat.getResultatBelop())
             .isEqualTo(BigDecimal.valueOf(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP) * 0.5)),
         () -> Assertions.assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_50_PROSENT),
-        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 14")
+        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 14"),
+        () -> Assertions.assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "***  ");
   }
@@ -311,7 +325,8 @@ class ForskuddBeregningTest {
         () -> Assertions.assertThat(resultat.getResultatBelop())
             .isEqualTo(BigDecimal.valueOf(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP) * 0.75)),
         () -> Assertions.assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
-        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 15")
+        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 15"),
+        () -> Assertions.assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "***  ");
   }
@@ -331,7 +346,8 @@ class ForskuddBeregningTest {
         () -> Assertions.assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_50_PROSENT),
         () -> Assertions.assertThat(resultat.getResultatBelop())
             .isEqualTo(BigDecimal.valueOf(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP) * 0.5)),
-        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 16")
+        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 16"),
+        () -> Assertions.assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "***  ");
   }
@@ -352,7 +368,8 @@ class ForskuddBeregningTest {
         () -> Assertions.assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_50_PROSENT),
         () -> Assertions.assertThat(resultat.getResultatBelop())
             .isEqualTo(BigDecimal.valueOf(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP) * 0.5)),
-        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 16")
+        () -> Assertions.assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 16"),
+        () -> Assertions.assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "***  ");
   }

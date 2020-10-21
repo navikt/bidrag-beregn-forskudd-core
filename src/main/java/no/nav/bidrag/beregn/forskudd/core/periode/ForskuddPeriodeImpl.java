@@ -32,7 +32,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
   private final ForskuddBeregning forskuddBeregning;
 
-  private List<ResultatPeriode> periodeResultatListe = new ArrayList<>();
+  private final List<ResultatPeriode> periodeResultatListe = new ArrayList<>();
 
   private List<InntektPeriode> justertInntektPeriodeListe;
   private List<SivilstandPeriode> justertSivilstandPeriodeListe;
