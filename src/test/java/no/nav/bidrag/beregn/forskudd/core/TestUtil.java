@@ -240,8 +240,43 @@ public class TestUtil {
 
     var sjablonPeriodeListe = TestUtil.byggSjablonPeriodeListe();
 
-    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bmInntektListe, bmSivilstandListe, bmBarnListe,
-        sjablonPeriodeListe);
+    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bmInntektListe, bmSivilstandListe, bmBarnListe, sjablonPeriodeListe);
+  }
+
+  public static BeregnForskuddGrunnlag byggForskuddGrunnlagMedUgyldigInntekt() {
+    var beregnDatoFra = LocalDate.parse("2017-01-01");
+    var beregnDatoTil = LocalDate.parse("2019-01-01");
+
+    var sBFodselsdato = LocalDate.parse("2006-12-19");
+    var sBBostedStatusListe = new ArrayList<BostatusPeriode>();
+    sBBostedStatusListe.add(new BostatusPeriode(new Periode(LocalDate.parse("2006-12-19"), LocalDate.parse("2018-08-16")), MED_FORELDRE));
+    sBBostedStatusListe
+        .add(new BostatusPeriode(new Periode(LocalDate.parse("2018-08-16"), LocalDate.parse("2018-11-13")), MED_ANDRE_ENN_FORELDRE));
+    sBBostedStatusListe.add(new BostatusPeriode(new Periode(LocalDate.parse("2018-11-13"), null), MED_FORELDRE));
+    var soknadBarn = new SoknadBarn(sBFodselsdato, sBBostedStatusListe);
+
+    var bmInntektListe = new ArrayList<InntektPeriode>();
+    bmInntektListe
+        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")), InntektType.ALOYSE,
+            BigDecimal.valueOf(250000)));
+    bmInntektListe
+        .add(new InntektPeriode(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")), InntektType.INNTEKTSOPPL_ARBEIDSGIVER,
+            BigDecimal.valueOf(400000)));
+    bmInntektListe
+        .add(new InntektPeriode(new Periode(LocalDate.parse("2019-01-01"), null), InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(500000)));
+
+    var bmSivilstandListe = new ArrayList<SivilstandPeriode>();
+    bmSivilstandListe.add(new SivilstandPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-17")), GIFT));
+    bmSivilstandListe.add(new SivilstandPeriode(new Periode(LocalDate.parse("2018-04-17"), LocalDate.parse("2019-08-01")), ENSLIG));
+
+    var bmBarnListe = new ArrayList<Periode>();
+    bmBarnListe.add(new Periode(LocalDate.parse("2017-01-01"), null));
+    bmBarnListe.add(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-06-17")));
+    bmBarnListe.add(new Periode(LocalDate.parse("2019-03-31"), null));
+
+    var sjablonPeriodeListe = TestUtil.byggSjablonPeriodeListe();
+
+    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bmInntektListe, bmSivilstandListe, bmBarnListe, sjablonPeriodeListe);
   }
 
   public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenBarn() {
@@ -280,6 +315,43 @@ public class TestUtil {
 
     var bmBarnListe = new ArrayList<Periode>();
     bmBarnListe.add(new Periode(LocalDate.parse("2017-01-01"), null));
+
+    var sjablonPeriodeListe = TestUtil.byggSjablonPeriodeListe();
+
+    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bmInntektListe, bmSivilstandListe, bmBarnListe,
+        sjablonPeriodeListe);
+  }
+
+  public static BeregnForskuddGrunnlag byggForskuddGrunnlagMedJusteringAvInntekter() {
+    var beregnDatoFra = LocalDate.parse("2018-01-01");
+    var beregnDatoTil = LocalDate.parse("2020-07-01");
+
+    var sBFodselsdato = LocalDate.parse("2015-01-01");
+    var sBBostedStatusListe = new ArrayList<BostatusPeriode>();
+    sBBostedStatusListe.add(new BostatusPeriode(new Periode(LocalDate.parse("2018-01-01"), null), MED_FORELDRE));
+    var soknadBarn = new SoknadBarn(sBFodselsdato, sBBostedStatusListe);
+
+    var bmSivilstandListe = new ArrayList<SivilstandPeriode>();
+    bmSivilstandListe.add(new SivilstandPeriode(new Periode(LocalDate.parse("2018-01-01"), null), ENSLIG));
+
+    var bmBarnListe = new ArrayList<Periode>();
+    bmBarnListe.add(new Periode(LocalDate.parse("2018-01-01"), null));
+
+    var bmInntektListe = new ArrayList<InntektPeriode>();
+    bmInntektListe.add(
+        new InntektPeriode(new Periode(LocalDate.parse("2018-01-01"), null), InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(200000)));
+    bmInntektListe.add(
+        new InntektPeriode(new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")), InntektType.INNTEKTSOPPL_ARBEIDSGIVER,
+            BigDecimal.valueOf(150000)));
+    bmInntektListe.add(
+        new InntektPeriode(new Periode(LocalDate.parse("2019-01-01"), null), InntektType.SAKSBEHANDLER_BEREGNET_INNTEKT,
+            BigDecimal.valueOf(300000)));
+    bmInntektListe.add(
+        new InntektPeriode(new Periode(LocalDate.parse("2019-01-01"), null), InntektType.KAPITALINNTEKT_EGNE_OPPL,
+            BigDecimal.valueOf(100000)));
+    bmInntektListe.add(
+        new InntektPeriode(new Periode(LocalDate.parse("2020-01-01"), null), InntektType.ATTFORING_AAP,
+            BigDecimal.valueOf(250000)));
 
     var sjablonPeriodeListe = TestUtil.byggSjablonPeriodeListe();
 

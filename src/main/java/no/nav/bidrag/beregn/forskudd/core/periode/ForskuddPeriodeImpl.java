@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.forskudd.core.periode;
 
 import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
 import static java.time.temporal.TemporalAdjusters.firstDayOfNextMonth;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 
@@ -10,12 +11,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import no.nav.bidrag.beregn.felles.InntektUtil;
 import no.nav.bidrag.beregn.felles.PeriodeUtil;
 import no.nav.bidrag.beregn.felles.bo.Avvik;
 import no.nav.bidrag.beregn.felles.bo.Periode;
 import no.nav.bidrag.beregn.felles.bo.Sjablon;
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriode;
 import no.nav.bidrag.beregn.felles.enums.BostatusKode;
+import no.nav.bidrag.beregn.felles.enums.Rolle;
+import no.nav.bidrag.beregn.felles.enums.SoknadType;
+import no.nav.bidrag.beregn.felles.inntekt.InntektGrunnlag;
 import no.nav.bidrag.beregn.felles.periode.Periodiserer;
 import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.AlderPeriode;
@@ -35,6 +40,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
   private final List<ResultatPeriode> periodeResultatListe = new ArrayList<>();
 
   private List<InntektPeriode> justertInntektPeriodeListe;
+  private List<InntektPeriode> justertBidragMottakerInntektPeriodeListe;
   private List<SivilstandPeriode> justertSivilstandPeriodeListe;
   private List<Periode> justertBarnPeriodeListe;
   private List<BostatusPeriode> justertBostatusPeriodeListe;
@@ -48,6 +54,9 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
   public BeregnForskuddResultat beregnPerioder(BeregnForskuddGrunnlag periodeGrunnlag) {
 
+    // Juster inntekter for å unngå overlapp innenfor samme inntektsgruppe
+    justerInntekter(periodeGrunnlag.getBidragMottakerInntektPeriodeListe());
+
     // Juster datoer
     justerDatoerGrunnlagslister(periodeGrunnlag);
 
@@ -60,9 +69,23 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     return new BeregnForskuddResultat(periodeResultatListe);
   }
 
+  // Justerer inntekter for å unngå overlapp innenfor samme inntektsgruppe
+  private void justerInntekter(List<InntektPeriode> inntektPeriodeListe) {
+
+    var inntektGrunnlagListe = InntektUtil.justerInntekter(inntektPeriodeListe.stream()
+            .map(inntektPeriode -> new InntektGrunnlag(inntektPeriode.getInntektDatoFraTil(), inntektPeriode.getInntektType(),
+                inntektPeriode.getInntektBelop()))
+            .collect(toList()));
+    justertBidragMottakerInntektPeriodeListe = inntektGrunnlagListe.stream()
+        .map(inntektGrunnlag -> new InntektPeriode(inntektGrunnlag.getInntektDatoFraTil(), inntektGrunnlag.getInntektType(),
+            inntektGrunnlag.getInntektBelop()))
+        .sorted(comparing(inntektPeriode -> inntektPeriode.getInntektDatoFraTil().getDatoFra()))
+        .collect(toList());
+  }
+
   // Justerer datoer på grunnlagslistene (blir gjort implisitt i xxxPeriode::new)
   private void justerDatoerGrunnlagslister(BeregnForskuddGrunnlag periodeGrunnlag) {
-    justertInntektPeriodeListe = periodeGrunnlag.getBidragMottakerInntektPeriodeListe()
+    justertInntektPeriodeListe = justertBidragMottakerInntektPeriodeListe
         .stream()
         .map(InntektPeriode::new)
         .collect(toCollection(ArrayList::new));
@@ -255,6 +278,13 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     avvikListe.addAll(PeriodeUtil
         .validerInputDatoer(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil(), "sjablonPeriodeListe", sjablonPeriodeListe, false,
             false, false, false));
+
+    // Valider inntekter
+    var inntektGrunnlagListe = periodeGrunnlag.getBidragMottakerInntektPeriodeListe().stream()
+        .map(inntektPeriode -> new InntektGrunnlag(inntektPeriode.getInntektDatoFraTil(), inntektPeriode.getInntektType(),
+            inntektPeriode.getInntektBelop()))
+        .collect(toList());
+    avvikListe.addAll(InntektUtil.validerInntekter(inntektGrunnlagListe, SoknadType.FORSKUDD, Rolle.BIDRAGSMOTTAKER));
 
     return avvikListe;
   }
