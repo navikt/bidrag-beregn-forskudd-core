@@ -27,7 +27,6 @@ data class SoknadBarn(
     val soknadBarnBostatusPeriodeListe: List<BostatusPeriode>
 )
 
-
 // Resultat periode
 data class BeregnForskuddResultat(
     val resultatPeriodeListe: List<ResultatPeriode>
@@ -37,7 +36,6 @@ data class ResultatPeriode(
     val resultatDatoFraTil: Periode,
     val resultatBeregning: ResultatBeregning,
     val resultatGrunnlag: GrunnlagBeregning)
-
 
 // Grunnlag beregning
 data class GrunnlagBeregning(
@@ -53,7 +51,6 @@ data class Inntekt(
     val inntektBelop: BigDecimal
 )
 
-
 // Resultat beregning
 data class ResultatBeregning(
     val resultatBelop: BigDecimal,
@@ -63,8 +60,22 @@ data class ResultatBeregning(
 )
 
 
+// Hjelpeklasser
+data class BeregnForskuddListeGrunnlag(
+    val periodeResultatListe: MutableList<ResultatPeriode> = mutableListOf(),
+    var justertInntektPeriodeListe: List<InntektPeriode> = emptyList(),
+    var justertBidragMottakerInntektPeriodeListe: List<InntektPeriode> = emptyList(),
+    var justertSivilstandPeriodeListe: List<SivilstandPeriode> = emptyList(),
+    var justertBarnPeriodeListe: List<Periode> = emptyList(),
+    var justertBostatusPeriodeListe: List<BostatusPeriode> = emptyList(),
+    var justertAlderPeriodeListe: List<AlderPeriode> =emptyList(),
+    var justertSjablonPeriodeListe: List<SjablonPeriode> = emptyList(),
+    var bruddPeriodeListe: List<Periode>? = emptyList()
+)
+
 // ENUMs
 enum class ResultatKode {
+
   AVSLAG,
   INNVILGET_50_PROSENT,
   INNVILGET_75_PROSENT,
