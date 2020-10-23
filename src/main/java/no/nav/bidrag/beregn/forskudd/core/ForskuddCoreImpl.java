@@ -52,10 +52,12 @@ public class ForskuddCoreImpl implements ForskuddCore {
 
   public BeregnForskuddResultatCore beregnForskudd(BeregnForskuddGrunnlagCore grunnlag) {
     var beregnForskuddGrunnlag = mapTilBusinessObject(grunnlag);
-    var beregnForskuddResultat = new BeregnForskuddResultat(Collections.emptyList());
+    BeregnForskuddResultat beregnForskuddResultat;
     var avvikListe = forskuddPeriode.validerInput(beregnForskuddGrunnlag);
     if (avvikListe.isEmpty()) {
       beregnForskuddResultat = forskuddPeriode.beregnPerioder(beregnForskuddGrunnlag);
+    } else {
+      beregnForskuddResultat = new BeregnForskuddResultat(Collections.emptyList());
     }
     return mapFraBusinessObject(avvikListe, beregnForskuddResultat);
   }
