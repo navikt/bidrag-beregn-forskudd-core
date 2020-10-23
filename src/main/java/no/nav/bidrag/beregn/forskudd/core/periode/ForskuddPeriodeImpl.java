@@ -37,7 +37,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
   private final ForskuddBeregning forskuddBeregning;
 
-  private final List<ResultatPeriode> periodeResultatListe;
+  private List<ResultatPeriode> periodeResultatListe;
 
   private List<InntektPeriode> justertInntektPeriodeListe;
   private List<InntektPeriode> justertBidragMottakerInntektPeriodeListe;
