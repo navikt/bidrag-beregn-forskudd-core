@@ -33,6 +33,15 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
   private double inntektsgrenseEnslig75ProsentForskuddBelop;
   private double inntektsgrenseGiftSamboer75ProsentForskuddBelop;
 
+  public ForskuddBeregningImpl() {
+    this.maksInntektForskuddMottakerMultiplikator = 0d;
+    this.inntektsintervallForskuddBelop = 0d;
+    this.forskuddssats100ProsentBelop = 0d;
+    this.inntektsgrense100ProsentForskuddBelop = 0d;
+    this.inntektsgrenseEnslig75ProsentForskuddBelop = 0d;
+    this.inntektsgrenseGiftSamboer75ProsentForskuddBelop = 0d;
+  }
+
   @Override
   public ResultatBeregning beregn(GrunnlagBeregning grunnlag) {
 
