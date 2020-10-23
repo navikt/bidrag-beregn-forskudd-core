@@ -21,6 +21,7 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 Versjon | Endringstype      | Beskrivelse
 --------|-------------------|------------
+0.4.4   | Endret            | Debug
 0.4.3   | Endret            | Debug
 0.4.2   | Endret            | Debug
 0.4.1   | Opprettet         | Lagt til validering av inntekter
