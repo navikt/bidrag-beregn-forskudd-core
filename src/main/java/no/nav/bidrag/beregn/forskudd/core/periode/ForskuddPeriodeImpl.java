@@ -37,7 +37,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
   private final ForskuddBeregning forskuddBeregning;
 
-  private final List<ResultatPeriode> periodeResultatListe = new ArrayList<>();
+  private final List<ResultatPeriode> periodeResultatListe;
 
   private List<InntektPeriode> justertInntektPeriodeListe;
   private List<InntektPeriode> justertBidragMottakerInntektPeriodeListe;
@@ -50,6 +50,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
   public ForskuddPeriodeImpl(ForskuddBeregning forskuddBeregning) {
     this.forskuddBeregning = forskuddBeregning;
+    this.periodeResultatListe = new ArrayList<>();
   }
 
   public BeregnForskuddResultat beregnPerioder(BeregnForskuddGrunnlag periodeGrunnlag) {

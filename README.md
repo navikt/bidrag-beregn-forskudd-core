@@ -21,6 +21,7 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 Versjon | Endringstype      | Beskrivelse
 --------|-------------------|------------
+0.4.2   | Opprettet         | Debug
 0.4.1   | Opprettet         | Lagt til validering av inntekter
 0.4.0   | Endret            | Endret måten sjabloner legges ut på i resultatgrunnlaget (inneholder nå navn/verdi på de som faktisk er brukt)
 0.3.0   | Endret            | Lagt inn ny måte å håndtere sjabloner på og ny validering av datoer + mindre endringer
