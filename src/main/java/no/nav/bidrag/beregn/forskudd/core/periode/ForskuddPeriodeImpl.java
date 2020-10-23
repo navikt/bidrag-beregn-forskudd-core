@@ -51,6 +51,14 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
   public ForskuddPeriodeImpl(ForskuddBeregning forskuddBeregning) {
     this.forskuddBeregning = forskuddBeregning;
     this.periodeResultatListe = new ArrayList<>();
+    this.justertInntektPeriodeListe = new ArrayList<>();
+    this.justertBidragMottakerInntektPeriodeListe = new ArrayList<>();
+    this.justertSivilstandPeriodeListe = new ArrayList<>();
+    this.justertBarnPeriodeListe = new ArrayList<>();
+    this.justertBostatusPeriodeListe = new ArrayList<>();
+    this.justertAlderPeriodeListe = new ArrayList<>();
+    this.justertSjablonPeriodeListe = new ArrayList<>();
+    this.bruddPeriodeListe = new ArrayList<>();
   }
 
   public BeregnForskuddResultat beregnPerioder(BeregnForskuddGrunnlag periodeGrunnlag) {
