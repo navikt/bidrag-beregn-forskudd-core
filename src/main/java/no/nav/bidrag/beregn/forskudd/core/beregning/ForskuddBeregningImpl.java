@@ -26,20 +26,20 @@ import no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode;
 
 public class ForskuddBeregningImpl implements ForskuddBeregning {
 
-  private double maksInntektForskuddMottakerMultiplikator;
-  private double inntektsintervallForskuddBelop;
-  private double forskuddssats100ProsentBelop;
-  private double inntektsgrense100ProsentForskuddBelop;
-  private double inntektsgrenseEnslig75ProsentForskuddBelop;
-  private double inntektsgrenseGiftSamboer75ProsentForskuddBelop;
+  private BigDecimal maksInntektForskuddMottakerMultiplikator;
+  private BigDecimal inntektsintervallForskuddBelop;
+  private BigDecimal forskuddssats100ProsentBelop;
+  private BigDecimal inntektsgrense100ProsentForskuddBelop;
+  private BigDecimal inntektsgrenseEnslig75ProsentForskuddBelop;
+  private BigDecimal inntektsgrenseGiftSamboer75ProsentForskuddBelop;
 
   public ForskuddBeregningImpl() {
-    this.maksInntektForskuddMottakerMultiplikator = 0d;
-    this.inntektsintervallForskuddBelop = 0d;
-    this.forskuddssats100ProsentBelop = 0d;
-    this.inntektsgrense100ProsentForskuddBelop = 0d;
-    this.inntektsgrenseEnslig75ProsentForskuddBelop = 0d;
-    this.inntektsgrenseGiftSamboer75ProsentForskuddBelop = 0d;
+    this.maksInntektForskuddMottakerMultiplikator = BigDecimal.ZERO;
+    this.inntektsintervallForskuddBelop = BigDecimal.ZERO;
+    this.forskuddssats100ProsentBelop = BigDecimal.ZERO;
+    this.inntektsgrense100ProsentForskuddBelop = BigDecimal.ZERO;
+    this.inntektsgrenseEnslig75ProsentForskuddBelop = BigDecimal.ZERO;
+    this.inntektsgrenseGiftSamboer75ProsentForskuddBelop = BigDecimal.ZERO;
   }
 
   @Override
@@ -47,10 +47,10 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
 
     hentSjablonVerdier(grunnlag.getSjablonListe());
 
-    var maksInntektsgrense = forskuddssats100ProsentBelop * maksInntektForskuddMottakerMultiplikator;
-    var inntektsIntervallTotal = (grunnlag.getAntallBarnIHusstand() - 1) * inntektsintervallForskuddBelop;
-    if (inntektsIntervallTotal < 0) {
-      inntektsIntervallTotal = 0;
+    var maksInntektsgrense = forskuddssats100ProsentBelop.multiply(maksInntektForskuddMottakerMultiplikator);
+    var inntektsIntervallTotal = inntektsintervallForskuddBelop.multiply(BigDecimal.valueOf(grunnlag.getAntallBarnIHusstand() - 1));
+    if (inntektsIntervallTotal.compareTo(BigDecimal.ZERO) < 0) {
+      inntektsIntervallTotal = BigDecimal.ZERO;
     }
     ResultatKode resultatKode;
     String regel;
@@ -88,7 +88,7 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
     } else {
       resultatKode = (erUnderInntektsGrense(
           settInntektsgrense(grunnlag.getBidragMottakerSivilstandKode(), inntektsgrenseEnslig75ProsentForskuddBelop,
-              inntektsgrenseGiftSamboer75ProsentForskuddBelop) + inntektsIntervallTotal, bidragMottakerInntekt)) ? INNVILGET_75_PROSENT
+              inntektsgrenseGiftSamboer75ProsentForskuddBelop).add(inntektsIntervallTotal), bidragMottakerInntekt)) ? INNVILGET_75_PROSENT
           : INNVILGET_50_PROSENT;
       if (grunnlag.getBidragMottakerSivilstandKode().equals(ENSLIG)) {
         if (grunnlag.getAntallBarnIHusstand() == 1) {
@@ -139,24 +139,24 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
   }
 
   // Beregner forskuddsbeløp basert på resultatkode
-  private static BigDecimal beregnForskudd(ResultatKode resultatKode, double forskuddssats100ProsentBelop) {
+  private static BigDecimal beregnForskudd(ResultatKode resultatKode, BigDecimal forskuddssats100ProsentBelop) {
     return switch (resultatKode) {
-      case INNVILGET_50_PROSENT -> BigDecimal.valueOf(forskuddssats100ProsentBelop * 0.5);
-      case INNVILGET_75_PROSENT -> BigDecimal.valueOf(forskuddssats100ProsentBelop * 0.75);
-      case INNVILGET_100_PROSENT -> BigDecimal.valueOf(forskuddssats100ProsentBelop);
-      case INNVILGET_125_PROSENT -> BigDecimal.valueOf(forskuddssats100ProsentBelop * 1.25);
-      case INNVILGET_200_PROSENT -> BigDecimal.valueOf(forskuddssats100ProsentBelop * 2);
-      case INNVILGET_250_PROSENT -> BigDecimal.valueOf(forskuddssats100ProsentBelop * 2.5);
+      case INNVILGET_50_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(0.5));
+      case INNVILGET_75_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(0.75));
+      case INNVILGET_100_PROSENT -> forskuddssats100ProsentBelop;
+      case INNVILGET_125_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(1.25));
+      case INNVILGET_200_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(2));
+      case INNVILGET_250_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(2.5));
       default -> BigDecimal.ZERO;
     };
   }
 
-  private static boolean erUnderInntektsGrense(double inntektsgrense, BigDecimal inntekt) {
-    return inntekt.compareTo(BigDecimal.valueOf(inntektsgrense)) < 1;
+  private static boolean erUnderInntektsGrense(BigDecimal inntektsgrense, BigDecimal inntekt) {
+    return inntekt.compareTo(inntektsgrense) < 1;
   }
 
-  private static double settInntektsgrense(SivilstandKode sivilstandKode, double inntektsgrenseEnslig75Prosent,
-      double inntektsgrenseGift75Prosent) {
+  private static BigDecimal settInntektsgrense(SivilstandKode sivilstandKode, BigDecimal inntektsgrenseEnslig75Prosent,
+      BigDecimal inntektsgrenseGift75Prosent) {
     return sivilstandKode.equals(ENSLIG) ? inntektsgrenseEnslig75Prosent : inntektsgrenseGift75Prosent;
   }
 }
