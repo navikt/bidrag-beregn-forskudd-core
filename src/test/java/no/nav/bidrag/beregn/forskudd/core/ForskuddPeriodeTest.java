@@ -60,7 +60,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(250000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerSivilstandKode())
@@ -210,7 +210,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(250000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerSivilstandKode())
@@ -228,11 +228,10 @@ class ForskuddPeriodeTest {
   void testBeregnPerioderGrunnlagMedFlereInntekterISammePeriodeTest1() {
 
     var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(400000)));
-    bmInntektListe.add(
-        new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2017-06-01")), InntektType.KAPITALINNTEKT_EGNE_OPPL,
-            BigDecimal.valueOf(10000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+        BigDecimal.valueOf(400000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2017-06-01")),
+        InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER, BigDecimal.valueOf(10000)));
     bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-04-01"), LocalDate.parse("2017-09-01")), InntektType.UTVIDET_BARNETRYGD,
         BigDecimal.valueOf(15000)));
     var grunnlag = TestUtil.byggForskuddGrunnlagMedFlereInntekterISammePeriode(bmInntektListe);
@@ -252,11 +251,11 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(2),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektType())
-            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPL),
+            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(10000)),
 
@@ -268,11 +267,11 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(3),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektType())
-            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPL),
+            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(10000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(2).getInntektType())
@@ -288,7 +287,7 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(2),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektType())
@@ -304,7 +303,7 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000))
     );
@@ -315,12 +314,10 @@ class ForskuddPeriodeTest {
   void testBeregnPerioderGrunnlagMedFlereInntekterISammePeriodeTest2() {
 
     var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")), InntektType.INNTEKTSOPPL_ARBEIDSGIVER,
-            BigDecimal.valueOf(400000)));
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2017-06-01")), InntektType.KAPITALINNTEKT_EGNE_OPPL,
-            BigDecimal.valueOf(10000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
+        InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(400000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2017-06-01")),
+        InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER, BigDecimal.valueOf(10000)));
     bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-04-01"), LocalDate.parse("2017-09-01")), InntektType.UTVIDET_BARNETRYGD,
         BigDecimal.valueOf(15000)));
     var grunnlag = TestUtil.byggForskuddGrunnlagMedFlereInntekterISammePeriode(bmInntektListe);
@@ -340,11 +337,11 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(2),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektType())
-            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPL),
+            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(10000)),
 
@@ -356,11 +353,11 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(3),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektType())
-            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPL),
+            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(10000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(2).getInntektType())
@@ -376,7 +373,7 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(2),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektType())
@@ -392,7 +389,7 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000))
     );
@@ -403,14 +400,12 @@ class ForskuddPeriodeTest {
   void testBeregnPerioderGrunnlagMedFlereInntekterISammePeriodeTest3() {
 
     var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(400000)));
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-03-01"), LocalDate.parse("2017-06-01")), InntektType.KAPITALINNTEKT_EGNE_OPPL,
-            BigDecimal.valueOf(10000)));
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-09-01"), LocalDate.parse("2017-12-01")), InntektType.UTVIDET_BARNETRYGD,
-            BigDecimal.valueOf(15000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+        BigDecimal.valueOf(400000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-03-01"), LocalDate.parse("2017-06-01")),
+        InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER, BigDecimal.valueOf(10000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-09-01"), LocalDate.parse("2017-12-01")), InntektType.UTVIDET_BARNETRYGD,
+        BigDecimal.valueOf(15000)));
     var grunnlag = TestUtil.byggForskuddGrunnlagMedFlereInntekterISammePeriode(bmInntektListe);
 
     var resultat = forskuddPeriode.beregnPerioder(grunnlag);
@@ -428,7 +423,7 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000)),
 
@@ -440,11 +435,11 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(2),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektType())
-            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPL),
+            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(10000)),
 
@@ -456,7 +451,7 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000)),
 
@@ -468,7 +463,7 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(2),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektType())
@@ -484,7 +479,7 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000))
     );
@@ -495,11 +490,10 @@ class ForskuddPeriodeTest {
   void testBeregnPerioderGrunnlagMedFlereInntekterISammePeriodeTest4() {
 
     var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(400000)));
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")), InntektType.KAPITALINNTEKT_EGNE_OPPL,
-            BigDecimal.valueOf(10000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+        BigDecimal.valueOf(400000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
+        InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER, BigDecimal.valueOf(10000)));
     bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")), InntektType.UTVIDET_BARNETRYGD,
         BigDecimal.valueOf(15000)));
     var grunnlag = TestUtil.byggForskuddGrunnlagMedFlereInntekterISammePeriode(bmInntektListe);
@@ -519,11 +513,11 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(3),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektType())
-            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPL),
+            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(10000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(2).getInntektType())
@@ -538,11 +532,10 @@ class ForskuddPeriodeTest {
   void testBeregnPerioderGrunnlagMedFlereInntekterISammePeriodeTest5() {
 
     var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(400000)));
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-03-01"), LocalDate.parse("2017-06-01")), InntektType.KAPITALINNTEKT_EGNE_OPPL,
-            BigDecimal.valueOf(10000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+        BigDecimal.valueOf(400000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-03-01"), LocalDate.parse("2017-06-01")),
+        InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER, BigDecimal.valueOf(10000)));
     bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-03-01"), LocalDate.parse("2017-06-01")), InntektType.UTVIDET_BARNETRYGD,
         BigDecimal.valueOf(15000)));
     var grunnlag = TestUtil.byggForskuddGrunnlagMedFlereInntekterISammePeriode(bmInntektListe);
@@ -562,7 +555,7 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000)),
 
@@ -574,11 +567,11 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(3),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektType())
-            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPL),
+            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(10000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(2).getInntektType())
@@ -594,7 +587,7 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000))
     );
@@ -605,11 +598,10 @@ class ForskuddPeriodeTest {
   void testBeregnPerioderGrunnlagMedFlereInntekterISammePeriodeTest6() {
 
     var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2017-06-01")), InntektType.KAPITALINNTEKT_EGNE_OPPL,
-            BigDecimal.valueOf(10000)));
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(400000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2017-06-01")),
+        InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER, BigDecimal.valueOf(10000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+        BigDecimal.valueOf(400000)));
     bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-04-01"), LocalDate.parse("2017-09-01")), InntektType.UTVIDET_BARNETRYGD,
         BigDecimal.valueOf(15000)));
     var grunnlag = TestUtil.byggForskuddGrunnlagMedFlereInntekterISammePeriode(bmInntektListe);
@@ -629,11 +621,11 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(2),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektType())
-            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPL),
+            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(10000)),
 
@@ -645,11 +637,11 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(3),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektType())
-            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPL),
+            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(10000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(2).getInntektType())
@@ -665,7 +657,7 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(2),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektType())
@@ -681,7 +673,7 @@ class ForskuddPeriodeTest {
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(400000))
     );
@@ -702,7 +694,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2018-06-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(200000)),
 
@@ -710,7 +702,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2019-01-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(150000)),
 
@@ -722,7 +714,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(300000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektType())
-            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPL),
+            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(100000)),
 
@@ -730,7 +722,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatDatoFraTil().getDatoTil()).isNull(),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(2),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPL),
+            .isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektBelop())
             .isEqualTo(BigDecimal.valueOf(100000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatGrunnlag().getBidragMottakerInntektListe().get(1).getInntektType())
@@ -745,11 +737,10 @@ class ForskuddPeriodeTest {
   void testValiderInputGrunnlagMedFlereInntekterISammePeriodeTest1() {
 
     var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(400000)));
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2017-06-01")), InntektType.KAPITALINNTEKT_EGNE_OPPL,
-            BigDecimal.valueOf(10000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+        BigDecimal.valueOf(400000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2017-06-01")),
+        InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER, BigDecimal.valueOf(10000)));
     bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-04-01"), LocalDate.parse("2017-09-01")), InntektType.UTVIDET_BARNETRYGD,
         BigDecimal.valueOf(15000)));
     var grunnlag = TestUtil.byggForskuddGrunnlagMedFlereInntekterISammePeriode(bmInntektListe);
@@ -766,12 +757,10 @@ class ForskuddPeriodeTest {
   void testValiderInputGrunnlagMedFlereInntekterISammePeriodeTest2() {
 
     var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")), InntektType.INNTEKTSOPPL_ARBEIDSGIVER,
-            BigDecimal.valueOf(400000)));
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2017-06-01")), InntektType.KAPITALINNTEKT_EGNE_OPPL,
-            BigDecimal.valueOf(10000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
+        InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(400000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2017-06-01")),
+        InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER, BigDecimal.valueOf(10000)));
     bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-04-01"), LocalDate.parse("2017-09-01")), InntektType.UTVIDET_BARNETRYGD,
         BigDecimal.valueOf(15000)));
     var grunnlag = TestUtil.byggForskuddGrunnlagMedFlereInntekterISammePeriode(bmInntektListe);
@@ -788,11 +777,10 @@ class ForskuddPeriodeTest {
   void testValiderInputGrunnlagMedFlereInntekterISammePeriodeTest4() {
 
     var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(400000)));
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")), InntektType.KAPITALINNTEKT_EGNE_OPPL,
-            BigDecimal.valueOf(10000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+        BigDecimal.valueOf(400000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
+        InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER, BigDecimal.valueOf(10000)));
     bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")), InntektType.UTVIDET_BARNETRYGD,
         BigDecimal.valueOf(15000)));
     var grunnlag = TestUtil.byggForskuddGrunnlagMedFlereInntekterISammePeriode(bmInntektListe);
@@ -809,11 +797,10 @@ class ForskuddPeriodeTest {
   void testValiderInputGrunnlagMedFlereInntekterISammePeriodeTest5() {
 
     var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(400000)));
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-03-01"), LocalDate.parse("2017-06-01")), InntektType.KAPITALINNTEKT_EGNE_OPPL,
-            BigDecimal.valueOf(10000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+        BigDecimal.valueOf(400000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-03-01"), LocalDate.parse("2017-06-01")),
+        InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER, BigDecimal.valueOf(10000)));
     bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-03-01"), LocalDate.parse("2017-06-01")), InntektType.UTVIDET_BARNETRYGD,
         BigDecimal.valueOf(15000)));
     var grunnlag = TestUtil.byggForskuddGrunnlagMedFlereInntekterISammePeriode(bmInntektListe);
@@ -830,10 +817,9 @@ class ForskuddPeriodeTest {
   void testValiderInputGrunnlagMedFlereInntekterISammePeriodeTest6() {
 
     var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe
-        .add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2017-06-01")), InntektType.KAPITALINNTEKT_EGNE_OPPL,
-            BigDecimal.valueOf(10000)));
-    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.INNTEKTSOPPL_ARBEIDSGIVER,
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2017-06-01")),
+        InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER, BigDecimal.valueOf(10000)));
+    bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-01-01"), null), InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
         BigDecimal.valueOf(400000)));
     bmInntektListe.add(new InntektPeriode(new Periode(LocalDate.parse("2017-04-01"), LocalDate.parse("2017-09-01")), InntektType.UTVIDET_BARNETRYGD,
         BigDecimal.valueOf(15000)));

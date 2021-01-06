@@ -20,7 +20,7 @@ import no.nav.bidrag.beregn.felles.bo.SjablonPeriode;
 import no.nav.bidrag.beregn.felles.enums.BostatusKode;
 import no.nav.bidrag.beregn.felles.enums.Rolle;
 import no.nav.bidrag.beregn.felles.enums.SoknadType;
-import no.nav.bidrag.beregn.felles.inntekt.InntektGrunnlag;
+import no.nav.bidrag.beregn.felles.inntekt.InntektPeriodeGrunnlag;
 import no.nav.bidrag.beregn.felles.periode.Periodiserer;
 import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.AlderPeriode;
@@ -65,9 +65,10 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
   private void justerInntekter(List<InntektPeriode> inntektPeriodeListe, BeregnForskuddListeGrunnlag beregnForskuddListeGrunnlag) {
 
     var inntektGrunnlagListe = InntektUtil.justerInntekter(inntektPeriodeListe.stream()
-        .map(inntektPeriode -> new InntektGrunnlag(inntektPeriode.getInntektDatoFraTil(), inntektPeriode.getInntektType(),
-            inntektPeriode.getInntektBelop()))
+        .map(inntektPeriode -> new InntektPeriodeGrunnlag(inntektPeriode.getInntektDatoFraTil(), inntektPeriode.getInntektType(),
+            inntektPeriode.getInntektBelop(), false, false))
         .collect(toList()));
+
     beregnForskuddListeGrunnlag.setJustertBidragMottakerInntektPeriodeListe(
         inntektGrunnlagListe.stream()
             .map(inntektGrunnlag -> new InntektPeriode(inntektGrunnlag.getInntektDatoFraTil(), inntektGrunnlag.getInntektType(),
@@ -286,8 +287,8 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
     // Valider inntekter
     var inntektGrunnlagListe = periodeGrunnlag.getBidragMottakerInntektPeriodeListe().stream()
-        .map(inntektPeriode -> new InntektGrunnlag(inntektPeriode.getInntektDatoFraTil(), inntektPeriode.getInntektType(),
-            inntektPeriode.getInntektBelop()))
+        .map(inntektPeriode -> new InntektPeriodeGrunnlag(inntektPeriode.getInntektDatoFraTil(), inntektPeriode.getInntektType(),
+            inntektPeriode.getInntektBelop(), false, false))
         .collect(toList());
     avvikListe.addAll(InntektUtil.validerInntekter(inntektGrunnlagListe, SoknadType.FORSKUDD, Rolle.BIDRAGSMOTTAKER));
 

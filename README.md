@@ -21,7 +21,7 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 Versjon | Endringstype      | Beskrivelse
 --------|-------------------|------------
-0.4.6   | Endret            | Oppdatert til siste versjon av bidrag-beregn-felles
+0.4.6   | Endret            | Oppdatert til siste versjon av bidrag-beregn-felles. Endret fra Double til BigDecimal.
 0.4.5   | Endret            | Skrevet om ForskuddPerideImpl pga caching-problematikk (feil bruk av instanc-variabler)
 0.4.4   | Endret            | Debug
 0.4.3   | Endret            | Debug

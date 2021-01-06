@@ -68,7 +68,7 @@ public class ForskuddCoreTest {
             .isEqualTo(1),
         () -> assertThat(
             beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER.toString()),
+            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER.toString()),
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0)
             .getInntektBelop()).isEqualTo(BigDecimal.valueOf(500000)),
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerSivilstandKode())
