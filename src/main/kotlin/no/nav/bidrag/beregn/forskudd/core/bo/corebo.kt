@@ -7,6 +7,7 @@ import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
 import no.nav.bidrag.beregn.felles.enums.BostatusKode
 import no.nav.bidrag.beregn.felles.enums.InntektType
 import no.nav.bidrag.beregn.felles.enums.SivilstandKode
+import no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -72,15 +73,3 @@ data class BeregnForskuddListeGrunnlag(
     var justertSjablonPeriodeListe: List<SjablonPeriode> = emptyList(),
     var bruddPeriodeListe: List<Periode>? = emptyList()
 )
-
-// ENUMs
-enum class ResultatKode {
-
-  AVSLAG,
-  INNVILGET_50_PROSENT,
-  INNVILGET_75_PROSENT,
-  INNVILGET_100_PROSENT,
-  INNVILGET_125_PROSENT,
-  INNVILGET_200_PROSENT,
-  INNVILGET_250_PROSENT
-}

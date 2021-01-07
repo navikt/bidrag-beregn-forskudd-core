@@ -1,13 +1,13 @@
 package no.nav.bidrag.beregn.forskudd.core;
 
 import static java.util.Collections.singletonList;
-import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.AVSLAG;
-import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_100_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_125_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_200_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_250_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_50_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_75_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.AVSLAG;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.FORHOYET_FORSKUDD_100_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.FORHOYET_FORSKUDD_11_AAR_125_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.FORSKUDD_ENSLIG_ASYLANT_11_AAR_250_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.FORSKUDD_ENSLIG_ASYLANT_200_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.ORDINAERT_FORSKUDD_75_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.REDUSERT_FORSKUDD_50_PROSENT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -39,6 +39,13 @@ class ForskuddBeregningTest {
 
   private final ForskuddBeregning forskuddBeregning = ForskuddBeregning.getInstance();
   private final List<Sjablon> sjablonListe = TestUtil.byggSjablonListe();
+
+  private final BigDecimal forventetResultatBelop50Prosent = BigDecimal.valueOf(840);
+  private final BigDecimal forventetResultatBelop75Prosent = BigDecimal.valueOf(1250);
+  private final BigDecimal forventetResultatBelop100Prosent = BigDecimal.valueOf(1670);
+  private final BigDecimal forventetResultatBelop125Prosent = BigDecimal.valueOf(2090);
+  private final BigDecimal forventetResultatBelop200Prosent = BigDecimal.valueOf(3340);
+  private final BigDecimal forventetResultatBelop250Prosent = BigDecimal.valueOf(4180);
 
   @Test
   @Order(1)
@@ -73,9 +80,8 @@ class ForskuddBeregningTest {
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop()
-            .compareTo(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP).multiply(BigDecimal.valueOf(2.5)))).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_250_PROSENT),
+        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop250Prosent)).isZero(),
+        () -> assertThat(resultat.getResultatKode()).isEqualTo(FORSKUDD_ENSLIG_ASYLANT_11_AAR_250_PROSENT),
         () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 2"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
@@ -91,9 +97,8 @@ class ForskuddBeregningTest {
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop()
-            .compareTo(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP).multiply(BigDecimal.valueOf(2)))).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_200_PROSENT),
+        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop200Prosent)).isZero(),
+        () -> assertThat(resultat.getResultatKode()).isEqualTo(FORSKUDD_ENSLIG_ASYLANT_200_PROSENT),
         () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 3"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
@@ -109,9 +114,8 @@ class ForskuddBeregningTest {
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop()
-            .compareTo(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP).multiply(BigDecimal.valueOf(1.25)))).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_125_PROSENT),
+        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop125Prosent)).isZero(),
+        () -> assertThat(resultat.getResultatKode()).isEqualTo(FORHOYET_FORSKUDD_11_AAR_125_PROSENT),
         () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 4"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
@@ -128,7 +132,7 @@ class ForskuddBeregningTest {
     assertAll(
         () -> assertThat(resultat).isNotNull(),
         () -> assertThat(resultat.getResultatBelop().compareTo(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP))).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_100_PROSENT),
+        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop100Prosent)).isZero(),
         () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 5"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
@@ -164,9 +168,8 @@ class ForskuddBeregningTest {
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop()
-            .compareTo(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP).multiply(BigDecimal.valueOf(1.25)))).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_125_PROSENT),
+        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop125Prosent)).isZero(),
+        () -> assertThat(resultat.getResultatKode()).isEqualTo(FORHOYET_FORSKUDD_11_AAR_125_PROSENT),
         () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 7"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
@@ -183,8 +186,8 @@ class ForskuddBeregningTest {
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop().compareTo(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP))).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_100_PROSENT),
+        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop100Prosent)).isZero(),
+        () -> assertThat(resultat.getResultatKode()).isEqualTo(FORHOYET_FORSKUDD_100_PROSENT),
         () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 8"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
@@ -201,9 +204,8 @@ class ForskuddBeregningTest {
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop()
-            .compareTo(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP).multiply(BigDecimal.valueOf(0.75)))).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop75Prosent)).isZero(),
+        () -> assertThat(resultat.getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 9"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
@@ -220,9 +222,8 @@ class ForskuddBeregningTest {
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop()
-            .compareTo(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP).multiply(BigDecimal.valueOf(0.5)))).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_50_PROSENT),
+        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop50Prosent)).isZero(),
+        () -> assertThat(resultat.getResultatKode()).isEqualTo(REDUSERT_FORSKUDD_50_PROSENT),
         () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 10"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
@@ -240,9 +241,8 @@ class ForskuddBeregningTest {
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop()
-            .compareTo(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP).multiply(BigDecimal.valueOf(0.75)))).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop75Prosent)).isZero(),
+        () -> assertThat(resultat.getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
@@ -260,9 +260,8 @@ class ForskuddBeregningTest {
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop()
-            .compareTo(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP).multiply(BigDecimal.valueOf(0.5)))).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_50_PROSENT),
+        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop50Prosent)).isZero(),
+        () -> assertThat(resultat.getResultatKode()).isEqualTo(REDUSERT_FORSKUDD_50_PROSENT),
         () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 12"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
@@ -279,9 +278,8 @@ class ForskuddBeregningTest {
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop()
-            .compareTo(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP).multiply(BigDecimal.valueOf(0.75)))).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop75Prosent)).isZero(),
+        () -> assertThat(resultat.getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 13"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
@@ -298,9 +296,8 @@ class ForskuddBeregningTest {
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop()
-            .compareTo(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP).multiply(BigDecimal.valueOf(0.5)))).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_50_PROSENT),
+        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop50Prosent)).isZero(),
+        () -> assertThat(resultat.getResultatKode()).isEqualTo(REDUSERT_FORSKUDD_50_PROSENT),
         () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 14"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
@@ -318,9 +315,8 @@ class ForskuddBeregningTest {
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop()
-            .compareTo(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP).multiply(BigDecimal.valueOf(0.75)))).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop75Prosent)).isZero(),
+        () -> assertThat(resultat.getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 15"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
@@ -338,9 +334,8 @@ class ForskuddBeregningTest {
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_50_PROSENT),
-        () -> assertThat(resultat.getResultatBelop()
-            .compareTo(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP).multiply(BigDecimal.valueOf(0.5)))).isZero(),
+        () -> assertThat(resultat.getResultatKode()).isEqualTo(REDUSERT_FORSKUDD_50_PROSENT),
+        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop50Prosent)).isZero(),
         () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 16"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
@@ -360,9 +355,8 @@ class ForskuddBeregningTest {
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(INNVILGET_50_PROSENT),
-        () -> assertThat(resultat.getResultatBelop()
-            .compareTo(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP).multiply(BigDecimal.valueOf(0.5)))).isZero(),
+        () -> assertThat(resultat.getResultatKode()).isEqualTo(REDUSERT_FORSKUDD_50_PROSENT),
+        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop50Prosent)).isZero(),
         () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 16"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
@@ -379,6 +373,8 @@ class ForskuddBeregningTest {
   }
 
   private void printGrunnlagResultat(ResultatBeregning resultat, String betydning) {
+    System.out.println();
+    System.out.println();
     System.out.println("SJABLONVERDIER:");
     System.out.println("---------------");
     System.out.println("0005 Forskuddssats 100%:                             " + finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP));

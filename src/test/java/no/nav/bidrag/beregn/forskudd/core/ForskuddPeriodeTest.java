@@ -1,9 +1,9 @@
 package no.nav.bidrag.beregn.forskudd.core;
 
-import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_100_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_125_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_50_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_75_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.FORHOYET_FORSKUDD_100_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.FORHOYET_FORSKUDD_11_AAR_125_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.ORDINAERT_FORSKUDD_75_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.REDUSERT_FORSKUDD_50_PROSENT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -53,7 +53,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-01-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2017-12-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_100_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()).isEqualTo(FORHOYET_FORSKUDD_100_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 8"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -65,50 +65,52 @@ class ForskuddPeriodeTest {
             .isEqualTo(BigDecimal.valueOf(250000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerSivilstandKode())
             .isEqualTo(SivilstandKode.GIFT),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getAntallBarnIHusstand() == 2),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSoknadBarnAlder() == 10),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getAntallBarnIHusstand()).isEqualTo(3),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSoknadBarnAlder()).isEqualTo(0),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSoknadBarnBostatusKode())
             .isEqualTo(BostatusKode.MED_FORELDRE),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSjablonListe()).isEqualTo(TestUtil.byggSjablonListe()),
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-12-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2018-01-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_125_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode()).isEqualTo(
+            FORHOYET_FORSKUDD_11_AAR_125_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 7"),
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2018-01-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2018-05-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 15"),
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2018-05-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2018-07-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2018-07-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2018-09-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(5).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2018-09-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(5).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2018-12-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(5).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_125_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(5).getResultatBeregning().getResultatKode()).isEqualTo(
+            FORHOYET_FORSKUDD_11_AAR_125_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(5).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 4"),
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(6).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2018-12-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(6).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2019-01-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(6).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(6).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(6).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(7).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2019-01-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(7).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2019-04-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(7).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_50_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(7).getResultatBeregning().getResultatKode()).isEqualTo(REDUSERT_FORSKUDD_50_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(7).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 12"),
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(8).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2019-04-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(8).getResultatDatoFraTil().getDatoTil()).isNull(),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(8).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(8).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(8).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11")
     );
     printGrunnlagResultat(resultat);
@@ -203,7 +205,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-01-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoTil()).isNull(),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_100_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()).isEqualTo(FORHOYET_FORSKUDD_100_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 8"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -215,8 +217,8 @@ class ForskuddPeriodeTest {
             .isEqualTo(BigDecimal.valueOf(250000)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerSivilstandKode())
             .isEqualTo(SivilstandKode.GIFT),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getAntallBarnIHusstand() == 2),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSoknadBarnAlder() == 10),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getAntallBarnIHusstand()).isEqualTo(1),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSoknadBarnAlder()).isEqualTo(0),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSoknadBarnBostatusKode())
             .isEqualTo(BostatusKode.MED_FORELDRE),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSjablonListe()).isEqualTo(TestUtil.byggSjablonListe())
@@ -245,7 +247,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-01-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2017-04-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -261,7 +263,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-04-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2017-06-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -281,7 +283,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-06-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2017-09-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -297,7 +299,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-09-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatDatoFraTil().getDatoTil()).isNull(),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -331,7 +333,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-01-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2017-04-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -347,7 +349,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-04-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2017-06-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -367,7 +369,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-06-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2017-09-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -383,7 +385,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-09-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatDatoFraTil().getDatoTil()).isNull(),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -417,7 +419,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-01-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2017-03-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -429,7 +431,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-03-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2017-06-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -445,7 +447,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-06-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2017-09-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -457,7 +459,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-09-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2017-12-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -473,7 +475,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-12-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatDatoFraTil().getDatoTil()).isNull(),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -507,7 +509,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-01-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoTil()).isNull(),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -549,7 +551,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-01-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2017-03-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -561,7 +563,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-03-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2017-06-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -581,7 +583,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-06-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoTil()).isNull(),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -615,7 +617,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-01-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2017-04-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -631,7 +633,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-04-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2017-06-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -651,7 +653,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-06-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2017-09-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
@@ -667,7 +669,7 @@ class ForskuddPeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-09-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatDatoFraTil().getDatoTil()).isNull(),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatKode()).isEqualTo(INNVILGET_75_PROSENT),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getSjablonListe())
             .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),

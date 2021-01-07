@@ -1,5 +1,8 @@
 package no.nav.bidrag.beregn.forskudd.core;
 
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.AVSLAG;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.FORHOYET_FORSKUDD_100_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.ORDINAERT_FORSKUDD_75_PROSENT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
@@ -19,9 +22,11 @@ import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 @DisplayName("ForskuddCore (dto test)")
 public class ForskuddCoreTest {
 
@@ -36,7 +41,6 @@ public class ForskuddCoreTest {
 
   @BeforeEach
   void initMocksAndService() {
-    MockitoAnnotations.initMocks(this);
     forskuddCore = new ForskuddCoreImpl(forskuddPeriodeMock);
   }
 
@@ -60,7 +64,7 @@ public class ForskuddCoreTest {
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBelop())
             .isEqualTo(BigDecimal.valueOf(1600)),
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode())
-            .isEqualTo("INNVILGET_100_PROSENT"),
+            .isEqualTo(FORHOYET_FORSKUDD_100_PROSENT.toString()),
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBeskrivelse())
             .isEqualTo("REGEL 1"),
 
@@ -73,8 +77,8 @@ public class ForskuddCoreTest {
             .getInntektBelop()).isEqualTo(BigDecimal.valueOf(500000)),
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerSivilstandKode())
             .isEqualTo(SivilstandKode.ENSLIG.toString()),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getAntallBarnIHusstand() == 2),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSoknadBarnAlder() == 10),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getAntallBarnIHusstand()).isEqualTo(2),
+        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSoknadBarnAlder()).isEqualTo(10),
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSoknadBarnBostatusKode())
             .isEqualTo(BostatusKode.MED_FORELDRE.toString()),
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSjablonListe())
@@ -87,7 +91,7 @@ public class ForskuddCoreTest {
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatBelop())
             .isEqualTo(BigDecimal.valueOf(1200)),
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode())
-            .isEqualTo("INNVILGET_75_PROSENT"),
+            .isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT.toString()),
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatBeskrivelse())
             .isEqualTo("REGEL 2"),
 
@@ -98,7 +102,7 @@ public class ForskuddCoreTest {
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBelop())
             .isEqualTo(BigDecimal.valueOf(0)),
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode())
-            .isEqualTo("AVSLAG"),
+            .isEqualTo(AVSLAG.toString()),
         () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBeskrivelse())
             .isEqualTo("REGEL 11")
     );
