@@ -3,15 +3,16 @@ package no.nav.bidrag.beregn.forskudd.core.beregning;
 import static no.nav.bidrag.beregn.felles.enums.BostatusKode.ENSLIG_ASYLANT;
 import static no.nav.bidrag.beregn.felles.enums.BostatusKode.MED_FORELDRE;
 import static no.nav.bidrag.beregn.felles.enums.SivilstandKode.ENSLIG;
-import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.AVSLAG;
-import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_100_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_125_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_200_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_250_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_50_PROSENT;
-import static no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode.INNVILGET_75_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.AVSLAG;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.FORHOYET_FORSKUDD_100_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.FORHOYET_FORSKUDD_11_AAR_125_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.FORSKUDD_ENSLIG_ASYLANT_11_AAR_250_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.FORSKUDD_ENSLIG_ASYLANT_200_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.ORDINAERT_FORSKUDD_75_PROSENT;
+import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.REDUSERT_FORSKUDD_50_PROSENT;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import no.nav.bidrag.beregn.felles.SjablonUtil;
@@ -22,7 +23,7 @@ import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn;
 import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.Inntekt;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning;
-import no.nav.bidrag.beregn.forskudd.core.bo.ResultatKode;
+import no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode;
 
 public class ForskuddBeregningImpl implements ForskuddBeregning {
 
@@ -66,13 +67,13 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
 
       // Søknadsbarn er enslig asylant (REGEL 2/3)
     } else if (grunnlag.getSoknadBarnBostatusKode().equals(ENSLIG_ASYLANT)) {
-      resultatKode = (grunnlag.getSoknadBarnAlder() >= 11) ? INNVILGET_250_PROSENT : INNVILGET_200_PROSENT;
-      regel = (resultatKode.equals(INNVILGET_250_PROSENT) ? "REGEL 2" : "REGEL 3");
+      resultatKode = (grunnlag.getSoknadBarnAlder() >= 11) ? FORSKUDD_ENSLIG_ASYLANT_11_AAR_250_PROSENT : FORSKUDD_ENSLIG_ASYLANT_200_PROSENT;
+      regel = (resultatKode.equals(FORSKUDD_ENSLIG_ASYLANT_11_AAR_250_PROSENT) ? "REGEL 2" : "REGEL 3");
 
       // Søknadsbarn bor alene eller ikke med foreldre (REGEL 4/5)
     } else if (!(grunnlag.getSoknadBarnBostatusKode().equals(MED_FORELDRE))) {
-      resultatKode = (grunnlag.getSoknadBarnAlder() >= 11) ? INNVILGET_125_PROSENT : INNVILGET_100_PROSENT;
-      regel = (resultatKode.equals(INNVILGET_125_PROSENT) ? "REGEL 4" : "REGEL 5");
+      resultatKode = (grunnlag.getSoknadBarnAlder() >= 11) ? FORHOYET_FORSKUDD_11_AAR_125_PROSENT : FORHOYET_FORSKUDD_100_PROSENT;
+      regel = (resultatKode.equals(FORHOYET_FORSKUDD_11_AAR_125_PROSENT) ? "REGEL 4" : "REGEL 5");
 
       // Over maks inntektsgrense for forskudd (REGEL 6)
     } else if (!(erUnderInntektsGrense(maksInntektsgrense, bidragMottakerInntekt))) {
@@ -81,26 +82,26 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
 
       // Under maks inntektsgrense for fullt forskudd (REGEL 7/8)
     } else if (erUnderInntektsGrense(inntektsgrense100ProsentForskuddBelop, bidragMottakerInntekt)) {
-      resultatKode = (grunnlag.getSoknadBarnAlder() >= 11) ? INNVILGET_125_PROSENT : INNVILGET_100_PROSENT;
-      regel = (resultatKode.equals(INNVILGET_125_PROSENT) ? "REGEL 7" : "REGEL 8");
+      resultatKode = (grunnlag.getSoknadBarnAlder() >= 11) ? FORHOYET_FORSKUDD_11_AAR_125_PROSENT : FORHOYET_FORSKUDD_100_PROSENT;
+      regel = (resultatKode.equals(FORHOYET_FORSKUDD_11_AAR_125_PROSENT) ? "REGEL 7" : "REGEL 8");
 
       // Resterende regler (gift/enslig) (REGEL 9/10/11/12/13/14/15/16)
     } else {
       resultatKode = (erUnderInntektsGrense(
           settInntektsgrense(grunnlag.getBidragMottakerSivilstandKode(), inntektsgrenseEnslig75ProsentForskuddBelop,
-              inntektsgrenseGiftSamboer75ProsentForskuddBelop).add(inntektsIntervallTotal), bidragMottakerInntekt)) ? INNVILGET_75_PROSENT
-          : INNVILGET_50_PROSENT;
+              inntektsgrenseGiftSamboer75ProsentForskuddBelop).add(inntektsIntervallTotal), bidragMottakerInntekt)) ? ORDINAERT_FORSKUDD_75_PROSENT
+          : REDUSERT_FORSKUDD_50_PROSENT;
       if (grunnlag.getBidragMottakerSivilstandKode().equals(ENSLIG)) {
         if (grunnlag.getAntallBarnIHusstand() == 1) {
-          regel = (resultatKode.equals(INNVILGET_75_PROSENT) ? "REGEL 9" : "REGEL 10");
+          regel = (resultatKode.equals(ORDINAERT_FORSKUDD_75_PROSENT) ? "REGEL 9" : "REGEL 10");
         } else {
-          regel = (resultatKode.equals(INNVILGET_75_PROSENT) ? "REGEL 11" : "REGEL 12");
+          regel = (resultatKode.equals(ORDINAERT_FORSKUDD_75_PROSENT) ? "REGEL 11" : "REGEL 12");
         }
       } else {
         if (grunnlag.getAntallBarnIHusstand() == 1) {
-          regel = (resultatKode.equals(INNVILGET_75_PROSENT) ? "REGEL 13" : "REGEL 14");
+          regel = (resultatKode.equals(ORDINAERT_FORSKUDD_75_PROSENT) ? "REGEL 13" : "REGEL 14");
         } else {
-          regel = (resultatKode.equals(INNVILGET_75_PROSENT) ? "REGEL 15" : "REGEL 16");
+          regel = (resultatKode.equals(ORDINAERT_FORSKUDD_75_PROSENT) ? "REGEL 15" : "REGEL 16");
         }
       }
     }
@@ -141,12 +142,13 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
   // Beregner forskuddsbeløp basert på resultatkode
   private static BigDecimal beregnForskudd(ResultatKode resultatKode, BigDecimal forskuddssats100ProsentBelop) {
     return switch (resultatKode) {
-      case INNVILGET_50_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(0.5));
-      case INNVILGET_75_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(0.75));
-      case INNVILGET_100_PROSENT -> forskuddssats100ProsentBelop;
-      case INNVILGET_125_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(1.25));
-      case INNVILGET_200_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(2));
-      case INNVILGET_250_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(2.5));
+      case REDUSERT_FORSKUDD_50_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(0.5)).setScale(-1, RoundingMode.HALF_UP);
+      case ORDINAERT_FORSKUDD_75_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(0.75)).setScale(-1, RoundingMode.HALF_UP);
+      case FORHOYET_FORSKUDD_100_PROSENT -> forskuddssats100ProsentBelop;
+      case FORHOYET_FORSKUDD_11_AAR_125_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(1.25)).setScale(-1, RoundingMode.HALF_UP);
+      case FORSKUDD_ENSLIG_ASYLANT_200_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(2)).setScale(-1, RoundingMode.HALF_UP);
+      case FORSKUDD_ENSLIG_ASYLANT_11_AAR_250_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(2.5))
+          .setScale(-1, RoundingMode.HALF_UP);
       default -> BigDecimal.ZERO;
     };
   }
