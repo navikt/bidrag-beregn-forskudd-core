@@ -21,6 +21,7 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 Versjon | Endringstype      | Beskrivelse
 --------|-------------------|------------
+0.4.8   | Endret            | Litt justeringer på beregningsreglene, med utgangspunkt i sjablon 00038 i stedet for 0005
 0.4.7   | Endret            | Endret på teksten i resultatkodene. Resultatbeløp avrundes nå til nærmeste tier.
 0.4.6   | Endret            | Oppdatert til siste versjon av bidrag-beregn-felles. Endret fra Double til BigDecimal.
 0.4.5   | Endret            | Skrevet om ForskuddPerideImpl pga caching-problematikk (feil bruk av instanc-variabler)

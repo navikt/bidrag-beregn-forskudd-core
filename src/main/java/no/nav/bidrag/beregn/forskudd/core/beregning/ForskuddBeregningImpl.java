@@ -29,6 +29,7 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
 
   private BigDecimal maksInntektForskuddMottakerMultiplikator;
   private BigDecimal inntektsintervallForskuddBelop;
+  private BigDecimal forskuddssats75ProsentBelop;
   private BigDecimal forskuddssats100ProsentBelop;
   private BigDecimal inntektsgrense100ProsentForskuddBelop;
   private BigDecimal inntektsgrenseEnslig75ProsentForskuddBelop;
@@ -37,6 +38,7 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
   public ForskuddBeregningImpl() {
     this.maksInntektForskuddMottakerMultiplikator = BigDecimal.ZERO;
     this.inntektsintervallForskuddBelop = BigDecimal.ZERO;
+    this.forskuddssats75ProsentBelop = BigDecimal.ZERO;
     this.forskuddssats100ProsentBelop = BigDecimal.ZERO;
     this.inntektsgrense100ProsentForskuddBelop = BigDecimal.ZERO;
     this.inntektsgrenseEnslig75ProsentForskuddBelop = BigDecimal.ZERO;
@@ -106,11 +108,13 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
       }
     }
 
-    return new ResultatBeregning(beregnForskudd(resultatKode, forskuddssats100ProsentBelop), resultatKode, regel, byggSjablonListe());
+    return new ResultatBeregning(beregnForskudd(resultatKode, forskuddssats75ProsentBelop, forskuddssats100ProsentBelop), resultatKode, regel,
+        byggSjablonListe());
   }
 
   // Henter sjablonverdier
   private void hentSjablonVerdier(List<Sjablon> sjablonListe) {
+    forskuddssats75ProsentBelop = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELOP);
     forskuddssats100ProsentBelop = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP);
     maksInntektForskuddMottakerMultiplikator = SjablonUtil
         .hentSjablonverdi(sjablonListe, SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR);
@@ -126,6 +130,7 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
   // Mapper ut sjablonverdier til ResultatBeregning (dette for å sikre at kun sjabloner som faktisk er brukt legges ut i grunnlaget for beregning)
   private List<SjablonNavnVerdi> byggSjablonListe() {
     var sjablonNavnVerdiListe = new ArrayList<SjablonNavnVerdi>();
+    sjablonNavnVerdiListe.add(new SjablonNavnVerdi(SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELOP.getNavn(), forskuddssats75ProsentBelop));
     sjablonNavnVerdiListe.add(new SjablonNavnVerdi(SjablonTallNavn.FORSKUDDSSATS_BELOP.getNavn(), forskuddssats100ProsentBelop));
     sjablonNavnVerdiListe.add(new SjablonNavnVerdi(SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.getNavn(),
         maksInntektForskuddMottakerMultiplikator));
@@ -140,15 +145,23 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
   }
 
   // Beregner forskuddsbeløp basert på resultatkode
-  private static BigDecimal beregnForskudd(ResultatKode resultatKode, BigDecimal forskuddssats100ProsentBelop) {
+  // Forskudd 50%  = Sjablon 0038 * 2/3
+  // Forskudd 75%  = Sjablon 0038
+  // Forskudd 100% = Sjablon 0038 * 4/3
+  // Forskudd 125% = Sjablon 0038 * 5/3
+  // Forskudd 200% = Sjablon 0005 * 2
+  // Forskudd 250% = ((Sjablon 0038 * 1/3) + Sjablon 0005) * 2
+  private static BigDecimal beregnForskudd(ResultatKode resultatKode, BigDecimal forskuddssats75ProsentBelop,
+      BigDecimal forskuddssats100ProsentBelop) {
     return switch (resultatKode) {
-      case REDUSERT_FORSKUDD_50_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(0.5)).setScale(-1, RoundingMode.HALF_UP);
-      case ORDINAERT_FORSKUDD_75_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(0.75)).setScale(-1, RoundingMode.HALF_UP);
-      case FORHOYET_FORSKUDD_100_PROSENT -> forskuddssats100ProsentBelop;
-      case FORHOYET_FORSKUDD_11_AAR_125_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(1.25)).setScale(-1, RoundingMode.HALF_UP);
-      case FORSKUDD_ENSLIG_ASYLANT_200_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(2)).setScale(-1, RoundingMode.HALF_UP);
-      case FORSKUDD_ENSLIG_ASYLANT_11_AAR_250_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(2.5))
+      case REDUSERT_FORSKUDD_50_PROSENT -> forskuddssats75ProsentBelop.multiply(BigDecimal.valueOf(0.66666666)).setScale(-1, RoundingMode.HALF_UP);
+      case ORDINAERT_FORSKUDD_75_PROSENT -> forskuddssats75ProsentBelop;
+      case FORHOYET_FORSKUDD_100_PROSENT -> forskuddssats75ProsentBelop.multiply(BigDecimal.valueOf(1.33333333)).setScale(-1, RoundingMode.HALF_UP);
+      case FORHOYET_FORSKUDD_11_AAR_125_PROSENT -> forskuddssats75ProsentBelop.multiply(BigDecimal.valueOf(1.66666666))
           .setScale(-1, RoundingMode.HALF_UP);
+      case FORSKUDD_ENSLIG_ASYLANT_200_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(2)).setScale(-1, RoundingMode.HALF_UP);
+      case FORSKUDD_ENSLIG_ASYLANT_11_AAR_250_PROSENT -> forskuddssats75ProsentBelop.multiply(BigDecimal.valueOf(0.33333333))
+          .add(forskuddssats100ProsentBelop).multiply(BigDecimal.valueOf(2)).setScale(-1, RoundingMode.HALF_UP);
       default -> BigDecimal.ZERO;
     };
   }

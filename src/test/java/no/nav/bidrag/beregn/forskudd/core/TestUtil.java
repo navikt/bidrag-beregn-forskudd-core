@@ -63,6 +63,8 @@ public class TestUtil {
         singletonList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(336500)))));
     sjablonListe.add(new Sjablon(SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP.getNavn(), emptyList(),
         singletonList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(61700)))));
+    sjablonListe.add(new Sjablon(SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELOP.getNavn(), emptyList(),
+        singletonList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(1250)))));
 
     return sjablonListe;
   }
@@ -72,6 +74,7 @@ public class TestUtil {
     var sjablonListe = new ArrayList<SjablonNavnVerdi>();
 
     // Sjablontall
+    sjablonListe.add(new SjablonNavnVerdi(SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELOP.getNavn(), BigDecimal.valueOf(1250)));
     sjablonListe.add(new SjablonNavnVerdi(SjablonTallNavn.FORSKUDDSSATS_BELOP.getNavn(), BigDecimal.valueOf(1670)));
     sjablonListe.add(new SjablonNavnVerdi(SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.getNavn(), BigDecimal.valueOf(320)));
     sjablonListe.add(new SjablonNavnVerdi(SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP.getNavn(), BigDecimal.valueOf(270200)));
@@ -114,6 +117,9 @@ public class TestUtil {
     sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null),
         new Sjablon(SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP.getNavn(), emptyList(),
             singletonList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(61700))))));
+    sjablonPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-01-01"), null),
+        new Sjablon(SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELOP.getNavn(), emptyList(),
+            singletonList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(1250))))));
 
     return sjablonPeriodeListe;
   }
