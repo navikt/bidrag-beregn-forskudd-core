@@ -40,12 +40,12 @@ class ForskuddBeregningTest {
   private final ForskuddBeregning forskuddBeregning = ForskuddBeregning.getInstance();
   private final List<Sjablon> sjablonListe = TestUtil.byggSjablonListe();
 
-  private final BigDecimal forventetResultatBelop50Prosent = BigDecimal.valueOf(840);
+  private final BigDecimal forventetResultatBelop50Prosent = BigDecimal.valueOf(830);
   private final BigDecimal forventetResultatBelop75Prosent = BigDecimal.valueOf(1250);
   private final BigDecimal forventetResultatBelop100Prosent = BigDecimal.valueOf(1670);
-  private final BigDecimal forventetResultatBelop125Prosent = BigDecimal.valueOf(2090);
+  private final BigDecimal forventetResultatBelop125Prosent = BigDecimal.valueOf(2080);
   private final BigDecimal forventetResultatBelop200Prosent = BigDecimal.valueOf(3340);
-  private final BigDecimal forventetResultatBelop250Prosent = BigDecimal.valueOf(4180);
+  private final BigDecimal forventetResultatBelop250Prosent = BigDecimal.valueOf(4170);
 
   @Test
   @Order(1)
@@ -131,7 +131,6 @@ class ForskuddBeregningTest {
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop().compareTo(finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP))).isZero(),
         () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop100Prosent)).isZero(),
         () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 5"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
@@ -386,9 +385,11 @@ class ForskuddBeregningTest {
         SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP));
     System.out.println("0035 Inntektsgrense 75% gift:                        " + finnSjablonVerdi(sjablonListe,
         SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP));
+    System.out.println("0038 Forskuddssats 75%:                              " + finnSjablonVerdi(sjablonListe,
+        SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELOP));
     System.out.println(
         "0036 Inntektsintervall:                              " + finnSjablonVerdi(sjablonListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP));
-    System.out.println("0005x0013 Maks inntekstgrense:                       " + (finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP)
+    System.out.println("0005x0013 Maks inntektsgrense:                       " + (finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP)
         .multiply(finnSjablonVerdi(sjablonListe, SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR))));
     System.out.println();
     System.out.println("GRUNNLAG:");
