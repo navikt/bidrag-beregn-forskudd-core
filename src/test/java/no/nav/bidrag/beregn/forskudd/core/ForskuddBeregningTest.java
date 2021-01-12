@@ -43,7 +43,7 @@ class ForskuddBeregningTest {
   private final BigDecimal forventetResultatBelop50Prosent = BigDecimal.valueOf(830);
   private final BigDecimal forventetResultatBelop75Prosent = BigDecimal.valueOf(1250);
   private final BigDecimal forventetResultatBelop100Prosent = BigDecimal.valueOf(1670);
-  private final BigDecimal forventetResultatBelop125Prosent = BigDecimal.valueOf(2080);
+  private final BigDecimal forventetResultatBelop125Prosent = BigDecimal.valueOf(2090);
   private final BigDecimal forventetResultatBelop200Prosent = BigDecimal.valueOf(3340);
   private final BigDecimal forventetResultatBelop250Prosent = BigDecimal.valueOf(4170);
 
