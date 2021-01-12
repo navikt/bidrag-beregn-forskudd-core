@@ -148,7 +148,7 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
   // Forskudd 50%  = Sjablon 0038 * 2/3
   // Forskudd 75%  = Sjablon 0038
   // Forskudd 100% = Sjablon 0038 * 4/3
-  // Forskudd 125% = Sjablon 0038 * 5/3
+  // Forskudd 125% = (Sjablon 0038 * 1/3) + Sjablon 0005)
   // Forskudd 200% = Sjablon 0005 * 2
   // Forskudd 250% = ((Sjablon 0038 * 1/3) + Sjablon 0005) * 2
   private static BigDecimal beregnForskudd(ResultatKode resultatKode, BigDecimal forskuddssats75ProsentBelop,
@@ -157,8 +157,8 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
       case REDUSERT_FORSKUDD_50_PROSENT -> forskuddssats75ProsentBelop.multiply(BigDecimal.valueOf(0.66666666)).setScale(-1, RoundingMode.HALF_UP);
       case ORDINAERT_FORSKUDD_75_PROSENT -> forskuddssats75ProsentBelop;
       case FORHOYET_FORSKUDD_100_PROSENT -> forskuddssats75ProsentBelop.multiply(BigDecimal.valueOf(1.33333333)).setScale(-1, RoundingMode.HALF_UP);
-      case FORHOYET_FORSKUDD_11_AAR_125_PROSENT -> forskuddssats75ProsentBelop.multiply(BigDecimal.valueOf(1.66666666))
-          .setScale(-1, RoundingMode.HALF_UP);
+      case FORHOYET_FORSKUDD_11_AAR_125_PROSENT -> forskuddssats75ProsentBelop.multiply(BigDecimal.valueOf(0.33333333))
+          .add(forskuddssats100ProsentBelop).setScale(-1, RoundingMode.HALF_UP);
       case FORSKUDD_ENSLIG_ASYLANT_200_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(2)).setScale(-1, RoundingMode.HALF_UP);
       case FORSKUDD_ENSLIG_ASYLANT_11_AAR_250_PROSENT -> forskuddssats75ProsentBelop.multiply(BigDecimal.valueOf(0.33333333))
           .add(forskuddssats100ProsentBelop).multiply(BigDecimal.valueOf(2)).setScale(-1, RoundingMode.HALF_UP);
