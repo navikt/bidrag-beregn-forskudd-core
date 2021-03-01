@@ -21,7 +21,7 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 Versjon | Endringstype      | Beskrivelse
 --------|-------------------|------------
-0.4.10  | Endret            | Liten justering på måten 250% forskudd beregnes. Oppdatert tester til å gjenspeile årets sjablonsatser.
+0.4.10  | Endret            | Liten justering på måten 250% forskudd beregnes. Oppdatert tester til å gjenspeile de nyeste sjablonsatsene.
 0.4.9   | Endret            | Liten justering på måten 125% forskudd beregnes
 0.4.8   | Endret            | Litt justeringer på beregningsreglene, med utgangspunkt i sjablon 00038 i stedet for 0005
 0.4.7   | Endret            | Endret på teksten i resultatkodene. Resultatbeløp avrundes nå til nærmeste tier.
