@@ -40,12 +40,12 @@ class ForskuddBeregningTest {
   private final ForskuddBeregning forskuddBeregning = ForskuddBeregning.getInstance();
   private final List<Sjablon> sjablonListe = TestUtil.byggSjablonListe();
 
-  private final BigDecimal forventetResultatBelop50Prosent = BigDecimal.valueOf(830);
-  private final BigDecimal forventetResultatBelop75Prosent = BigDecimal.valueOf(1250);
-  private final BigDecimal forventetResultatBelop100Prosent = BigDecimal.valueOf(1670);
-  private final BigDecimal forventetResultatBelop125Prosent = BigDecimal.valueOf(2090);
-  private final BigDecimal forventetResultatBelop200Prosent = BigDecimal.valueOf(3340);
-  private final BigDecimal forventetResultatBelop250Prosent = BigDecimal.valueOf(4170);
+  private final BigDecimal forventetResultatBelop50Prosent = BigDecimal.valueOf(850);
+  private final BigDecimal forventetResultatBelop75Prosent = BigDecimal.valueOf(1280);
+  private final BigDecimal forventetResultatBelop100Prosent = BigDecimal.valueOf(1710);
+  private final BigDecimal forventetResultatBelop125Prosent = BigDecimal.valueOf(2140);
+  private final BigDecimal forventetResultatBelop200Prosent = BigDecimal.valueOf(3420);
+  private final BigDecimal forventetResultatBelop250Prosent = BigDecimal.valueOf(4280);
 
   @Test
   @Order(1)

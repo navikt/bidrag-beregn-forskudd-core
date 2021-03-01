@@ -150,7 +150,7 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
   // Forskudd 100% = Sjablon 0038 * 4/3
   // Forskudd 125% = (Sjablon 0038 * 1/3) + Sjablon 0005)
   // Forskudd 200% = Sjablon 0005 * 2
-  // Forskudd 250% = ((Sjablon 0038 * 1/3) + Sjablon 0005) * 2
+  // Forskudd 250% = ((Sjablon 0038 * 1/3) + Sjablon 0005) (avrundet opp) * 2
   private static BigDecimal beregnForskudd(ResultatKode resultatKode, BigDecimal forskuddssats75ProsentBelop,
       BigDecimal forskuddssats100ProsentBelop) {
     return switch (resultatKode) {
@@ -161,7 +161,7 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
           .add(forskuddssats100ProsentBelop).setScale(-1, RoundingMode.HALF_UP);
       case FORSKUDD_ENSLIG_ASYLANT_200_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(2)).setScale(-1, RoundingMode.HALF_UP);
       case FORSKUDD_ENSLIG_ASYLANT_11_AAR_250_PROSENT -> forskuddssats75ProsentBelop.multiply(BigDecimal.valueOf(0.33333333))
-          .add(forskuddssats100ProsentBelop).multiply(BigDecimal.valueOf(2)).setScale(-1, RoundingMode.HALF_UP);
+          .add(forskuddssats100ProsentBelop).setScale(-1, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(2)).setScale(-1, RoundingMode.HALF_UP);
       default -> BigDecimal.ZERO;
     };
   }
