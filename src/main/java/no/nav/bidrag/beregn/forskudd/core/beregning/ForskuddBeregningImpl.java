@@ -51,30 +51,33 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
     hentSjablonVerdier(grunnlag.getSjablonListe());
 
     var maksInntektsgrense = forskuddssats100ProsentBelop.multiply(maksInntektForskuddMottakerMultiplikator);
-    var inntektsIntervallTotal = inntektsintervallForskuddBelop.multiply(BigDecimal.valueOf(grunnlag.getAntallBarnIHusstand() - 1));
+    var inntektsIntervallTotal = inntektsintervallForskuddBelop.multiply(BigDecimal.valueOf(grunnlag.getAntallBarnIHusstand().getAntall() - 1));
     if (inntektsIntervallTotal.compareTo(BigDecimal.ZERO) < 0) {
       inntektsIntervallTotal = BigDecimal.ZERO;
     }
+
     ResultatKode resultatKode;
     String regel;
 
     // Legger sammen inntektene
-    var bidragMottakerInntekt = grunnlag.getBidragMottakerInntektListe().stream().map(Inntekt::getInntektBelop)
+    var bidragMottakerInntekt = grunnlag.getBidragMottakerInntektListe().stream().map(Inntekt::getBelop)
         .reduce(BigDecimal.ZERO, BigDecimal::add);
 
     // Søknadsbarn er over 18 år (REGEL 1)
-    if (grunnlag.getSoknadBarnAlder() >= 18) {
+    if (grunnlag.getSoknadBarnAlder().getAlder() >= 18) {
       resultatKode = AVSLAG;
       regel = "REGEL 1";
 
       // Søknadsbarn er enslig asylant (REGEL 2/3)
-    } else if (grunnlag.getSoknadBarnBostatusKode().equals(ENSLIG_ASYLANT)) {
-      resultatKode = (grunnlag.getSoknadBarnAlder() >= 11) ? FORSKUDD_ENSLIG_ASYLANT_11_AAR_250_PROSENT : FORSKUDD_ENSLIG_ASYLANT_200_PROSENT;
+    } else if (grunnlag.getSoknadBarnBostatus().getKode().equals(ENSLIG_ASYLANT)) {
+      resultatKode = (grunnlag.getSoknadBarnAlder().getAlder() >= 11) ? FORSKUDD_ENSLIG_ASYLANT_11_AAR_250_PROSENT
+          : FORSKUDD_ENSLIG_ASYLANT_200_PROSENT;
       regel = (resultatKode.equals(FORSKUDD_ENSLIG_ASYLANT_11_AAR_250_PROSENT) ? "REGEL 2" : "REGEL 3");
 
       // Søknadsbarn bor alene eller ikke med foreldre (REGEL 4/5)
-    } else if (!(grunnlag.getSoknadBarnBostatusKode().equals(MED_FORELDRE))) {
-      resultatKode = (grunnlag.getSoknadBarnAlder() >= 11) ? FORHOYET_FORSKUDD_11_AAR_125_PROSENT : FORHOYET_FORSKUDD_100_PROSENT;
+    } else if (!(grunnlag.getSoknadBarnBostatus().getKode().equals(MED_FORELDRE))) {
+      resultatKode =
+          (grunnlag.getSoknadBarnAlder().getAlder() >= 11) ? FORHOYET_FORSKUDD_11_AAR_125_PROSENT : FORHOYET_FORSKUDD_100_PROSENT;
       regel = (resultatKode.equals(FORHOYET_FORSKUDD_11_AAR_125_PROSENT) ? "REGEL 4" : "REGEL 5");
 
       // Over maks inntektsgrense for forskudd (REGEL 6)
@@ -84,23 +87,23 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
 
       // Under maks inntektsgrense for fullt forskudd (REGEL 7/8)
     } else if (erUnderInntektsGrense(inntektsgrense100ProsentForskuddBelop, bidragMottakerInntekt)) {
-      resultatKode = (grunnlag.getSoknadBarnAlder() >= 11) ? FORHOYET_FORSKUDD_11_AAR_125_PROSENT : FORHOYET_FORSKUDD_100_PROSENT;
+      resultatKode = (grunnlag.getSoknadBarnAlder().getAlder() >= 11) ? FORHOYET_FORSKUDD_11_AAR_125_PROSENT : FORHOYET_FORSKUDD_100_PROSENT;
       regel = (resultatKode.equals(FORHOYET_FORSKUDD_11_AAR_125_PROSENT) ? "REGEL 7" : "REGEL 8");
 
       // Resterende regler (gift/enslig) (REGEL 9/10/11/12/13/14/15/16)
     } else {
       resultatKode = (erUnderInntektsGrense(
-          settInntektsgrense(grunnlag.getBidragMottakerSivilstandKode(), inntektsgrenseEnslig75ProsentForskuddBelop,
+          settInntektsgrense(grunnlag.getBidragMottakerSivilstand().getKode(), inntektsgrenseEnslig75ProsentForskuddBelop,
               inntektsgrenseGiftSamboer75ProsentForskuddBelop).add(inntektsIntervallTotal), bidragMottakerInntekt)) ? ORDINAERT_FORSKUDD_75_PROSENT
           : REDUSERT_FORSKUDD_50_PROSENT;
-      if (grunnlag.getBidragMottakerSivilstandKode().equals(ENSLIG)) {
-        if (grunnlag.getAntallBarnIHusstand() == 1) {
+      if (grunnlag.getBidragMottakerSivilstand().getKode().equals(ENSLIG)) {
+        if (grunnlag.getAntallBarnIHusstand().getAntall() == 1) {
           regel = (resultatKode.equals(ORDINAERT_FORSKUDD_75_PROSENT) ? "REGEL 9" : "REGEL 10");
         } else {
           regel = (resultatKode.equals(ORDINAERT_FORSKUDD_75_PROSENT) ? "REGEL 11" : "REGEL 12");
         }
       } else {
-        if (grunnlag.getAntallBarnIHusstand() == 1) {
+        if (grunnlag.getAntallBarnIHusstand().getAntall() == 1) {
           regel = (resultatKode.equals(ORDINAERT_FORSKUDD_75_PROSENT) ? "REGEL 13" : "REGEL 14");
         } else {
           regel = (resultatKode.equals(ORDINAERT_FORSKUDD_75_PROSENT) ? "REGEL 15" : "REGEL 16");
@@ -123,8 +126,7 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
         .hentSjablonverdi(sjablonListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP);
     inntektsgrenseGiftSamboer75ProsentForskuddBelop = SjablonUtil
         .hentSjablonverdi(sjablonListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP);
-    inntektsintervallForskuddBelop = SjablonUtil
-        .hentSjablonverdi(sjablonListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP);
+    inntektsintervallForskuddBelop = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP);
   }
 
   // Mapper ut sjablonverdier til ResultatBeregning (dette for å sikre at kun sjabloner som faktisk er brukt legges ut i grunnlaget for beregning)
@@ -157,13 +159,16 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
       case REDUSERT_FORSKUDD_50_PROSENT -> forskuddssats75ProsentBelop.multiply(BigDecimal.valueOf(0.66666666)).setScale(-1, RoundingMode.HALF_UP);
       case ORDINAERT_FORSKUDD_75_PROSENT -> forskuddssats75ProsentBelop;
       case FORHOYET_FORSKUDD_100_PROSENT -> forskuddssats75ProsentBelop.multiply(BigDecimal.valueOf(1.33333333)).setScale(-1, RoundingMode.HALF_UP);
-      case FORHOYET_FORSKUDD_11_AAR_125_PROSENT -> forskuddssats75ProsentBelop.multiply(BigDecimal.valueOf(0.33333333))
-          .add(forskuddssats100ProsentBelop).setScale(-1, RoundingMode.HALF_UP);
+      case FORHOYET_FORSKUDD_11_AAR_125_PROSENT -> beregnForskudd11Aar125Prosent(forskuddssats75ProsentBelop, forskuddssats100ProsentBelop);
       case FORSKUDD_ENSLIG_ASYLANT_200_PROSENT -> forskuddssats100ProsentBelop.multiply(BigDecimal.valueOf(2)).setScale(-1, RoundingMode.HALF_UP);
-      case FORSKUDD_ENSLIG_ASYLANT_11_AAR_250_PROSENT -> forskuddssats75ProsentBelop.multiply(BigDecimal.valueOf(0.33333333))
-          .add(forskuddssats100ProsentBelop).setScale(-1, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(2)).setScale(-1, RoundingMode.HALF_UP);
+      case FORSKUDD_ENSLIG_ASYLANT_11_AAR_250_PROSENT -> beregnForskudd11Aar125Prosent(forskuddssats75ProsentBelop, forskuddssats100ProsentBelop)
+          .multiply(BigDecimal.valueOf(2)).setScale(-1, RoundingMode.HALF_UP);
       default -> BigDecimal.ZERO;
     };
+  }
+
+  private static BigDecimal beregnForskudd11Aar125Prosent(BigDecimal forskuddssats75ProsentBelop, BigDecimal forskuddssats100ProsentBelop) {
+    return forskuddssats75ProsentBelop.multiply(BigDecimal.valueOf(0.33333333)).add(forskuddssats100ProsentBelop).setScale(-1, RoundingMode.HALF_UP);
   }
 
   private static boolean erUnderInntektsGrense(BigDecimal inntektsgrense, BigDecimal inntekt) {

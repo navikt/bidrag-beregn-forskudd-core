@@ -8,9 +8,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import no.nav.bidrag.beregn.felles.InntektUtil;
 import no.nav.bidrag.beregn.felles.PeriodeUtil;
 import no.nav.bidrag.beregn.felles.bo.Avvik;
@@ -23,15 +21,20 @@ import no.nav.bidrag.beregn.felles.enums.SoknadType;
 import no.nav.bidrag.beregn.felles.inntekt.InntektPeriodeGrunnlag;
 import no.nav.bidrag.beregn.felles.periode.Periodiserer;
 import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregning;
+import no.nav.bidrag.beregn.forskudd.core.bo.Alder;
 import no.nav.bidrag.beregn.forskudd.core.bo.AlderPeriode;
+import no.nav.bidrag.beregn.forskudd.core.bo.Barn;
+import no.nav.bidrag.beregn.forskudd.core.bo.BarnPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddGrunnlag;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddListeGrunnlag;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat;
+import no.nav.bidrag.beregn.forskudd.core.bo.Bostatus;
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.Inntekt;
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode;
+import no.nav.bidrag.beregn.forskudd.core.bo.Sivilstand;
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode;
 
 public class ForskuddPeriodeImpl implements ForskuddPeriode {
@@ -65,15 +68,15 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
   private void justerInntekter(List<InntektPeriode> inntektPeriodeListe, BeregnForskuddListeGrunnlag beregnForskuddListeGrunnlag) {
 
     var inntektGrunnlagListe = InntektUtil.justerInntekter(inntektPeriodeListe.stream()
-        .map(inntektPeriode -> new InntektPeriodeGrunnlag(inntektPeriode.getInntektDatoFraTil(), inntektPeriode.getInntektType(),
-            inntektPeriode.getInntektBelop(), false, false))
+        .map(inntektPeriode -> new InntektPeriodeGrunnlag(inntektPeriode.getReferanse(), inntektPeriode.getPeriode(), inntektPeriode.getType(),
+            inntektPeriode.getBelop(), false, false))
         .collect(toList()));
 
     beregnForskuddListeGrunnlag.setJustertBidragMottakerInntektPeriodeListe(
         inntektGrunnlagListe.stream()
-            .map(inntektGrunnlag -> new InntektPeriode(inntektGrunnlag.getInntektDatoFraTil(), inntektGrunnlag.getInntektType(),
-                inntektGrunnlag.getInntektBelop()))
-            .sorted(comparing(inntektPeriode -> inntektPeriode.getInntektDatoFraTil().getDatoFra()))
+            .map(inntektGrunnlag -> new InntektPeriode(inntektGrunnlag.getReferanse(), inntektGrunnlag.getPeriode(), inntektGrunnlag.getType(),
+                inntektGrunnlag.getBelop()))
+            .sorted(comparing(inntektPeriode -> inntektPeriode.getPeriode().getDatoFom()))
             .collect(toList())
     );
   }
@@ -91,20 +94,19 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
             .collect(toCollection(ArrayList::new)));
 
     beregnForskuddListeGrunnlag.setJustertBarnPeriodeListe(
-        Optional.ofNullable(periodeGrunnlag.getBidragMottakerBarnPeriodeListe()).stream()
-            .flatMap(Collection::stream)
-            .map(Periode::new)
+        periodeGrunnlag.getBidragMottakerBarnPeriodeListe().stream()
+            .map(BarnPeriode::new)
             .collect(toCollection(ArrayList::new)));
 
     beregnForskuddListeGrunnlag.setJustertBostatusPeriodeListe(
-        periodeGrunnlag.getSoknadBarn().getSoknadBarnBostatusPeriodeListe().stream()
+        periodeGrunnlag.getSoknadBarn().getBostatusPeriodeListe().stream()
             .map(BostatusPeriode::new)
             .collect(toCollection(ArrayList::new)));
 
     beregnForskuddListeGrunnlag.setJustertAlderPeriodeListe(
-        settBarnAlderPerioder(periodeGrunnlag.getSoknadBarn().getSoknadBarnFodselsdato(),
+        settBarnAlderPerioder(periodeGrunnlag.getSoknadBarn().getFodselsdato(),
             periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil()).stream()
-            .map(alderPeriode -> new AlderPeriode(alderPeriode.getAlderDatoFraTil(), alderPeriode.getAlder()))
+            .map(alderPeriode -> new AlderPeriode(periodeGrunnlag.getSoknadBarn().getReferanse(), alderPeriode.getAlderPeriode(), alderPeriode.getAlder()))
             .collect(toCollection(ArrayList::new)));
 
     beregnForskuddListeGrunnlag.setJustertSjablonPeriodeListe(
@@ -130,15 +132,16 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
             .finnPerioder(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil()));
 
     // Hvis det ligger 2 perioder på slutten som i til-dato inneholder hhv. beregningsperiodens til-dato og null slås de sammen
-    if (beregnForskuddListeGrunnlag.getBruddPeriodeListe().size() > 1) {
-      if ((beregnForskuddListeGrunnlag.getBruddPeriodeListe().get(beregnForskuddListeGrunnlag.getBruddPeriodeListe().size() - 2).getDatoTil()
-          .equals(periodeGrunnlag.getBeregnDatoTil())) &&
-          (beregnForskuddListeGrunnlag.getBruddPeriodeListe().get(beregnForskuddListeGrunnlag.getBruddPeriodeListe().size() - 1).getDatoTil()
-              == null)) {
+    var bruddPeriodeListeAntallElementer =
+        (beregnForskuddListeGrunnlag.getBruddPeriodeListe() != null) ? beregnForskuddListeGrunnlag.getBruddPeriodeListe().size() : 0;
+    if (bruddPeriodeListeAntallElementer > 1) {
+      var nestSisteTilDato = beregnForskuddListeGrunnlag.getBruddPeriodeListe().get(bruddPeriodeListeAntallElementer - 2).getDatoTil();
+      var sisteTilDato = beregnForskuddListeGrunnlag.getBruddPeriodeListe().get(bruddPeriodeListeAntallElementer - 1).getDatoTil();
+      if ((periodeGrunnlag.getBeregnDatoTil().equals(nestSisteTilDato)) && (null == sisteTilDato)) {
         var nyPeriode = new Periode(
-            beregnForskuddListeGrunnlag.getBruddPeriodeListe().get(beregnForskuddListeGrunnlag.getBruddPeriodeListe().size() - 2).getDatoFra(), null);
-        beregnForskuddListeGrunnlag.getBruddPeriodeListe().remove(beregnForskuddListeGrunnlag.getBruddPeriodeListe().size() - 1);
-        beregnForskuddListeGrunnlag.getBruddPeriodeListe().remove(beregnForskuddListeGrunnlag.getBruddPeriodeListe().size() - 1);
+            beregnForskuddListeGrunnlag.getBruddPeriodeListe().get(bruddPeriodeListeAntallElementer - 2).getDatoFom(), null);
+        beregnForskuddListeGrunnlag.getBruddPeriodeListe().remove(bruddPeriodeListeAntallElementer - 1);
+        beregnForskuddListeGrunnlag.getBruddPeriodeListe().remove(bruddPeriodeListeAntallElementer - 2);
         beregnForskuddListeGrunnlag.getBruddPeriodeListe().add(nyPeriode);
       }
     }
@@ -148,44 +151,41 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
   private void beregnForskuddPerPeriode(BeregnForskuddListeGrunnlag beregnForskuddListeGrunnlag) {
 
     // Løper gjennom periodene og finner matchende verdi for hver kategori
-    for (Periode beregningsperiode : beregnForskuddListeGrunnlag.getBruddPeriodeListe()) {
-
+    // Kaller beregningsmodulen for hver beregningsperiode
+    beregnForskuddListeGrunnlag.getBruddPeriodeListe().forEach(beregningsperiode -> {
       var inntektListe = beregnForskuddListeGrunnlag.getJustertInntektPeriodeListe().stream()
-          .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
-          .map(inntektPeriode -> new Inntekt(inntektPeriode.getInntektType(), inntektPeriode.getInntektBelop())).collect(toList());
-
-      var sivilstandKode = beregnForskuddListeGrunnlag.getJustertSivilstandPeriodeListe().stream()
-          .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
-          .map(SivilstandPeriode::getSivilstandKode).findFirst().orElse(null);
-
+          .filter(i -> i.getPeriode().overlapperMed(beregningsperiode))
+          .map(inntektPeriode -> new Inntekt(inntektPeriode.getReferanse(), inntektPeriode.getType(), inntektPeriode.getBelop()))
+          .collect(toList());
+      var sivilstand = beregnForskuddListeGrunnlag.getJustertSivilstandPeriodeListe().stream()
+          .filter(i -> i.getPeriode().overlapperMed(beregningsperiode))
+          .map(sivilstandPeriode -> new Sivilstand(sivilstandPeriode.getReferanse(), sivilstandPeriode.getKode()))
+          .findFirst()
+          .orElse(null);
       var alder = beregnForskuddListeGrunnlag.getJustertAlderPeriodeListe().stream()
-          .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
-          .map(AlderPeriode::getAlder).findFirst().orElse(null);
-
-      var bostatusKode = beregnForskuddListeGrunnlag.getJustertBostatusPeriodeListe().stream()
-          .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
-          .map(BostatusPeriode::getBostatusKode).findFirst().orElse(null);
-
-      var antallBarn = (int) beregnForskuddListeGrunnlag.getJustertBarnPeriodeListe().stream()
-          .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).count();
-
+          .filter(i -> i.getPeriode().overlapperMed(beregningsperiode))
+          .map(alderPeriode -> new Alder(alderPeriode.getReferanse(), alderPeriode.getAlder()))
+          .findFirst()
+          .orElse(null);
+      var bostatus = beregnForskuddListeGrunnlag.getJustertBostatusPeriodeListe().stream()
+          .filter(i -> i.getPeriode().overlapperMed(beregningsperiode))
+          .map(bostatusPeriode -> new Bostatus(bostatusPeriode.getReferanse(), bostatusPeriode.getKode()))
+          .findFirst()
+          .orElse(null);
+      var barnReferanseListe = beregnForskuddListeGrunnlag.getJustertBarnPeriodeListe().stream()
+          .filter(i -> i.getPeriode().overlapperMed(beregningsperiode))
+          .map(BarnPeriode::getReferanse)
+          .collect(toList());
+      var antallBarn = new Barn(barnReferanseListe, barnReferanseListe.size() + soknadsbarnBorHjemme(bostatus.getKode()));
       var sjablonListe = beregnForskuddListeGrunnlag.getJustertSjablonPeriodeListe().stream()
-          .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
-          .map(sjablonPeriode -> new Sjablon(sjablonPeriode.getSjablon().getSjablonNavn(),
-              sjablonPeriode.getSjablon().getSjablonNokkelListe(),
-              sjablonPeriode.getSjablon().getSjablonInnholdListe())).collect(toList());
-
-      // Øk antall barn med 1 hvis søknadsbarnet bor hjemme
-      if (BostatusKode.MED_FORELDRE.equals(bostatusKode)) {
-        antallBarn = antallBarn + 1;
-      }
-
-      // Kaller beregningsmodulen for hver beregningsperiode
-      var grunnlagBeregning = new GrunnlagBeregning(inntektListe, sivilstandKode, antallBarn, alder, bostatusKode, sjablonListe);
-
+          .filter(i -> i.getPeriode().overlapperMed(beregningsperiode))
+          .map(sjablonPeriode -> new Sjablon(sjablonPeriode.getSjablon().getNavn(),
+              sjablonPeriode.getSjablon().getNokkelListe(),
+              sjablonPeriode.getSjablon().getInnholdListe())).collect(toList());
+      var grunnlagBeregning = new GrunnlagBeregning(inntektListe, sivilstand, antallBarn, alder, bostatus, sjablonListe);
       beregnForskuddListeGrunnlag.getPeriodeResultatListe()
           .add(new ResultatPeriode(beregningsperiode, forskuddBeregning.beregn(grunnlagBeregning), grunnlagBeregning));
-    }
+    });
   }
 
   // Deler opp i aldersperioder med utgangspunkt i fødselsdato
@@ -210,26 +210,32 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     var barn18AarIPerioden = (barn18AarDato.isAfter(beregnDatoFra.minusDays(1)) && barn18AarDato.isBefore(beregnDatoTil.plusDays(1)));
 
     if (barn11AarIPerioden) {
-      bruddAlderListe.add(new AlderPeriode(new Periode(beregnDatoFra.with(firstDayOfMonth()), barn11AarDato.with(firstDayOfMonth())), 0));
+      bruddAlderListe.add(new AlderPeriode("", new Periode(beregnDatoFra.with(firstDayOfMonth()), barn11AarDato.with(firstDayOfMonth())), 0));
       if (barn18AarIPerioden) {
-        bruddAlderListe.add(new AlderPeriode(new Periode(barn11AarDato.with(firstDayOfMonth()), barn18AarDato.with(firstDayOfMonth())), 11));
-        bruddAlderListe.add(new AlderPeriode(new Periode(barn18AarDato.with(firstDayOfMonth()), null), 18));
+        bruddAlderListe.add(new AlderPeriode("", new Periode(barn11AarDato.with(firstDayOfMonth()), barn18AarDato.with(firstDayOfMonth())), 11));
+        bruddAlderListe.add(new AlderPeriode("", new Periode(barn18AarDato.with(firstDayOfMonth()), null), 18));
       } else {
-        bruddAlderListe.add(new AlderPeriode(new Periode(barn11AarDato.with(firstDayOfMonth()), null), 11));
+        bruddAlderListe.add(new AlderPeriode("", new Periode(barn11AarDato.with(firstDayOfMonth()), null), 11));
       }
 
     } else {
       if (barn18AarIPerioden) {
-        bruddAlderListe.add(new AlderPeriode(new Periode(beregnDatoFra.with(firstDayOfMonth()), barn18AarDato.with(firstDayOfMonth())), 11));
-        bruddAlderListe.add(new AlderPeriode(new Periode(barn18AarDato.with(firstDayOfMonth()), null), 18));
+        bruddAlderListe.add(new AlderPeriode("", new Periode(beregnDatoFra.with(firstDayOfMonth()), barn18AarDato.with(firstDayOfMonth())), 11));
+        bruddAlderListe.add(new AlderPeriode("", new Periode(barn18AarDato.with(firstDayOfMonth()), null), 18));
 
       } else {
-        bruddAlderListe.add(new AlderPeriode(new Periode(beregnDatoFra.with(firstDayOfMonth()), null), alderStartPeriode));
+        bruddAlderListe.add(new AlderPeriode("", new Periode(beregnDatoFra.with(firstDayOfMonth()), null), alderStartPeriode));
       }
     }
 
     return bruddAlderListe;
   }
+
+  // Sjekker om søknadsbarnet bor hjemme
+  private Integer soknadsbarnBorHjemme(BostatusKode bostatusKode) {
+    return BostatusKode.MED_FORELDRE.equals(bostatusKode) ? 1 : 0;
+  }
+
 
   // Validerer at input-verdier til forskuddsberegning er gyldige
   public List<Avvik> validerInput(BeregnForskuddGrunnlag periodeGrunnlag) {
@@ -240,7 +246,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     // Sjekk perioder for inntekt
     var bidragMottakerInntektPeriodeListe = new ArrayList<Periode>();
     for (InntektPeriode bidragMottakerInntektPeriode : periodeGrunnlag.getBidragMottakerInntektPeriodeListe()) {
-      bidragMottakerInntektPeriodeListe.add(bidragMottakerInntektPeriode.getDatoFraTil());
+      bidragMottakerInntektPeriodeListe.add(bidragMottakerInntektPeriode.getPeriode());
     }
     avvikListe.addAll(
         PeriodeUtil.validerInputDatoer(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil(), "bidragMottakerInntektPeriodeListe",
@@ -249,7 +255,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
     // Sjekk perioder for sivilstand
     var bidragMottakerSivilstandPeriodeListe = new ArrayList<Periode>();
     for (SivilstandPeriode bidragMottakerSivilstandPeriode : periodeGrunnlag.getBidragMottakerSivilstandPeriodeListe()) {
-      bidragMottakerSivilstandPeriodeListe.add(bidragMottakerSivilstandPeriode.getDatoFraTil());
+      bidragMottakerSivilstandPeriodeListe.add(bidragMottakerSivilstandPeriode.getPeriode());
     }
     avvikListe.addAll(
         PeriodeUtil.validerInputDatoer(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil(), "bidragMottakerSivilstandPeriodeListe",
@@ -257,29 +263,27 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
     // Sjekk perioder for bostatus
     var soknadBarnBostatusPeriodeListe = new ArrayList<Periode>();
-    for (BostatusPeriode soknadBarnBostatusPeriode : periodeGrunnlag.getSoknadBarn().getSoknadBarnBostatusPeriodeListe()) {
-      soknadBarnBostatusPeriodeListe.add(soknadBarnBostatusPeriode.getDatoFraTil());
+    for (BostatusPeriode soknadBarnBostatusPeriode : periodeGrunnlag.getSoknadBarn().getBostatusPeriodeListe()) {
+      soknadBarnBostatusPeriodeListe.add(soknadBarnBostatusPeriode.getPeriode());
     }
     avvikListe.addAll(
         PeriodeUtil.validerInputDatoer(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil(), "soknadBarnBostatusPeriodeListe",
             soknadBarnBostatusPeriodeListe, true, true, true, true));
 
     // Sjekk perioder for barn
-    if (periodeGrunnlag.getBidragMottakerBarnPeriodeListe() != null) {
-      var bidragMottakerBarnPeriodeListe = new ArrayList<Periode>();
+    var bidragMottakerBarnPeriodeListe = new ArrayList<Periode>();
 
-      for (Periode bidragMottakerBarnPeriode : periodeGrunnlag.getBidragMottakerBarnPeriodeListe()) {
-        bidragMottakerBarnPeriodeListe.add(bidragMottakerBarnPeriode.getDatoFraTil());
-      }
-      avvikListe.addAll(
-          PeriodeUtil.validerInputDatoer(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil(), "bidragMottakerBarnPeriodeListe",
-              bidragMottakerBarnPeriodeListe, false, false, false, false));
+    for (BarnPeriode bidragMottakerBarnPeriode : periodeGrunnlag.getBidragMottakerBarnPeriodeListe()) {
+      bidragMottakerBarnPeriodeListe.add(bidragMottakerBarnPeriode.getPeriode());
     }
+    avvikListe.addAll(
+        PeriodeUtil.validerInputDatoer(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil(), "bidragMottakerBarnPeriodeListe",
+            bidragMottakerBarnPeriodeListe, false, false, false, false));
 
     // Sjekk perioder for sjablonliste
     var sjablonPeriodeListe = new ArrayList<Periode>();
     for (SjablonPeriode sjablonPeriode : periodeGrunnlag.getSjablonPeriodeListe()) {
-      sjablonPeriodeListe.add(sjablonPeriode.getDatoFraTil());
+      sjablonPeriodeListe.add(sjablonPeriode.getPeriode());
     }
     avvikListe.addAll(PeriodeUtil
         .validerInputDatoer(periodeGrunnlag.getBeregnDatoFra(), periodeGrunnlag.getBeregnDatoTil(), "sjablonPeriodeListe", sjablonPeriodeListe, false,
@@ -287,8 +291,8 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
     // Valider inntekter
     var inntektGrunnlagListe = periodeGrunnlag.getBidragMottakerInntektPeriodeListe().stream()
-        .map(inntektPeriode -> new InntektPeriodeGrunnlag(inntektPeriode.getInntektDatoFraTil(), inntektPeriode.getInntektType(),
-            inntektPeriode.getInntektBelop(), false, false))
+        .map(inntektPeriode -> new InntektPeriodeGrunnlag(inntektPeriode.getReferanse(), inntektPeriode.getPeriode(), inntektPeriode.getType(),
+            inntektPeriode.getBelop(), false, false))
         .collect(toList());
     avvikListe.addAll(InntektUtil.validerInntekter(inntektGrunnlagListe, SoknadType.FORSKUDD, Rolle.BIDRAGSMOTTAKER));
 

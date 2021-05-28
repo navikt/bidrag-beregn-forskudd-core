@@ -13,9 +13,6 @@ import java.time.LocalDate;
 import java.util.List;
 import no.nav.bidrag.beregn.felles.bo.Avvik;
 import no.nav.bidrag.beregn.felles.enums.AvvikType;
-import no.nav.bidrag.beregn.felles.enums.BostatusKode;
-import no.nav.bidrag.beregn.felles.enums.InntektType;
-import no.nav.bidrag.beregn.felles.enums.SivilstandKode;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode;
@@ -29,6 +26,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ForskuddCore (dto test)")
 public class ForskuddCoreTest {
+
+  private static final String INNTEKT_REFERANSE_1 = "INNTEKT_REFERANSE_1";
+  private static final String SIVILSTAND_REFERANSE_ENSLIG = "SIVILSTAND_REFERANSE_ENSLIG";
+  private static final String BARN_REFERANSE_1 = "BARN_REFERANSE_1";
+  private static final String SOKNADBARN_REFERANSE = "SOKNADBARN_REFERANSE";
+  private static final String BOSTATUS_REFERANSE_MED_FORELDRE_1 = "BOSTATUS_REFERANSE_MED_FORELDRE_1";
 
   private ForskuddCore forskuddCore;
 
@@ -54,56 +57,53 @@ public class ForskuddCoreTest {
     assertAll(
         () -> assertThat(beregnForskuddResultatCore).isNotNull(),
         () -> assertThat(beregnForskuddResultatCore.getAvvikListe()).isEmpty(),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe()).isNotEmpty(),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().size()).isEqualTo(3),
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe()).isNotEmpty(),
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().size()).isEqualTo(3),
 
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoFra())
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(0).getPeriode().getDatoFom())
             .isEqualTo(LocalDate.parse("2017-01-01")),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoTil())
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(0).getPeriode().getDatoTil())
             .isEqualTo(LocalDate.parse("2018-01-01")),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBelop())
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(0).getResultat().getBelop())
             .isEqualTo(BigDecimal.valueOf(1600)),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode())
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(0).getResultat().getKode())
             .isEqualTo(FORHOYET_FORSKUDD_100_PROSENT.toString()),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBeskrivelse())
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(0).getResultat().getRegel())
             .isEqualTo("REGEL 1"),
 
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().size())
-            .isEqualTo(1),
-        () -> assertThat(
-            beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0).getInntektType())
-            .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER.toString()),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerInntektListe().get(0)
-            .getInntektBelop()).isEqualTo(BigDecimal.valueOf(500000)),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getBidragMottakerSivilstandKode())
-            .isEqualTo(SivilstandKode.ENSLIG.toString()),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getAntallBarnIHusstand()).isEqualTo(2),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSoknadBarnAlder()).isEqualTo(10),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSoknadBarnBostatusKode())
-            .isEqualTo(BostatusKode.MED_FORELDRE.toString()),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonCoreListeFraSjablonListe(TestUtil.byggSjablonNavnVerdiListe())),
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(0).getGrunnlagReferanseListe().get(0))
+            .isEqualTo(INNTEKT_REFERANSE_1),
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(0).getGrunnlagReferanseListe().get(1))
+            .isEqualTo(SIVILSTAND_REFERANSE_ENSLIG),
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(0).getGrunnlagReferanseListe().get(2))
+            .isEqualTo(BARN_REFERANSE_1),
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(0).getGrunnlagReferanseListe().get(3))
+            .isEqualTo(SOKNADBARN_REFERANSE),
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(0).getGrunnlagReferanseListe().get(4))
+            .isEqualTo(BOSTATUS_REFERANSE_MED_FORELDRE_1),
+//        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSjablonListe())
+//            .isEqualTo(TestUtil.byggSjablonCoreListeFraSjablonListe(TestUtil.byggSjablonNavnVerdiListe())),
 
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getPeriodeDatoFra())
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(1).getPeriode().getDatoFom())
             .isEqualTo(LocalDate.parse("2018-01-01")),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getPeriodeDatoTil())
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(1).getPeriode().getDatoTil())
             .isEqualTo(LocalDate.parse("2019-01-01")),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatBelop())
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(1).getResultat().getBelop())
             .isEqualTo(BigDecimal.valueOf(1200)),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatKode())
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(1).getResultat().getKode())
             .isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT.toString()),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatBeskrivelse())
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(1).getResultat().getRegel())
             .isEqualTo("REGEL 2"),
 
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getPeriodeDatoFra())
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(2).getPeriode().getDatoFom())
             .isEqualTo(LocalDate.parse("2019-01-01")),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getPeriodeDatoTil())
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(2).getPeriode().getDatoTil())
             .isEqualTo(LocalDate.parse("2020-01-01")),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBelop())
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(2).getResultat().getBelop())
             .isEqualTo(BigDecimal.valueOf(0)),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatKode())
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(2).getResultat().getKode())
             .isEqualTo(AVSLAG.toString()),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBeskrivelse())
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(2).getResultat().getRegel())
             .isEqualTo("REGEL 11")
     );
   }
@@ -120,8 +120,8 @@ public class ForskuddCoreTest {
         () -> assertThat(beregnForskuddResultatCore.getAvvikListe()).isNotEmpty(),
         () -> assertThat(beregnForskuddResultatCore.getAvvikListe()).hasSize(1),
         () -> assertThat(beregnForskuddResultatCore.getAvvikListe().get(0).getAvvikTekst()).isEqualTo("beregnDatoTil må være etter beregnDatoFra"),
-        () -> assertThat(beregnForskuddResultatCore.getAvvikListe().get(0).getAvvikType()).isEqualTo(AvvikType.DATO_FRA_ETTER_DATO_TIL.toString()),
-        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe()).isEmpty()
+        () -> assertThat(beregnForskuddResultatCore.getAvvikListe().get(0).getAvvikType()).isEqualTo(AvvikType.DATO_FOM_ETTER_DATO_TIL.toString()),
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe()).isEmpty()
     );
   }
 }
