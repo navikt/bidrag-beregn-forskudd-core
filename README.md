@@ -21,6 +21,7 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 Versjon | Endringstype      | Beskrivelse
 --------|-------------------|------------
+0.5.0   | Endret            | Endring av grensesnitt mot rest-tjenesten (referanser). Oppdatert versjoner. Noe refaktorering.
 0.4.10  | Endret            | Liten justering på måten 250% forskudd beregnes. Oppdatert tester til å gjenspeile de nyeste sjablonsatsene.
 0.4.9   | Endret            | Liten justering på måten 125% forskudd beregnes
 0.4.8   | Endret            | Litt justeringer på beregningsreglene, med utgangspunkt i sjablon 00038 i stedet for 0005

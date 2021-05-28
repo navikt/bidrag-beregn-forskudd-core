@@ -22,9 +22,13 @@ import no.nav.bidrag.beregn.felles.enums.InntektType;
 import no.nav.bidrag.beregn.felles.enums.SivilstandKode;
 import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn;
 import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregning;
+import no.nav.bidrag.beregn.forskudd.core.bo.Alder;
+import no.nav.bidrag.beregn.forskudd.core.bo.Barn;
+import no.nav.bidrag.beregn.forskudd.core.bo.Bostatus;
 import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.Inntekt;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning;
+import no.nav.bidrag.beregn.forskudd.core.bo.Sivilstand;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -47,6 +51,13 @@ class ForskuddBeregningTest {
   private final BigDecimal forventetResultatBelop200Prosent = BigDecimal.valueOf(3420);
   private final BigDecimal forventetResultatBelop250Prosent = BigDecimal.valueOf(4280);
 
+  private static final String INNTEKT_REFERANSE_1 = "INNTEKT_REFERANSE_1";
+  private static final String INNTEKT_REFERANSE_2 = "INNTEKT_REFERANSE_2";
+  private static final String SIVILSTAND_REFERANSE = "SIVILSTAND_REFERANSE";
+  private static final String BARN_REFERANSE = "BARN_REFERANSE";
+  private static final String SOKNADBARN_REFERANSE = "SOKNADBARN_REFERANSE";
+  private static final String BOSTATUS_REFERANSE = "BOSTATUS_REFERANSE";
+
   @Test
   @Order(1)
   @DisplayName("Beregning feiler hvis grunnlag er null")
@@ -58,14 +69,19 @@ class ForskuddBeregningTest {
   @Order(2)
   @DisplayName("Regel 1: Søknadsbarn alder er høyere enn eller lik 18 år")
   void skalGiAvslagBarnOver18Aar() {
-    var inntekt = singletonList(new Inntekt(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.ZERO));
-    lagGrunnlag(inntekt, SivilstandKode.ENSLIG, 1, 18, BostatusKode.MED_FORELDRE);
+    var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.ZERO));
+    var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG);
+    var barn = new Barn(singletonList(BARN_REFERANSE), 1);
+    var alder = new Alder(SOKNADBARN_REFERANSE, 18);
+    var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
+    lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
+
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop()).isEqualTo(BigDecimal.ZERO),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(AVSLAG),
-        () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 1"),
+        () -> assertThat(resultat.getBelop()).isEqualTo(BigDecimal.ZERO),
+        () -> assertThat(resultat.getKode()).isEqualTo(AVSLAG),
+        () -> assertThat(resultat.getRegel()).isEqualTo("REGEL 1"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "   * ");
@@ -75,14 +91,19 @@ class ForskuddBeregningTest {
   @Order(3)
   @DisplayName("Regel 2: Søknadsbarn alder er høyere enn eller lik 11 år og type barn er ENSLIG ASYLANT")
   void skalGi250ProsentEnsligAsylant() {
-    var inntekt = singletonList(new Inntekt(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.ZERO));
-    lagGrunnlag(inntekt, SivilstandKode.ENSLIG, 1, 11, BostatusKode.ENSLIG_ASYLANT);
+    var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.ZERO));
+    var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG);
+    var barn = new Barn(singletonList(BARN_REFERANSE), 1);
+    var alder = new Alder(SOKNADBARN_REFERANSE, 11);
+    var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.ENSLIG_ASYLANT);
+    lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
+
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop250Prosent)).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(FORSKUDD_ENSLIG_ASYLANT_11_AAR_250_PROSENT),
-        () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 2"),
+        () -> assertThat(resultat.getBelop().compareTo(forventetResultatBelop250Prosent)).isZero(),
+        () -> assertThat(resultat.getKode()).isEqualTo(FORSKUDD_ENSLIG_ASYLANT_11_AAR_250_PROSENT),
+        () -> assertThat(resultat.getRegel()).isEqualTo("REGEL 2"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "   **");
@@ -92,14 +113,19 @@ class ForskuddBeregningTest {
   @Order(4)
   @DisplayName("Regel 3: Søknadsbarn alder er lavere enn 11 år og type barn er ENSLIG ASYLANT")
   void skalGi100ProsentEnsligAsylant() {
-    var inntekt = singletonList(new Inntekt(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.ZERO));
-    lagGrunnlag(inntekt, SivilstandKode.ENSLIG, 1, 10, BostatusKode.ENSLIG_ASYLANT);
+    var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.ZERO));
+    var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG);
+    var barn = new Barn(singletonList(BARN_REFERANSE), 1);
+    var alder = new Alder(SOKNADBARN_REFERANSE, 10);
+    var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.ENSLIG_ASYLANT);
+    lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
+
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop200Prosent)).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(FORSKUDD_ENSLIG_ASYLANT_200_PROSENT),
-        () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 3"),
+        () -> assertThat(resultat.getBelop().compareTo(forventetResultatBelop200Prosent)).isZero(),
+        () -> assertThat(resultat.getKode()).isEqualTo(FORSKUDD_ENSLIG_ASYLANT_200_PROSENT),
+        () -> assertThat(resultat.getRegel()).isEqualTo("REGEL 3"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "   **");
@@ -109,14 +135,19 @@ class ForskuddBeregningTest {
   @Order(5)
   @DisplayName("Regel 4: Søknadsbarn alder er høyere enn eller lik 11 år og bostedsstatus er ikke MED FORELDRE")
   void skalGi125ProsentBorIkkeMedForeldre() {
-    var inntekt = singletonList(new Inntekt(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.ZERO));
-    lagGrunnlag(inntekt, SivilstandKode.ENSLIG, 1, 11, BostatusKode.ALENE);
+    var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.ZERO));
+    var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG);
+    var barn = new Barn(singletonList(BARN_REFERANSE), 1);
+    var alder = new Alder(SOKNADBARN_REFERANSE, 11);
+    var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.ALENE);
+    lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
+
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop125Prosent)).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(FORHOYET_FORSKUDD_11_AAR_125_PROSENT),
-        () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 4"),
+        () -> assertThat(resultat.getBelop().compareTo(forventetResultatBelop125Prosent)).isZero(),
+        () -> assertThat(resultat.getKode()).isEqualTo(FORHOYET_FORSKUDD_11_AAR_125_PROSENT),
+        () -> assertThat(resultat.getRegel()).isEqualTo("REGEL 4"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "   **");
@@ -126,13 +157,18 @@ class ForskuddBeregningTest {
   @Order(6)
   @DisplayName("Regel 5: Søknadsbarn alder er lavere enn 11 år og bostedsstatus er ikke MED FORELDRE")
   void skalGi100ProsentBorIkkeMedForeldre() {
-    var inntekt = singletonList(new Inntekt(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.ZERO));
-    lagGrunnlag(inntekt, SivilstandKode.ENSLIG, 1, 10, BostatusKode.ALENE);
+    var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.ZERO));
+    var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG);
+    var barn = new Barn(singletonList(BARN_REFERANSE), 1);
+    var alder = new Alder(SOKNADBARN_REFERANSE, 10);
+    var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.ALENE);
+    lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
+
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop100Prosent)).isZero(),
-        () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 5"),
+        () -> assertThat(resultat.getBelop().compareTo(forventetResultatBelop100Prosent)).isZero(),
+        () -> assertThat(resultat.getRegel()).isEqualTo("REGEL 5"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "   **");
@@ -142,16 +178,21 @@ class ForskuddBeregningTest {
   @Order(7)
   @DisplayName("Regel 6: BM inntekt er over maks grense")
   void skalGiAvslagOverMaksGrense() {
-    var inntekt = singletonList(new Inntekt(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+    var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
         finnSjablonVerdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP).multiply(finnSjablonVerdi(sjablonListe,
             SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR)).add(BigDecimal.ONE)));
-    lagGrunnlag(inntekt, SivilstandKode.ENSLIG, 1, 11, BostatusKode.MED_FORELDRE);
+    var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG);
+    var barn = new Barn(singletonList(BARN_REFERANSE), 1);
+    var alder = new Alder(SOKNADBARN_REFERANSE, 11);
+    var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
+    lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
+
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop()).isEqualTo(BigDecimal.ZERO),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(AVSLAG),
-        () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 6"),
+        () -> assertThat(resultat.getBelop()).isEqualTo(BigDecimal.ZERO),
+        () -> assertThat(resultat.getKode()).isEqualTo(AVSLAG),
+        () -> assertThat(resultat.getRegel()).isEqualTo("REGEL 6"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "*    ");
@@ -161,15 +202,20 @@ class ForskuddBeregningTest {
   @Order(8)
   @DisplayName("Regel 7: BM inntekt er lavere eller lik sats for fullt forskudd og søknadsbarn alder er høyere enn eller lik 11 år")
   void skalGi125ProsentLavInntekt() {
-    var inntekt = singletonList(new Inntekt(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+    var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
         finnSjablonVerdi(sjablonListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP)));
-    lagGrunnlag(inntekt, SivilstandKode.ENSLIG, 1, 11, BostatusKode.MED_FORELDRE);
+    var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG);
+    var barn = new Barn(singletonList(BARN_REFERANSE), 1);
+    var alder = new Alder(SOKNADBARN_REFERANSE, 11);
+    var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
+    lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
+
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop125Prosent)).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(FORHOYET_FORSKUDD_11_AAR_125_PROSENT),
-        () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 7"),
+        () -> assertThat(resultat.getBelop().compareTo(forventetResultatBelop125Prosent)).isZero(),
+        () -> assertThat(resultat.getKode()).isEqualTo(FORHOYET_FORSKUDD_11_AAR_125_PROSENT),
+        () -> assertThat(resultat.getRegel()).isEqualTo("REGEL 7"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "*  * ");
@@ -179,15 +225,20 @@ class ForskuddBeregningTest {
   @Order(9)
   @DisplayName("Regel 8: BM inntekt er lavere eller lik sats for fullt forskudd og søknadsbarn alder er lavere enn 11 år")
   void skalGi100ProsentLavInntekt() {
-    var inntekt = singletonList(new Inntekt(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+    var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
         finnSjablonVerdi(sjablonListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP)));
-    lagGrunnlag(inntekt, SivilstandKode.ENSLIG, 1, 10, BostatusKode.MED_FORELDRE);
+    var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG);
+    var barn = new Barn(singletonList(BARN_REFERANSE), 1);
+    var alder = new Alder(SOKNADBARN_REFERANSE, 10);
+    var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
+    lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
+
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop100Prosent)).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(FORHOYET_FORSKUDD_100_PROSENT),
-        () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 8"),
+        () -> assertThat(resultat.getBelop().compareTo(forventetResultatBelop100Prosent)).isZero(),
+        () -> assertThat(resultat.getKode()).isEqualTo(FORHOYET_FORSKUDD_100_PROSENT),
+        () -> assertThat(resultat.getRegel()).isEqualTo("REGEL 8"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "*  * ");
@@ -197,15 +248,20 @@ class ForskuddBeregningTest {
   @Order(10)
   @DisplayName("Regel 9: BM inntekt er lavere eller lik sats for 75% forskudd enslig og antall barn i husstand er 1")
   void skalGi75ProsentEnsligEttBarn() {
-    var inntekt = singletonList(new Inntekt(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+    var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
         finnSjablonVerdi(sjablonListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP)));
-    lagGrunnlag(inntekt, SivilstandKode.ENSLIG, 1, 11, BostatusKode.MED_FORELDRE);
+    var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG);
+    var barn = new Barn(singletonList(BARN_REFERANSE), 1);
+    var alder = new Alder(SOKNADBARN_REFERANSE, 11);
+    var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
+    lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
+
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop75Prosent)).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
-        () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 9"),
+        () -> assertThat(resultat.getBelop().compareTo(forventetResultatBelop75Prosent)).isZero(),
+        () -> assertThat(resultat.getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
+        () -> assertThat(resultat.getRegel()).isEqualTo("REGEL 9"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "***  ");
@@ -215,15 +271,20 @@ class ForskuddBeregningTest {
   @Order(11)
   @DisplayName("Regel 10: BM inntekt er høyere enn sats for 75% forskudd enslig og antall barn i husstand er 1")
   void skalGi50ProsentEnsligEttBarn() {
-    var inntekt = singletonList(new Inntekt(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+    var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
         finnSjablonVerdi(sjablonListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP).add(BigDecimal.ONE)));
-    lagGrunnlag(inntekt, SivilstandKode.ENSLIG, 1, 11, BostatusKode.MED_FORELDRE);
+    var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG);
+    var barn = new Barn(singletonList(BARN_REFERANSE), 1);
+    var alder = new Alder(SOKNADBARN_REFERANSE, 11);
+    var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
+    lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
+
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop50Prosent)).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(REDUSERT_FORSKUDD_50_PROSENT),
-        () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 10"),
+        () -> assertThat(resultat.getBelop().compareTo(forventetResultatBelop50Prosent)).isZero(),
+        () -> assertThat(resultat.getKode()).isEqualTo(REDUSERT_FORSKUDD_50_PROSENT),
+        () -> assertThat(resultat.getRegel()).isEqualTo("REGEL 10"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "***  ");
@@ -233,16 +294,21 @@ class ForskuddBeregningTest {
   @Order(12)
   @DisplayName("Regel 11: BM inntekt er lavere eller lik sats for 75% forskudd enslig ++ og antall barn i husstand er mer enn 1")
   void skalGi75ProsentEnsligMerEnnEttBarn() {
-    var inntekt = singletonList(new Inntekt(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-            finnSjablonVerdi(sjablonListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP).add(
-                finnSjablonVerdi(sjablonListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP))));
-    lagGrunnlag(inntekt, SivilstandKode.ENSLIG, 2, 11, BostatusKode.MED_FORELDRE);
+    var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+        finnSjablonVerdi(sjablonListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP).add(
+            finnSjablonVerdi(sjablonListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP))));
+    var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG);
+    var barn = new Barn(singletonList(BARN_REFERANSE), 2);
+    var alder = new Alder(SOKNADBARN_REFERANSE, 11);
+    var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
+    lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
+
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop75Prosent)).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
-        () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 11"),
+        () -> assertThat(resultat.getBelop().compareTo(forventetResultatBelop75Prosent)).isZero(),
+        () -> assertThat(resultat.getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
+        () -> assertThat(resultat.getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "***  ");
@@ -252,16 +318,21 @@ class ForskuddBeregningTest {
   @Order(13)
   @DisplayName("Regel 12: BM inntekt er høyere enn sats for 75% forskudd enslig ++ og antall barn i husstand er mer enn 1")
   void skalGi50ProsentEnsligMerEnnEttBarn() {
-    var inntekt = singletonList(new Inntekt(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-            finnSjablonVerdi(sjablonListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP).add(
-                finnSjablonVerdi(sjablonListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP)).add(BigDecimal.ONE)));
-    lagGrunnlag(inntekt, SivilstandKode.ENSLIG, 2, 11, BostatusKode.MED_FORELDRE);
+    var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+        finnSjablonVerdi(sjablonListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP).add(
+            finnSjablonVerdi(sjablonListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP)).add(BigDecimal.ONE)));
+    var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG);
+    var barn = new Barn(singletonList(BARN_REFERANSE), 2);
+    var alder = new Alder(SOKNADBARN_REFERANSE, 11);
+    var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
+    lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
+
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop50Prosent)).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(REDUSERT_FORSKUDD_50_PROSENT),
-        () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 12"),
+        () -> assertThat(resultat.getBelop().compareTo(forventetResultatBelop50Prosent)).isZero(),
+        () -> assertThat(resultat.getKode()).isEqualTo(REDUSERT_FORSKUDD_50_PROSENT),
+        () -> assertThat(resultat.getRegel()).isEqualTo("REGEL 12"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "***  ");
@@ -271,15 +342,20 @@ class ForskuddBeregningTest {
   @Order(14)
   @DisplayName("Regel 13: BM inntekt er lavere eller lik sats for 75% forskudd gift og antall barn i husstand er 1")
   void skalGi75ProsentGiftEttBarn() {
-    var inntekt = singletonList(new Inntekt(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+    var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
         finnSjablonVerdi(sjablonListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP)));
-    lagGrunnlag(inntekt, SivilstandKode.GIFT, 1, 11, BostatusKode.MED_FORELDRE);
+    var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.GIFT);
+    var barn = new Barn(singletonList(BARN_REFERANSE), 1);
+    var alder = new Alder(SOKNADBARN_REFERANSE, 11);
+    var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
+    lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
+
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop75Prosent)).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
-        () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 13"),
+        () -> assertThat(resultat.getBelop().compareTo(forventetResultatBelop75Prosent)).isZero(),
+        () -> assertThat(resultat.getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
+        () -> assertThat(resultat.getRegel()).isEqualTo("REGEL 13"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "***  ");
@@ -289,15 +365,20 @@ class ForskuddBeregningTest {
   @Order(15)
   @DisplayName("Regel 14: BM inntekt er høyere enn sats for 75% forskudd gift og antall barn i husstand er 1")
   void skalGi50ProsentGiftEttBarn() {
-    var inntekt = singletonList(new Inntekt(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+    var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
         finnSjablonVerdi(sjablonListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP).add(BigDecimal.ONE)));
-    lagGrunnlag(inntekt, SivilstandKode.GIFT, 1, 11, BostatusKode.MED_FORELDRE);
+    var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.GIFT);
+    var barn = new Barn(singletonList(BARN_REFERANSE), 1);
+    var alder = new Alder(SOKNADBARN_REFERANSE, 11);
+    var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
+    lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
+
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop50Prosent)).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(REDUSERT_FORSKUDD_50_PROSENT),
-        () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 14"),
+        () -> assertThat(resultat.getBelop().compareTo(forventetResultatBelop50Prosent)).isZero(),
+        () -> assertThat(resultat.getKode()).isEqualTo(REDUSERT_FORSKUDD_50_PROSENT),
+        () -> assertThat(resultat.getRegel()).isEqualTo("REGEL 14"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "***  ");
@@ -307,16 +388,21 @@ class ForskuddBeregningTest {
   @Order(16)
   @DisplayName("Regel 15: BM inntekt er lavere eller lik sats for 75% forskudd gift ++ og antall barn i husstand er mer enn 1")
   void skalGi75ProsentGiftMerEnnEttBarn() {
-    var inntekt = singletonList(new Inntekt(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+    var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
         finnSjablonVerdi(sjablonListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP).add(
             finnSjablonVerdi(sjablonListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP))));
-    lagGrunnlag(inntekt, SivilstandKode.GIFT, 2, 11, BostatusKode.MED_FORELDRE);
+    var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.GIFT);
+    var barn = new Barn(singletonList(BARN_REFERANSE), 2);
+    var alder = new Alder(SOKNADBARN_REFERANSE, 11);
+    var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
+    lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
+
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop75Prosent)).isZero(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
-        () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 15"),
+        () -> assertThat(resultat.getBelop().compareTo(forventetResultatBelop75Prosent)).isZero(),
+        () -> assertThat(resultat.getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
+        () -> assertThat(resultat.getRegel()).isEqualTo("REGEL 15"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "***  ");
@@ -326,16 +412,21 @@ class ForskuddBeregningTest {
   @Order(17)
   @DisplayName("Regel 16: BM inntekt er høyere enn sats for 75% forskudd gift ++ og antall barn i husstand er mer enn 1 (1 inntekt)")
   void skalGi50ProsentGiftMerEnnEttBarn_EnInntekt() {
-    var inntekt = singletonList(new Inntekt(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-            finnSjablonVerdi(sjablonListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP).add(
-                finnSjablonVerdi(sjablonListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP).add(BigDecimal.ONE))));
-    lagGrunnlag(inntekt, SivilstandKode.GIFT, 2, 11, BostatusKode.MED_FORELDRE);
+    var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+        finnSjablonVerdi(sjablonListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP).add(
+            finnSjablonVerdi(sjablonListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP).add(BigDecimal.ONE))));
+    var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.GIFT);
+    var barn = new Barn(singletonList(BARN_REFERANSE), 2);
+    var alder = new Alder(SOKNADBARN_REFERANSE, 11);
+    var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
+    lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
+
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(REDUSERT_FORSKUDD_50_PROSENT),
-        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop50Prosent)).isZero(),
-        () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 16"),
+        () -> assertThat(resultat.getKode()).isEqualTo(REDUSERT_FORSKUDD_50_PROSENT),
+        () -> assertThat(resultat.getBelop().compareTo(forventetResultatBelop50Prosent)).isZero(),
+        () -> assertThat(resultat.getRegel()).isEqualTo("REGEL 16"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "***  ");
@@ -345,26 +436,30 @@ class ForskuddBeregningTest {
   @Order(18)
   @DisplayName("Regel 16: BM inntekt er høyere enn sats for 75% forskudd gift ++ og antall barn i husstand er mer enn 1 (2 inntekter)")
   void skalGi50ProsentGiftMerEnnEttBarn_ToInntekter() {
-    var inntekt = Arrays.asList(
-        new Inntekt(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+    var inntektListe = Arrays.asList(
+        new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
             finnSjablonVerdi(sjablonListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP)),
-        new Inntekt(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+        new Inntekt(INNTEKT_REFERANSE_2, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
             finnSjablonVerdi(sjablonListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP).add(BigDecimal.ONE)));
-    lagGrunnlag(inntekt, SivilstandKode.GIFT, 2, 11, BostatusKode.MED_FORELDRE);
+    var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.GIFT);
+    var barn = new Barn(singletonList(BARN_REFERANSE), 2);
+    var alder = new Alder(SOKNADBARN_REFERANSE, 11);
+    var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
+    lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
+
     var resultat = forskuddBeregning.beregn(grunnlag);
     assertAll(
         () -> assertThat(resultat).isNotNull(),
-        () -> assertThat(resultat.getResultatKode()).isEqualTo(REDUSERT_FORSKUDD_50_PROSENT),
-        () -> assertThat(resultat.getResultatBelop().compareTo(forventetResultatBelop50Prosent)).isZero(),
-        () -> assertThat(resultat.getResultatBeskrivelse()).isEqualTo("REGEL 16"),
+        () -> assertThat(resultat.getKode()).isEqualTo(REDUSERT_FORSKUDD_50_PROSENT),
+        () -> assertThat(resultat.getBelop().compareTo(forventetResultatBelop50Prosent)).isZero(),
+        () -> assertThat(resultat.getRegel()).isEqualTo("REGEL 16"),
         () -> assertThat(resultat.getSjablonListe()).isEqualTo(TestUtil.byggSjablonNavnVerdiListe())
     );
     printGrunnlagResultat(resultat, "***  ");
   }
 
-  private void lagGrunnlag(List<Inntekt> inntekt, SivilstandKode sivilstandKode, Integer antallBarnHjemme, Integer alderBarn,
-      BostatusKode bostatusKode) {
-    grunnlag = new GrunnlagBeregning(inntekt, sivilstandKode, antallBarnHjemme, alderBarn, bostatusKode, sjablonListe);
+  private void lagGrunnlag(List<Inntekt> inntekt, Sivilstand sivilstand, Barn barn, Alder alder, Bostatus bostatus) {
+    grunnlag = new GrunnlagBeregning(inntekt, sivilstand, barn, alder, bostatus, sjablonListe);
   }
 
   private BigDecimal finnSjablonVerdi(List<Sjablon> sjablonListe, SjablonTallNavn sjablonTallNavn) {
@@ -396,21 +491,22 @@ class ForskuddBeregningTest {
     System.out.println("---------");
     System.out.println(
         "BM inntekt:                                        " + betydning.charAt(0) + " " + grunnlag.getBidragMottakerInntektListe());
-    System.out.println(
-        "BM sivilstand:                                     " + betydning.charAt(1) + " " + grunnlag.getBidragMottakerSivilstandKode().name());
+    System.out.println("BM sivilstand:                                     " + betydning.charAt(1) + " " +
+        grunnlag.getBidragMottakerSivilstand().getKode().name());
     System.out.println("Antall barn i husstand:                            " + betydning.charAt(2) + " " + grunnlag.getAntallBarnIHusstand());
     System.out.println("Alder på søknadsbarn:                              " + betydning.charAt(3) + " " + grunnlag.getSoknadBarnAlder());
     System.out.println(
-        "Bostedsstatus søknadsbarn:                         " + betydning.charAt(4) + " " + grunnlag.getSoknadBarnBostatusKode().name());
+        "Bostedsstatus søknadsbarn:                         " + betydning.charAt(4) + " " + grunnlag.getSoknadBarnBostatus().getKode()
+            .name());
     System.out.println();
     System.out.println("Inntektsintervall totalt (0036 x (antall barn - 1)): " + (finnSjablonVerdi(sjablonListe,
-            SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP).multiply(BigDecimal.valueOf(grunnlag.getAntallBarnIHusstand() - 1))));
+        SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP).multiply(BigDecimal.valueOf(grunnlag.getAntallBarnIHusstand().getAntall() - 1))));
     System.out.println();
     System.out.println("RESULTAT:");
     System.out.println("---------");
     System.out
-        .println("Beregnet beløp:                                      " + (resultat == null ? "null" : resultat.getResultatBelop().intValue()));
-    System.out.println("Resultatkode:                                        " + (resultat == null ? "null" : resultat.getResultatKode().name()));
-    System.out.println("Regel brukt i beregning:                             " + (resultat == null ? "null" : resultat.getResultatBeskrivelse()));
+        .println("Beregnet beløp:                                      " + (resultat == null ? "null" : resultat.getBelop().intValue()));
+    System.out.println("Resultatkode:                                        " + (resultat == null ? "null" : resultat.getKode().name()));
+    System.out.println("Regel brukt i beregning:                             " + (resultat == null ? "null" : resultat.getRegel()));
   }
 }
