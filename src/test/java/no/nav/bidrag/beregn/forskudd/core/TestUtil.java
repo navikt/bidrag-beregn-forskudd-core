@@ -20,6 +20,7 @@ import no.nav.bidrag.beregn.felles.bo.Sjablon;
 import no.nav.bidrag.beregn.felles.bo.SjablonInnhold;
 import no.nav.bidrag.beregn.felles.bo.SjablonNavnVerdi;
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriode;
+import no.nav.bidrag.beregn.felles.bo.SjablonPeriodeNavnVerdi;
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore;
 import no.nav.bidrag.beregn.felles.enums.AvvikType;
 import no.nav.bidrag.beregn.felles.enums.BostatusKode;
@@ -105,6 +106,29 @@ public class TestUtil {
     return sjablonListe;
   }
 
+  public static List<SjablonPeriodeNavnVerdi> byggSjablonPeriodeNavnVerdiListe() {
+
+    var sjablonListe = new ArrayList<SjablonPeriodeNavnVerdi>();
+
+    // Sjablontall
+    sjablonListe.add(new SjablonPeriodeNavnVerdi(new Periode(LocalDate.parse("2017-01-01"), null),
+        SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELOP.getNavn(), BigDecimal.valueOf(1280)));
+    sjablonListe.add(new SjablonPeriodeNavnVerdi(new Periode(LocalDate.parse("2017-01-01"), null),
+        SjablonTallNavn.FORSKUDDSSATS_BELOP.getNavn(), BigDecimal.valueOf(1710)));
+    sjablonListe.add(new SjablonPeriodeNavnVerdi(new Periode(LocalDate.parse("2017-01-01"), null),
+        SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.getNavn(), BigDecimal.valueOf(320)));
+    sjablonListe.add(new SjablonPeriodeNavnVerdi(new Periode(LocalDate.parse("2017-01-01"), null),
+        SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP.getNavn(), BigDecimal.valueOf(270200)));
+    sjablonListe.add(new SjablonPeriodeNavnVerdi(new Periode(LocalDate.parse("2017-01-01"), null),
+        SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP.getNavn(), BigDecimal.valueOf(419700)));
+    sjablonListe.add(new SjablonPeriodeNavnVerdi(new Periode(LocalDate.parse("2017-01-01"), null),
+        SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP.getNavn(), BigDecimal.valueOf(336500)));
+    sjablonListe.add(new SjablonPeriodeNavnVerdi(new Periode(LocalDate.parse("2017-01-01"), null),
+        SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP.getNavn(), BigDecimal.valueOf(61700)));
+
+    return sjablonListe;
+  }
+
   public static List<SjablonPeriode> byggSjablonPeriodeListe() {
 
     var sjablonPeriodeListe = new ArrayList<SjablonPeriode>();
@@ -163,34 +187,34 @@ public class TestUtil {
     List<ResultatPeriode> periodeResultatListe = new ArrayList<>();
     periodeResultatListe.add(new ResultatPeriode(
         new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
-        new ResultatBeregning(BigDecimal.valueOf(1600), FORHOYET_FORSKUDD_100_PROSENT, "REGEL 1", TestUtil.byggSjablonNavnVerdiListe()),
+        new ResultatBeregning(BigDecimal.valueOf(1600), FORHOYET_FORSKUDD_100_PROSENT, "REGEL 1", TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         new GrunnlagBeregning(singletonList(
             new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(500000))),
             new Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandKode.ENSLIG),
             new Barn(singletonList(BARN_REFERANSE_1), 2),
             new Alder(SOKNADBARN_REFERANSE, 10),
             new Bostatus(BOSTATUS_REFERANSE_MED_FORELDRE_1, BostatusKode.MED_FORELDRE),
-            TestUtil.byggSjablonListe())));
+            TestUtil.byggSjablonPeriodeListe())));
     periodeResultatListe.add(new ResultatPeriode(
         new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
-        new ResultatBeregning(BigDecimal.valueOf(1200), ORDINAERT_FORSKUDD_75_PROSENT, "REGEL 2", TestUtil.byggSjablonNavnVerdiListe()),
+        new ResultatBeregning(BigDecimal.valueOf(1200), ORDINAERT_FORSKUDD_75_PROSENT, "REGEL 2", TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         new GrunnlagBeregning(singletonList(
             new Inntekt(INNTEKT_REFERANSE_2, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(500000))),
             new Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandKode.ENSLIG),
             new Barn(singletonList(BARN_REFERANSE_1), 2),
             new Alder(SOKNADBARN_REFERANSE, 10),
             new Bostatus(BOSTATUS_REFERANSE_MED_FORELDRE_1, BostatusKode.MED_FORELDRE),
-            TestUtil.byggSjablonListe())));
+            TestUtil.byggSjablonPeriodeListe())));
     periodeResultatListe.add(new ResultatPeriode(
         new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")),
-        new ResultatBeregning(BigDecimal.valueOf(0), AVSLAG, "REGEL 11", TestUtil.byggSjablonNavnVerdiListe()),
+        new ResultatBeregning(BigDecimal.valueOf(0), AVSLAG, "REGEL 11", TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         new GrunnlagBeregning(singletonList(
             new Inntekt(INNTEKT_REFERANSE_3, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(500000))),
             new Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandKode.ENSLIG),
             new Barn(singletonList(BARN_REFERANSE_1), 2),
             new Alder(SOKNADBARN_REFERANSE, 10),
             new Bostatus(BOSTATUS_REFERANSE_MED_FORELDRE_1, BostatusKode.MED_FORELDRE),
-            TestUtil.byggSjablonListe())));
+            TestUtil.byggSjablonPeriodeListe())));
     return new BeregnForskuddResultat(periodeResultatListe);
   }
 
@@ -263,8 +287,9 @@ public class TestUtil {
     var bmSivilstandListe = new ArrayList<SivilstandPeriode>();
     bmSivilstandListe.add(new SivilstandPeriode(SIVILSTAND_REFERANSE_GIFT, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-01")),
         GIFT));
-    bmSivilstandListe.add(new SivilstandPeriode(SIVILSTAND_REFERANSE_ENSLIG, new Periode(LocalDate.parse("2018-03-17"), LocalDate.parse("2019-07-01")),
-        ENSLIG));
+    bmSivilstandListe
+        .add(new SivilstandPeriode(SIVILSTAND_REFERANSE_ENSLIG, new Periode(LocalDate.parse("2018-03-17"), LocalDate.parse("2019-07-01")),
+            ENSLIG));
 
     var bmBarnListe = new ArrayList<BarnPeriode>();
     bmBarnListe.add(new BarnPeriode(BARN_REFERANSE_1, new Periode(LocalDate.parse("2017-01-01"), null)));
@@ -300,8 +325,9 @@ public class TestUtil {
     var bmSivilstandListe = new ArrayList<SivilstandPeriode>();
     bmSivilstandListe.add(new SivilstandPeriode(SIVILSTAND_REFERANSE_GIFT, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-17")),
         GIFT));
-    bmSivilstandListe.add(new SivilstandPeriode(SIVILSTAND_REFERANSE_ENSLIG, new Periode(LocalDate.parse("2018-04-17"), LocalDate.parse("2019-08-01")),
-        ENSLIG));
+    bmSivilstandListe
+        .add(new SivilstandPeriode(SIVILSTAND_REFERANSE_ENSLIG, new Periode(LocalDate.parse("2018-04-17"), LocalDate.parse("2019-08-01")),
+            ENSLIG));
 
     var bmBarnListe = new ArrayList<BarnPeriode>();
     bmBarnListe.add(new BarnPeriode(BARN_REFERANSE_1, new Periode(LocalDate.parse("2017-01-01"), null)));

@@ -65,7 +65,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getKode()).isEqualTo(FORHOYET_FORSKUDD_100_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getRegel()).isEqualTo("REGEL 8"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
 
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
@@ -97,7 +97,8 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getSoknadBarnBostatus().getReferanse())
             .isEqualTo(BOSTATUS_REFERANSE_MED_FORELDRE_1),
 
-        () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getSjablonListe()).isEqualTo(TestUtil.byggSjablonListe()),
+        () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getSjablonListe())
+            .isEqualTo(TestUtil.byggSjablonPeriodeListe()),
 
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getPeriode().getDatoFom()).isEqualTo(LocalDate.parse("2017-12-01")),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getPeriode().getDatoTil()).isEqualTo(LocalDate.parse("2018-01-01")),
@@ -236,7 +237,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getKode()).isEqualTo(FORHOYET_FORSKUDD_100_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getRegel()).isEqualTo("REGEL 8"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
 
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
@@ -249,7 +250,8 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getSoknadBarnAlder().getAlder()).isEqualTo(0),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getSoknadBarnBostatus().getKode())
             .isEqualTo(BostatusKode.MED_FORELDRE),
-        () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getSjablonListe()).isEqualTo(TestUtil.byggSjablonListe())
+        () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getSjablonListe())
+            .isEqualTo(TestUtil.byggSjablonPeriodeListe())
     );
   }
 
@@ -278,7 +280,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(2),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -294,7 +296,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(3),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -314,7 +316,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(2),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -330,7 +332,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -364,7 +366,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(2),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -380,7 +382,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(3),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -400,7 +402,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(2),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -416,7 +418,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -450,7 +452,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -462,7 +464,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(2),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -478,7 +480,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -490,7 +492,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(2),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -506,7 +508,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(4).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(4).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(4).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(4).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(4).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -540,7 +542,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(3),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -582,7 +584,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -594,7 +596,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(3),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -614,7 +616,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -648,7 +650,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(2),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -664,7 +666,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(3),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(1).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -684,7 +686,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(2),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(2).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),
@@ -700,7 +702,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getResultat().getKode()).isEqualTo(ORDINAERT_FORSKUDD_75_PROSENT),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getResultat().getRegel()).isEqualTo("REGEL 11"),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getResultat().getSjablonListe())
-            .isEqualTo(TestUtil.byggSjablonNavnVerdiListe()),
+            .isEqualTo(TestUtil.byggSjablonPeriodeNavnVerdiListe()),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getGrunnlag().getBidragMottakerInntektListe().size()).isEqualTo(1),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(3).getGrunnlag().getBidragMottakerInntektListe().get(0).getType())
             .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER),

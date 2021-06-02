@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.forskudd.core.beregning;
 
+import static java.util.stream.Collectors.toList;
 import static no.nav.bidrag.beregn.felles.enums.BostatusKode.ENSLIG_ASYLANT;
 import static no.nav.bidrag.beregn.felles.enums.BostatusKode.MED_FORELDRE;
 import static no.nav.bidrag.beregn.felles.enums.SivilstandKode.ENSLIG;
@@ -13,11 +14,13 @@ import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.REDUSERT_FOR
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import no.nav.bidrag.beregn.felles.SjablonUtil;
-import no.nav.bidrag.beregn.felles.bo.Sjablon;
-import no.nav.bidrag.beregn.felles.bo.SjablonNavnVerdi;
+import no.nav.bidrag.beregn.felles.bo.Periode;
+import no.nav.bidrag.beregn.felles.bo.SjablonPeriode;
+import no.nav.bidrag.beregn.felles.bo.SjablonPeriodeNavnVerdi;
 import no.nav.bidrag.beregn.felles.enums.SivilstandKode;
 import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn;
 import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning;
@@ -112,11 +115,14 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
     }
 
     return new ResultatBeregning(beregnForskudd(resultatKode, forskuddssats75ProsentBelop, forskuddssats100ProsentBelop), resultatKode, regel,
-        byggSjablonListe());
+        byggSjablonListe(grunnlag.getSjablonListe()));
   }
 
   // Henter sjablonverdier
-  private void hentSjablonVerdier(List<Sjablon> sjablonListe) {
+  private void hentSjablonVerdier(List<SjablonPeriode> sjablonPeriodeListe) {
+    var sjablonListe = sjablonPeriodeListe.stream()
+        .map(SjablonPeriode::getSjablon)
+        .collect(toList());
     forskuddssats75ProsentBelop = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELOP);
     forskuddssats100ProsentBelop = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonTallNavn.FORSKUDDSSATS_BELOP);
     maksInntektForskuddMottakerMultiplikator = SjablonUtil
@@ -130,20 +136,34 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
   }
 
   // Mapper ut sjablonverdier til ResultatBeregning (dette for å sikre at kun sjabloner som faktisk er brukt legges ut i grunnlaget for beregning)
-  private List<SjablonNavnVerdi> byggSjablonListe() {
-    var sjablonNavnVerdiListe = new ArrayList<SjablonNavnVerdi>();
-    sjablonNavnVerdiListe.add(new SjablonNavnVerdi(SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELOP.getNavn(), forskuddssats75ProsentBelop));
-    sjablonNavnVerdiListe.add(new SjablonNavnVerdi(SjablonTallNavn.FORSKUDDSSATS_BELOP.getNavn(), forskuddssats100ProsentBelop));
-    sjablonNavnVerdiListe.add(new SjablonNavnVerdi(SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.getNavn(),
-        maksInntektForskuddMottakerMultiplikator));
-    sjablonNavnVerdiListe.add(new SjablonNavnVerdi(SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP.getNavn(),
-        inntektsgrense100ProsentForskuddBelop));
-    sjablonNavnVerdiListe.add(new SjablonNavnVerdi(SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP.getNavn(),
-        inntektsgrenseEnslig75ProsentForskuddBelop));
-    sjablonNavnVerdiListe.add(new SjablonNavnVerdi(SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP.getNavn(),
-        inntektsgrenseGiftSamboer75ProsentForskuddBelop));
-    sjablonNavnVerdiListe.add(new SjablonNavnVerdi(SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP.getNavn(), inntektsintervallForskuddBelop));
-    return sjablonNavnVerdiListe;
+  private List<SjablonPeriodeNavnVerdi> byggSjablonListe(List<SjablonPeriode> sjablonPeriodeListe) {
+    var sjablonListe = new ArrayList<SjablonPeriodeNavnVerdi>();
+    sjablonListe.add(new SjablonPeriodeNavnVerdi(hentPeriode(sjablonPeriodeListe, SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELOP.getNavn()),
+        SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELOP.getNavn(), forskuddssats75ProsentBelop));
+    sjablonListe.add(new SjablonPeriodeNavnVerdi(hentPeriode(sjablonPeriodeListe, SjablonTallNavn.FORSKUDDSSATS_BELOP.getNavn()),
+        SjablonTallNavn.FORSKUDDSSATS_BELOP.getNavn(), forskuddssats100ProsentBelop));
+    sjablonListe.add(new SjablonPeriodeNavnVerdi(hentPeriode(sjablonPeriodeListe,
+        SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.getNavn()),
+        SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.getNavn(), maksInntektForskuddMottakerMultiplikator));
+    sjablonListe.add(new SjablonPeriodeNavnVerdi(hentPeriode(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP.getNavn()),
+        SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP.getNavn(), inntektsgrense100ProsentForskuddBelop));
+    sjablonListe.add(new SjablonPeriodeNavnVerdi(hentPeriode(sjablonPeriodeListe,
+        SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP.getNavn()),
+        SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP.getNavn(), inntektsgrenseEnslig75ProsentForskuddBelop));
+    sjablonListe.add(new SjablonPeriodeNavnVerdi(hentPeriode(sjablonPeriodeListe,
+        SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP.getNavn()),
+        SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP.getNavn(), inntektsgrenseGiftSamboer75ProsentForskuddBelop));
+    sjablonListe.add(new SjablonPeriodeNavnVerdi(hentPeriode(sjablonPeriodeListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP.getNavn()),
+        SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP.getNavn(), inntektsintervallForskuddBelop));
+    return sjablonListe;
+  }
+
+  private Periode hentPeriode(List<SjablonPeriode> sjablonPeriodeListe, String sjablonNavn) {
+    return sjablonPeriodeListe.stream()
+        .filter(sjablonPeriode -> sjablonPeriode.getSjablon().getNavn().equals(sjablonNavn))
+        .map(SjablonPeriode::getPeriode)
+        .findFirst()
+        .orElse(new Periode(LocalDate.MIN, LocalDate.MAX));
   }
 
   // Beregner forskuddsbeløp basert på resultatkode

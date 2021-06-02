@@ -13,7 +13,6 @@ import no.nav.bidrag.beregn.felles.InntektUtil;
 import no.nav.bidrag.beregn.felles.PeriodeUtil;
 import no.nav.bidrag.beregn.felles.bo.Avvik;
 import no.nav.bidrag.beregn.felles.bo.Periode;
-import no.nav.bidrag.beregn.felles.bo.Sjablon;
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriode;
 import no.nav.bidrag.beregn.felles.enums.BostatusKode;
 import no.nav.bidrag.beregn.felles.enums.Rolle;
@@ -179,9 +178,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
       var antallBarn = new Barn(barnReferanseListe, barnReferanseListe.size() + soknadsbarnBorHjemme(bostatus.getKode()));
       var sjablonListe = beregnForskuddListeGrunnlag.getJustertSjablonPeriodeListe().stream()
           .filter(i -> i.getPeriode().overlapperMed(beregningsperiode))
-          .map(sjablonPeriode -> new Sjablon(sjablonPeriode.getSjablon().getNavn(),
-              sjablonPeriode.getSjablon().getNokkelListe(),
-              sjablonPeriode.getSjablon().getInnholdListe())).collect(toList());
+          .collect(toList());
       var grunnlagBeregning = new GrunnlagBeregning(inntektListe, sivilstand, antallBarn, alder, bostatus, sjablonListe);
       beregnForskuddListeGrunnlag.getPeriodeResultatListe()
           .add(new ResultatPeriode(beregningsperiode, forskuddBeregning.beregn(grunnlagBeregning), grunnlagBeregning));

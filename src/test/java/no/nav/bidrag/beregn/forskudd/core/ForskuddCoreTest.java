@@ -59,6 +59,8 @@ public class ForskuddCoreTest {
         () -> assertThat(beregnForskuddResultatCore.getAvvikListe()).isEmpty(),
         () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe()).isNotEmpty(),
         () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().size()).isEqualTo(3),
+        () -> assertThat(beregnForskuddResultatCore.getSjablonListe()).isNotEmpty(),
+        () -> assertThat(beregnForskuddResultatCore.getSjablonListe().size()).isEqualTo(TestUtil.byggSjablonPeriodeListe().size()),
 
         () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(0).getPeriode().getDatoFom())
             .isEqualTo(LocalDate.parse("2017-01-01")),
@@ -81,8 +83,6 @@ public class ForskuddCoreTest {
             .isEqualTo(SOKNADBARN_REFERANSE),
         () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(0).getGrunnlagReferanseListe().get(4))
             .isEqualTo(BOSTATUS_REFERANSE_MED_FORELDRE_1),
-//        () -> assertThat(beregnForskuddResultatCore.getResultatPeriodeListe().get(0).getResultatGrunnlag().getSjablonListe())
-//            .isEqualTo(TestUtil.byggSjablonCoreListeFraSjablonListe(TestUtil.byggSjablonNavnVerdiListe())),
 
         () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(1).getPeriode().getDatoFom())
             .isEqualTo(LocalDate.parse("2018-01-01")),
