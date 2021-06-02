@@ -1,9 +1,8 @@
 package no.nav.bidrag.beregn.forskudd.core.bo
 
 import no.nav.bidrag.beregn.felles.bo.Periode
-import no.nav.bidrag.beregn.felles.bo.Sjablon
-import no.nav.bidrag.beregn.felles.bo.SjablonNavnVerdi
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
+import no.nav.bidrag.beregn.felles.bo.SjablonPeriodeNavnVerdi
 import no.nav.bidrag.beregn.felles.enums.BostatusKode
 import no.nav.bidrag.beregn.felles.enums.InntektType
 import no.nav.bidrag.beregn.felles.enums.SivilstandKode
@@ -46,7 +45,7 @@ data class GrunnlagBeregning(
   val antallBarnIHusstand: Barn,
   val soknadBarnAlder: Alder,
   val soknadBarnBostatus: Bostatus,
-  val sjablonListe: List<Sjablon>
+  val sjablonListe: List<SjablonPeriode>
 )
 
 data class Inntekt(
@@ -80,7 +79,7 @@ data class ResultatBeregning(
   val belop: BigDecimal,
   val kode: ResultatKode,
   val regel: String,
-  val sjablonListe: List<SjablonNavnVerdi>
+  val sjablonListe: List<SjablonPeriodeNavnVerdi>
 )
 
 

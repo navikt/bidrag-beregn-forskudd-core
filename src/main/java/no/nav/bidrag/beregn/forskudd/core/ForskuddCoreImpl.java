@@ -4,7 +4,9 @@ import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import no.nav.bidrag.beregn.felles.bo.Avvik;
 import no.nav.bidrag.beregn.felles.bo.Periode;
@@ -12,11 +14,13 @@ import no.nav.bidrag.beregn.felles.bo.Sjablon;
 import no.nav.bidrag.beregn.felles.bo.SjablonInnhold;
 import no.nav.bidrag.beregn.felles.bo.SjablonNokkel;
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriode;
+import no.nav.bidrag.beregn.felles.bo.SjablonPeriodeNavnVerdi;
 import no.nav.bidrag.beregn.felles.dto.AvvikCore;
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore;
 import no.nav.bidrag.beregn.felles.dto.SjablonInnholdCore;
 import no.nav.bidrag.beregn.felles.dto.SjablonNokkelCore;
 import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore;
+import no.nav.bidrag.beregn.felles.dto.SjablonResultatGrunnlagCore;
 import no.nav.bidrag.beregn.felles.enums.BostatusKode;
 import no.nav.bidrag.beregn.felles.enums.InntektType;
 import no.nav.bidrag.beregn.felles.enums.SivilstandKode;
@@ -24,7 +28,6 @@ import no.nav.bidrag.beregn.forskudd.core.bo.BarnPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddGrunnlag;
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode;
-import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning;
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode;
@@ -150,15 +153,8 @@ public class ForskuddCoreImpl implements ForskuddCore {
   }
 
   private BeregnetForskuddResultatCore mapFraBusinessObject(List<Avvik> avvikListe, BeregnForskuddResultat resultat) {
-    return new BeregnetForskuddResultatCore(mapResultatPeriode(resultat.getBeregnetForskuddPeriodeListe()), mapAvvik(avvikListe));
-  }
-
-  private List<AvvikCore> mapAvvik(List<Avvik> avvikListe) {
-    var avvikCoreListe = new ArrayList<AvvikCore>();
-    for (Avvik avvik : avvikListe) {
-      avvikCoreListe.add(new AvvikCore(avvik.getAvvikTekst(), avvik.getAvvikType().toString()));
-    }
-    return avvikCoreListe;
+    return new BeregnetForskuddResultatCore(mapResultatPeriode(resultat.getBeregnetForskuddPeriodeListe()),
+        mapSjablonGrunnlagListe(resultat.getBeregnetForskuddPeriodeListe()), mapAvvik(avvikListe));
   }
 
   private List<ResultatPeriodeCore> mapResultatPeriode(List<ResultatPeriode> periodeResultatListe) {
@@ -169,18 +165,48 @@ public class ForskuddCoreImpl implements ForskuddCore {
           new PeriodeCore(periodeResultat.getPeriode().getDatoFom(), periodeResultat.getPeriode().getDatoTil()),
           new ResultatBeregningCore(forskuddBeregningResultat.getBelop(), forskuddBeregningResultat.getKode().toString(),
               forskuddBeregningResultat.getRegel()),
-          mapReferanseListe(periodeResultat.getGrunnlag())));
+          mapReferanseListe(periodeResultat)));
     }
     return resultatPeriodeCoreListe;
   }
 
-  private List<String> mapReferanseListe(GrunnlagBeregning resultatGrunnlag) {
+  private List<String> mapReferanseListe(ResultatPeriode resultatPeriode) {
+    var resultatGrunnlag = resultatPeriode.getGrunnlag();
+    var sjablonListe = resultatPeriode.getResultat().getSjablonListe();
     var referanseListe = new ArrayList<String>();
     resultatGrunnlag.getBidragMottakerInntektListe().forEach(inntekt -> referanseListe.add(inntekt.getReferanse()));
     referanseListe.add(resultatGrunnlag.getBidragMottakerSivilstand().getReferanse());
     referanseListe.addAll(resultatGrunnlag.getAntallBarnIHusstand().getReferanseListe());
     referanseListe.add(resultatGrunnlag.getSoknadBarnAlder().getReferanse());
     referanseListe.add(resultatGrunnlag.getSoknadBarnBostatus().getReferanse());
+    referanseListe.addAll(sjablonListe.stream().map(this::lagSjablonReferanse).distinct().collect(toList()));
     return referanseListe;
+  }
+
+  private String lagSjablonReferanse(SjablonPeriodeNavnVerdi sjablon) {
+    return "Sjablon_" + sjablon.getNavn() + "_" + sjablon.getPeriode().getDatoFom().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+  }
+
+  private List<SjablonResultatGrunnlagCore> mapSjablonGrunnlagListe(List<ResultatPeriode> periodeResultatListe) {
+    return periodeResultatListe.stream()
+        .map(resultatPeriode -> mapSjablonListe(resultatPeriode.getResultat().getSjablonListe()))
+        .flatMap(Collection::stream)
+        .distinct()
+        .collect(toList());
+  }
+
+  private List<SjablonResultatGrunnlagCore> mapSjablonListe(List<SjablonPeriodeNavnVerdi> sjablonListe) {
+    return sjablonListe.stream()
+        .map(sjablon -> new SjablonResultatGrunnlagCore(lagSjablonReferanse(sjablon), new PeriodeCore(sjablon.getPeriode().getDatoFom(), sjablon.getPeriode().getDatoTil()),
+            sjablon.getNavn(), sjablon.getVerdi()))
+        .collect(toList());
+  }
+
+  private List<AvvikCore> mapAvvik(List<Avvik> avvikListe) {
+    var avvikCoreListe = new ArrayList<AvvikCore>();
+    for (Avvik avvik : avvikListe) {
+      avvikCoreListe.add(new AvvikCore(avvik.getAvvikTekst(), avvik.getAvvikType().toString()));
+    }
+    return avvikCoreListe;
   }
 }

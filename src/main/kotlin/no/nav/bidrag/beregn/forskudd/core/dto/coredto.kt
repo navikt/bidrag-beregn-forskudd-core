@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.forskudd.core.dto
 import no.nav.bidrag.beregn.felles.dto.AvvikCore
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore
 import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore
+import no.nav.bidrag.beregn.felles.dto.SjablonResultatGrunnlagCore
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -50,6 +51,7 @@ data class BarnPeriodeCore(
 // Resultat
 data class BeregnetForskuddResultatCore(
   val beregnetForskuddPeriodeListe: List<ResultatPeriodeCore>,
+  val sjablonListe: List<SjablonResultatGrunnlagCore>,
   val avvikListe: List<AvvikCore>
 )
 
