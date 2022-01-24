@@ -25,7 +25,7 @@
   <properties>
 
     <!-- language -->
-    <java.version>17</java.version>
+    <java.version>16</java.version>
     <kotlin.version>1.6.0</kotlin.version>
 
     <!-- build -->
@@ -35,9 +35,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <!-- dependencies -->
-    <bidrag-beregn-felles.version>0.18.1</bidrag-beregn-felles.version>
+    <bidrag-beregn-felles.version>0.18.0</bidrag-beregn-felles.version>
     <guava.version>30.1.1-jre</guava.version>
-    <spring-boot.version>2.6.1</spring-boot.version>
+    <spring-boot.version>2.4.2</spring-boot.version>
   </properties>
 
   <distributionManagement>
