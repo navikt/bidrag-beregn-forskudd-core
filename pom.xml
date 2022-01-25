@@ -3,7 +3,7 @@
 
   <groupId>no.nav.bidrag</groupId>
   <artifactId>bidrag-beregn-forskudd-core</artifactId>
-  <version>0.6.3-SNAPSHOT</version>
+  <version>0.6.2-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>bidrag-beregn-forskudd-core</name>
   <description>Forskuddsberegning</description>
@@ -26,7 +26,7 @@
 
     <!-- language -->
     <java.version>17</java.version>
-    <kotlin.version>1.6.0</kotlin.version>
+    <kotlin.version>1.6.10</kotlin.version>
 
     <!-- build -->
     <build-helper-maven.version>3.2.0</build-helper-maven.version>
