@@ -21,6 +21,7 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 Versjon | Endringstype      | Beskrivelse
 --------|-------------------|------------
+0.6.4   | Endret            | Ny versjon av bidrag-beregn-felles
 0.6.3   | Endret            | Oppdatert til Java 17 + oppdatert andre avhengigheter (nytt forsøk)
 0.6.1   | Endret            | Oppdatert til Java 17 + oppdatert andre avhengigheter
 0.6.0   | Endret            | Endring av grensesnitt for å få med mer informasjon om sjabloner
