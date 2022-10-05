@@ -72,17 +72,19 @@ data class AlderPeriode(
   }
 }
 
-data class BarnPeriode(
+data class BarnIHusstandenPeriode(
   val referanse: String,
-  val barnPeriode: Periode
+  val barnIHusstandenPeriode: Periode,
+  val antall: Double
 ) : PeriodisertGrunnlag {
 
-  constructor(barnPeriode: BarnPeriode) : this(
-    barnPeriode.referanse,
-    barnPeriode.barnPeriode.justerDatoer()
+  constructor(barnIHusstandenPeriode: BarnIHusstandenPeriode) : this(
+    barnIHusstandenPeriode.referanse,
+    barnIHusstandenPeriode.barnIHusstandenPeriode.justerDatoer(),
+    barnIHusstandenPeriode.antall
   )
 
   override fun getPeriode(): Periode {
-    return barnPeriode
+    return barnIHusstandenPeriode
   }
 }

@@ -12,9 +12,9 @@ data class BeregnForskuddGrunnlagCore(
   val beregnDatoFra: LocalDate,
   val beregnDatoTil: LocalDate,
   val soknadBarn: SoknadBarnCore,
-  val bidragMottakerInntektPeriodeListe: List<InntektPeriodeCore>,
-  val bidragMottakerSivilstandPeriodeListe: List<SivilstandPeriodeCore>,
-  val bidragMottakerBarnPeriodeListe: List<BarnPeriodeCore>,
+  val inntektPeriodeListe: List<InntektPeriodeCore>,
+  val sivilstandPeriodeListe: List<SivilstandPeriodeCore>,
+  val barnIHusstandenPeriodeListe: List<BarnIHusstandenPeriodeCore>,
   var sjablonPeriodeListe: List<SjablonPeriodeCore>
 )
 
@@ -43,9 +43,10 @@ data class SivilstandPeriodeCore(
   val kode: String
 )
 
-data class BarnPeriodeCore(
-  val referanse: String,
-  val periode: PeriodeCore
+data class BarnIHusstandenPeriodeCore(
+    val referanse: String,
+    val periode: PeriodeCore,
+    val antall: Double
 )
 
 // Resultat

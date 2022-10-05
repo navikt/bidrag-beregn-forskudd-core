@@ -13,7 +13,7 @@ import java.util.List;
 import no.nav.bidrag.beregn.felles.bo.Periode;
 import no.nav.bidrag.beregn.felles.enums.InntektType;
 import no.nav.bidrag.beregn.felles.periode.Periodiserer;
-import no.nav.bidrag.beregn.forskudd.core.bo.BarnPeriode;
+import no.nav.bidrag.beregn.forskudd.core.bo.BarnIHusstandenPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode;
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode;
@@ -107,9 +107,9 @@ class PeriodisererTest {
         .addBruddpunkter(new SivilstandPeriode(SIVILSTAND_REFERANSE_GIFT, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-17")),
             GIFT))
         .addBruddpunkter(new SivilstandPeriode(SIVILSTAND_REFERANSE_ENSLIG, new Periode(LocalDate.parse("2018-04-17"), null), ENSLIG))
-        .addBruddpunkter(new BarnPeriode(BARN_REFERANSE_1, new Periode(LocalDate.parse("2017-01-01"), null)))
-        .addBruddpunkter(new BarnPeriode(BARN_REFERANSE_2, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-06-16"))))
-        .addBruddpunkter(new BarnPeriode(BARN_REFERANSE_3, new Periode(LocalDate.parse("2019-03-31"), null)))
+        .addBruddpunkter(new BarnIHusstandenPeriode(BARN_REFERANSE_1, new Periode(LocalDate.parse("2017-01-01"), null), 1d))
+        .addBruddpunkter(new BarnIHusstandenPeriode(BARN_REFERANSE_2, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-06-16")), 1d))
+        .addBruddpunkter(new BarnIHusstandenPeriode(BARN_REFERANSE_3, new Periode(LocalDate.parse("2019-03-31"), null), 1d))
         .addBruddpunkter(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_1,
             new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-08-16")), MED_FORELDRE))
         .addBruddpunkter(new BostatusPeriode(BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE,

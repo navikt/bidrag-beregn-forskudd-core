@@ -29,7 +29,7 @@ public class ForskuddCoreTest {
 
   private static final String INNTEKT_REFERANSE_1 = "INNTEKT_REFERANSE_1";
   private static final String SIVILSTAND_REFERANSE_ENSLIG = "SIVILSTAND_REFERANSE_ENSLIG";
-  private static final String BARN_REFERANSE_1 = "BARN_REFERANSE_1";
+  private static final String BARN_I_HUSSTANDEN_REFERANSE_1 = "BARN_I_HUSSTANDEN_REFERANSE_1";
   private static final String SOKNADBARN_REFERANSE = "SOKNADBARN_REFERANSE";
   private static final String BOSTATUS_REFERANSE_MED_FORELDRE_1 = "BOSTATUS_REFERANSE_MED_FORELDRE_1";
 
@@ -78,7 +78,7 @@ public class ForskuddCoreTest {
         () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(0).getGrunnlagReferanseListe().get(1))
             .isEqualTo(SIVILSTAND_REFERANSE_ENSLIG),
         () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(0).getGrunnlagReferanseListe().get(2))
-            .isEqualTo(BARN_REFERANSE_1),
+            .isEqualTo(BARN_I_HUSSTANDEN_REFERANSE_1),
         () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(0).getGrunnlagReferanseListe().get(3))
             .isEqualTo(SOKNADBARN_REFERANSE),
         () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(0).getGrunnlagReferanseListe().get(4))
