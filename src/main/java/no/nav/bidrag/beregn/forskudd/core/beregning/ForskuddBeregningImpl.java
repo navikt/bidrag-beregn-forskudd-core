@@ -55,7 +55,8 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
     hentSjablonVerdier(grunnlag.getSjablonListe());
 
     var maksInntektsgrense = forskuddssats100ProsentBelop.multiply(maksInntektForskuddMottakerMultiplikator);
-    var inntektsIntervallTotal = inntektsintervallForskuddBelop.multiply(BigDecimal.valueOf(grunnlag.getBarnIHusstanden().getAntall()));
+    //Inntektsintervall regnes ut med antall barn utover ett
+    var inntektsIntervallTotal = inntektsintervallForskuddBelop.multiply(BigDecimal.valueOf(grunnlag.getBarnIHusstanden().getAntall() - 1));
     if (inntektsIntervallTotal.compareTo(BigDecimal.ZERO) < 0) {
       inntektsIntervallTotal = BigDecimal.ZERO;
     }
@@ -101,13 +102,13 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
               inntektsgrenseGiftSamboer75ProsentForskuddBelop).add(inntektsIntervallTotal), bidragMottakerInntekt)) ? ORDINAERT_FORSKUDD_75_PROSENT
           : REDUSERT_FORSKUDD_50_PROSENT;
       if (grunnlag.getSivilstand().getKode().equals(ENSLIG)) {
-        if (grunnlag.getBarnIHusstanden().getAntall() + soknadsbarnBorHjemme(grunnlag.getSoknadBarnBostatus().getKode()) == 1) {
+        if (grunnlag.getBarnIHusstanden().getAntall() == 1) {
           regel = (resultatKode.equals(ORDINAERT_FORSKUDD_75_PROSENT) ? "REGEL 9" : "REGEL 10");
         } else {
           regel = (resultatKode.equals(ORDINAERT_FORSKUDD_75_PROSENT) ? "REGEL 11" : "REGEL 12");
         }
       } else {
-        if (grunnlag.getBarnIHusstanden().getAntall() + soknadsbarnBorHjemme(grunnlag.getSoknadBarnBostatus().getKode()) == 1) {
+        if (grunnlag.getBarnIHusstanden().getAntall() == 1) {
           regel = (resultatKode.equals(ORDINAERT_FORSKUDD_75_PROSENT) ? "REGEL 13" : "REGEL 14");
         } else {
           regel = (resultatKode.equals(ORDINAERT_FORSKUDD_75_PROSENT) ? "REGEL 15" : "REGEL 16");

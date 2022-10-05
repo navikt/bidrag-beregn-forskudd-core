@@ -175,8 +175,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
           .filter(i -> i.getPeriode().overlapperMed(beregningsperiode))
           .map(barnIHusstandenPeriode -> new BarnIHusstanden(barnIHusstandenPeriode.getReferanse(), barnIHusstandenPeriode.getAntall()))
           .findFirst()
-//          .orElse(null);
-          .orElse(new BarnIHusstanden("", 0d));
+          .orElse(null);
       var sjablonListe = beregnForskuddListeGrunnlag.getJustertSjablonPeriodeListe().stream()
           .filter(i -> i.getPeriode().overlapperMed(beregningsperiode))
           .collect(toList());

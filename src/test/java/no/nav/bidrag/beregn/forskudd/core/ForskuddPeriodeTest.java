@@ -48,7 +48,7 @@ class ForskuddPeriodeTest {
   private final BeregnForskuddGrunnlag beregnForskuddGrunnlag = TestUtil.byggForskuddGrunnlag();
   private final BeregnForskuddGrunnlag beregnForskuddGrunnlagMedAvvik = TestUtil.byggForskuddGrunnlagMedAvvik();
   private final BeregnForskuddGrunnlag beregnForskuddGrunnlagMedUgylidgInntekt = TestUtil.byggForskuddGrunnlagMedUgyldigInntekt();
-  private final BeregnForskuddGrunnlag beregnForskuddGrunnlagUtenBarn = TestUtil.byggForskuddGrunnlagUtenBarn();
+  private final BeregnForskuddGrunnlag beregnForskuddGrunnlagUtenBarn = TestUtil.byggForskuddGrunnlagUtenAndreBarn();
 
   @Test
   @DisplayName("Test utvidet grunnlag")
@@ -81,7 +81,7 @@ class ForskuddPeriodeTest {
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getSivilstand().getReferanse())
             .isEqualTo(SIVILSTAND_REFERANSE_GIFT),
 
-        () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBarnIHusstanden().getAntall()).isEqualTo(2),
+        () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBarnIHusstanden().getAntall()).isEqualTo(3),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBarnIHusstanden().getReferanse())
             .isEqualTo(BARN_I_HUSSTANDEN_REFERANSE_1),
 
@@ -243,7 +243,7 @@ class ForskuddPeriodeTest {
             .isEqualTo(BigDecimal.valueOf(250000)),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getSivilstand().getKode())
             .isEqualTo(SivilstandKode.GIFT),
-        () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBarnIHusstanden().getAntall()).isEqualTo(0),
+        () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getBarnIHusstanden().getAntall()).isEqualTo(1d),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getSoknadBarnAlder().getAlder()).isEqualTo(0),
         () -> assertThat(resultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlag().getSoknadBarnBostatus().getKode())
             .isEqualTo(BostatusKode.MED_FORELDRE),

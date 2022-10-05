@@ -252,8 +252,8 @@ class ForskuddBeregningTest {
     var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
         finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP)));
     var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG);
-    // Setter 0 i antall barn i husstanden siden søknadsbarnet regnes med ved status "MED_FORELDRE"
-    var barnIHusstanden = new BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 0d);
+    // Søknadsbarnet er med i grunnlag antall barn i husstanden
+    var barnIHusstanden = new BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1d);
     var alder = new Alder(SOKNADBARN_REFERANSE, 11);
     var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
     lagGrunnlag(inntektListe, sivilstand, barnIHusstanden, alder, bostatus);
@@ -276,8 +276,8 @@ class ForskuddBeregningTest {
     var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
         finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP).add(BigDecimal.ONE)));
     var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG);
-    // Setter 0 i antall barn i husstanden siden søknadsbarnet regnes med ved status "MED_FORELDRE"
-    var barn = new BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 0d);
+    // Søknadsbarnet er med i grunnlag antall barn i husstanden
+    var barn = new BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1d);
     var alder = new Alder(SOKNADBARN_REFERANSE, 11);
     var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
     lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
@@ -301,8 +301,8 @@ class ForskuddBeregningTest {
         finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP).add(
             finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP))));
     var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG);
-    // Setter 1 i antall barn i husstanden siden søknadsbarnet regnes med ved status "MED_FORELDRE"
-    var barn = new BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1d);
+    // Søknadsbarnet er med i grunnlag antall barn i husstanden
+    var barn = new BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 2d);
     var alder = new Alder(SOKNADBARN_REFERANSE, 11);
     var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
     lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
@@ -326,8 +326,8 @@ class ForskuddBeregningTest {
         finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP).add(
             finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP)).add(BigDecimal.ONE)));
     var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG);
-    // Setter 1 i antall barn i husstanden siden søknadsbarnet regnes med ved status "MED_FORELDRE"
-    var barn = new BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1d);
+    // Søknadsbarnet er med i grunnlag antall barn i husstanden
+    var barn = new BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 2d);
     var alder = new Alder(SOKNADBARN_REFERANSE, 11);
     var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
     lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
@@ -350,8 +350,8 @@ class ForskuddBeregningTest {
     var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
         finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP)));
     var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.GIFT);
-    // Setter 0 i antall barn i husstanden siden søknadsbarnet regnes med ved status "MED_FORELDRE"
-    var barn = new BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 0d);
+    // Søknadsbarnet er med i grunnlag antall barn i husstanden
+    var barn = new BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1d);
     var alder = new Alder(SOKNADBARN_REFERANSE, 11);
     var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
     lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
@@ -374,8 +374,8 @@ class ForskuddBeregningTest {
     var inntektListe = singletonList(new Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
         finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP).add(BigDecimal.ONE)));
     var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.GIFT);
-    // Setter 0 i antall barn i husstanden siden søknadsbarnet regnes med ved status "MED_FORELDRE"
-    var barn = new BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 0d);
+    // Søknadsbarnet er med i grunnlag antall barn i husstanden
+    var barn = new BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1d);
     var alder = new Alder(SOKNADBARN_REFERANSE, 11);
     var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
     lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
@@ -399,8 +399,8 @@ class ForskuddBeregningTest {
         finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP).add(
             finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP))));
     var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.GIFT);
-    // Setter 1 i antall barn i husstanden siden søknadsbarnet regnes med ved status "MED_FORELDRE"
-    var barn = new BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1d);
+    // Søknadsbarnet er med i grunnlag antall barn i husstanden
+    var barn = new BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 2d);
     var alder = new Alder(SOKNADBARN_REFERANSE, 11);
     var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
     lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
@@ -424,8 +424,8 @@ class ForskuddBeregningTest {
         finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP).add(
             finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP).add(BigDecimal.ONE))));
     var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.GIFT);
-    // Setter 1 i antall barn i husstanden siden søknadsbarnet regnes med ved status "MED_FORELDRE"
-    var barn = new BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1d);
+    // Søknadsbarnet er med i grunnlag antall barn i husstanden
+    var barn = new BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 2d);
     var alder = new Alder(SOKNADBARN_REFERANSE, 11);
     var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
     lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
@@ -451,8 +451,8 @@ class ForskuddBeregningTest {
         new Inntekt(INNTEKT_REFERANSE_2, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
             finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP).add(BigDecimal.ONE)));
     var sivilstand = new Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.GIFT);
-    // Setter 1 i antall barn i husstanden siden søknadsbarnet regnes med ved status "MED_FORELDRE"
-    var barn = new BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1d);
+    // Søknadsbarnet er med i grunnlag antall barn i husstanden
+    var barn = new BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 2d);
     var alder = new Alder(SOKNADBARN_REFERANSE, 11);
     var bostatus = new Bostatus(BOSTATUS_REFERANSE, BostatusKode.MED_FORELDRE);
     lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus);
