@@ -15,9 +15,9 @@ data class BeregnForskuddGrunnlag(
   val beregnDatoFra: LocalDate,
   val beregnDatoTil: LocalDate,
   val soknadBarn: SoknadBarn,
-  val bidragMottakerInntektPeriodeListe: List<InntektPeriode>,
-  val bidragMottakerSivilstandPeriodeListe: List<SivilstandPeriode>,
-  val bidragMottakerBarnPeriodeListe: List<BarnPeriode>,
+  val inntektPeriodeListe: List<InntektPeriode>,
+  val sivilstandPeriodeListe: List<SivilstandPeriode>,
+  val barnIHusstandenPeriodeListe: List<BarnIHusstandenPeriode>,
   val sjablonPeriodeListe: List<SjablonPeriode>
 )
 
@@ -40,9 +40,9 @@ data class ResultatPeriode(
 
 // Grunnlag beregning
 data class GrunnlagBeregning(
-  val bidragMottakerInntektListe: List<Inntekt>,
-  val bidragMottakerSivilstand: Sivilstand,
-  val antallBarnIHusstand: Barn,
+  val inntektListe: List<Inntekt>,
+  val sivilstand: Sivilstand,
+  val barnIHusstanden: BarnIHusstanden,
   val soknadBarnAlder: Alder,
   val soknadBarnBostatus: Bostatus,
   val sjablonListe: List<SjablonPeriode>
@@ -59,9 +59,9 @@ data class Sivilstand(
   val kode: SivilstandKode
 )
 
-data class Barn(
-  val referanseListe: List<String>,
-  val antall: Int
+data class BarnIHusstanden(
+  val referanse: String,
+  val antall: Double
 )
 
 data class Alder(
@@ -87,9 +87,9 @@ data class ResultatBeregning(
 data class BeregnForskuddListeGrunnlag(
   val periodeResultatListe: MutableList<ResultatPeriode> = mutableListOf(),
   var justertInntektPeriodeListe: List<InntektPeriode> = emptyList(),
-  var justertBidragMottakerInntektPeriodeListe: List<InntektPeriode> = emptyList(),
+  var justertinntektPeriodeListe: List<InntektPeriode> = emptyList(),
   var justertSivilstandPeriodeListe: List<SivilstandPeriode> = emptyList(),
-  var justertBarnPeriodeListe: List<BarnPeriode> = emptyList(),
+  var justertBarnIHusstandenPeriodeListe: List<BarnIHusstandenPeriode> = emptyList(),
   var justertBostatusPeriodeListe: List<BostatusPeriode> = emptyList(),
   var justertAlderPeriodeListe: List<AlderPeriode> = emptyList(),
   var justertSjablonPeriodeListe: List<SjablonPeriode> = emptyList(),

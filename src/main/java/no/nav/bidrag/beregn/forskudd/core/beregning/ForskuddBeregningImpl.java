@@ -21,6 +21,7 @@ import no.nav.bidrag.beregn.felles.SjablonUtil;
 import no.nav.bidrag.beregn.felles.bo.Periode;
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriode;
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriodeNavnVerdi;
+import no.nav.bidrag.beregn.felles.enums.BostatusKode;
 import no.nav.bidrag.beregn.felles.enums.SivilstandKode;
 import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn;
 import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning;
@@ -54,7 +55,7 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
     hentSjablonVerdier(grunnlag.getSjablonListe());
 
     var maksInntektsgrense = forskuddssats100ProsentBelop.multiply(maksInntektForskuddMottakerMultiplikator);
-    var inntektsIntervallTotal = inntektsintervallForskuddBelop.multiply(BigDecimal.valueOf(grunnlag.getAntallBarnIHusstand().getAntall() - 1));
+    var inntektsIntervallTotal = inntektsintervallForskuddBelop.multiply(BigDecimal.valueOf(grunnlag.getBarnIHusstanden().getAntall()));
     if (inntektsIntervallTotal.compareTo(BigDecimal.ZERO) < 0) {
       inntektsIntervallTotal = BigDecimal.ZERO;
     }
@@ -63,7 +64,7 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
     String regel;
 
     // Legger sammen inntektene
-    var bidragMottakerInntekt = grunnlag.getBidragMottakerInntektListe().stream().map(Inntekt::getBelop)
+    var bidragMottakerInntekt = grunnlag.getInntektListe().stream().map(Inntekt::getBelop)
         .reduce(BigDecimal.ZERO, BigDecimal::add);
 
     // Søknadsbarn er over 18 år (REGEL 1)
@@ -96,17 +97,17 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
       // Resterende regler (gift/enslig) (REGEL 9/10/11/12/13/14/15/16)
     } else {
       resultatKode = (erUnderInntektsGrense(
-          settInntektsgrense(grunnlag.getBidragMottakerSivilstand().getKode(), inntektsgrenseEnslig75ProsentForskuddBelop,
+          settInntektsgrense(grunnlag.getSivilstand().getKode(), inntektsgrenseEnslig75ProsentForskuddBelop,
               inntektsgrenseGiftSamboer75ProsentForskuddBelop).add(inntektsIntervallTotal), bidragMottakerInntekt)) ? ORDINAERT_FORSKUDD_75_PROSENT
           : REDUSERT_FORSKUDD_50_PROSENT;
-      if (grunnlag.getBidragMottakerSivilstand().getKode().equals(ENSLIG)) {
-        if (grunnlag.getAntallBarnIHusstand().getAntall() == 1) {
+      if (grunnlag.getSivilstand().getKode().equals(ENSLIG)) {
+        if (grunnlag.getBarnIHusstanden().getAntall() + soknadsbarnBorHjemme(grunnlag.getSoknadBarnBostatus().getKode()) == 1) {
           regel = (resultatKode.equals(ORDINAERT_FORSKUDD_75_PROSENT) ? "REGEL 9" : "REGEL 10");
         } else {
           regel = (resultatKode.equals(ORDINAERT_FORSKUDD_75_PROSENT) ? "REGEL 11" : "REGEL 12");
         }
       } else {
-        if (grunnlag.getAntallBarnIHusstand().getAntall() == 1) {
+        if (grunnlag.getBarnIHusstanden().getAntall() + soknadsbarnBorHjemme(grunnlag.getSoknadBarnBostatus().getKode()) == 1) {
           regel = (resultatKode.equals(ORDINAERT_FORSKUDD_75_PROSENT) ? "REGEL 13" : "REGEL 14");
         } else {
           regel = (resultatKode.equals(ORDINAERT_FORSKUDD_75_PROSENT) ? "REGEL 15" : "REGEL 16");
@@ -198,5 +199,10 @@ public class ForskuddBeregningImpl implements ForskuddBeregning {
   private static BigDecimal settInntektsgrense(SivilstandKode sivilstandKode, BigDecimal inntektsgrenseEnslig75Prosent,
       BigDecimal inntektsgrenseGift75Prosent) {
     return sivilstandKode.equals(ENSLIG) ? inntektsgrenseEnslig75Prosent : inntektsgrenseGift75Prosent;
+  }
+
+  // Sjekker om søknadsbarnet bor hjemme
+  private Integer soknadsbarnBorHjemme(BostatusKode bostatusKode) {
+    return BostatusKode.MED_FORELDRE.equals(bostatusKode) ? 1 : 0;
   }
 }
