@@ -160,29 +160,31 @@ public class TestUtil {
   }
 
   public static BeregnForskuddGrunnlagCore byggForskuddGrunnlagCore() {
+    var soknadBarn = new SoknadBarnCore(SOKNADBARN_REFERANSE, LocalDate.parse("2006-05-12"));
+    
     var bostatusPeriode = new BostatusPeriodeCore(BOSTATUS_REFERANSE_MED_FORELDRE_1,
         new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")),
         BostatusKode.MED_FORELDRE.toString());
-    var soknadBarn = new SoknadBarnCore(SOKNADBARN_REFERANSE, LocalDate.parse("2006-05-12"), singletonList(bostatusPeriode));
+    var bostatusPeriodeListe = singletonList(bostatusPeriode);
 
-    var bidragMottakerInntektPeriode = new InntektPeriodeCore(INNTEKT_REFERANSE_1,
+    var inntektPeriode = new InntektPeriodeCore(INNTEKT_REFERANSE_1,
         new PeriodeCore(LocalDate.parse("2017-01-01"), null), InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER.toString(), BigDecimal.valueOf(0));
-    var bidragMottakerInntektPeriodeListe = singletonList(bidragMottakerInntektPeriode);
+    var inntektPeriodeListe = singletonList(inntektPeriode);
 
-    var bidragMottakerSivilstandPeriode1 = new SivilstandPeriodeCore(SIVILSTAND_REFERANSE_GIFT,
+    var sivilstandPeriode1 = new SivilstandPeriodeCore(SIVILSTAND_REFERANSE_GIFT,
         new PeriodeCore(LocalDate.parse("2018-01-01"), LocalDate.parse("2020-01-01")), SivilstandKode.GIFT.toString());
-    var bidragMottakerSivilstandPeriode2 = new SivilstandPeriodeCore(SIVILSTAND_REFERANSE_ENSLIG,
+    var sivilstandPeriode2 = new SivilstandPeriodeCore(SIVILSTAND_REFERANSE_ENSLIG,
         new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")), SivilstandKode.ENSLIG.toString());
     var bidragMottakerSivilstandPeriodeListe = new ArrayList<SivilstandPeriodeCore>();
-    bidragMottakerSivilstandPeriodeListe.add(bidragMottakerSivilstandPeriode1);
-    bidragMottakerSivilstandPeriodeListe.add(bidragMottakerSivilstandPeriode2);
+    bidragMottakerSivilstandPeriodeListe.add(sivilstandPeriode1);
+    bidragMottakerSivilstandPeriodeListe.add(sivilstandPeriode2);
 
     var barnIHusstandenPeriode = new BarnIHusstandenPeriodeCore(
         BARN_I_HUSSTANDEN_REFERANSE_1, new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), 1d);
     var bidragMottakerBarnPeriodeListe = singletonList(barnIHusstandenPeriode);
 
-    return new BeregnForskuddGrunnlagCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01"), soknadBarn,
-        bidragMottakerInntektPeriodeListe, bidragMottakerSivilstandPeriodeListe, bidragMottakerBarnPeriodeListe, emptyList());
+    return new BeregnForskuddGrunnlagCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01"), soknadBarn, bostatusPeriodeListe,
+        inntektPeriodeListe, bidragMottakerSivilstandPeriodeListe, bidragMottakerBarnPeriodeListe, emptyList());
   }
 
   public static BeregnForskuddResultat byggForskuddResultat() {
@@ -229,202 +231,202 @@ public class TestUtil {
   }
 
   public static BeregnForskuddGrunnlag byggForskuddGrunnlag(String beregnDatoFra, String beregnDatoTil) {
-    var sBFodselsdato = LocalDate.parse("2006-12-19");
-    var sBBostedStatusListe = new ArrayList<BostatusPeriode>();
-    sBBostedStatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_1,
+    var fodselsdato = LocalDate.parse("2006-12-19");
+    var bostatusListe = new ArrayList<BostatusPeriode>();
+    bostatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_1,
         new Periode(LocalDate.parse("2006-12-19"), LocalDate.parse("2018-08-16")), MED_FORELDRE));
-    sBBostedStatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE,
+    bostatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE,
         new Periode(LocalDate.parse("2018-08-16"), LocalDate.parse("2018-11-13")), MED_ANDRE_ENN_FORELDRE));
-    sBBostedStatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_2, new Periode(LocalDate.parse("2018-11-13"), null), MED_FORELDRE));
-    var soknadBarn = new SoknadBarn(SOKNADBARN_REFERANSE, sBFodselsdato, sBBostedStatusListe);
+    bostatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_2, new Periode(LocalDate.parse("2018-11-13"), null), MED_FORELDRE));
+    var soknadBarn = new SoknadBarn(SOKNADBARN_REFERANSE, fodselsdato);
 
-    var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_1, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
+    var inntektListe = new ArrayList<InntektPeriode>();
+    inntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_1, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
         InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(250000)));
-    bmInntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_2, new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
+    inntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_2, new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
         InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(400000)));
-    bmInntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_3, new Periode(LocalDate.parse("2019-01-01"), null),
+    inntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_3, new Periode(LocalDate.parse("2019-01-01"), null),
         InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(500000)));
 
-    var bmSivilstandListe = new ArrayList<SivilstandPeriode>();
-    bmSivilstandListe.add(new SivilstandPeriode(SIVILSTAND_REFERANSE_GIFT, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-17")),
+    var sivilstandListe = new ArrayList<SivilstandPeriode>();
+    sivilstandListe.add(new SivilstandPeriode(SIVILSTAND_REFERANSE_GIFT, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-17")),
         GIFT));
-    bmSivilstandListe
+    sivilstandListe
         .add(new SivilstandPeriode(SIVILSTAND_REFERANSE_ENSLIG, new Periode(LocalDate.parse("2018-04-17"), LocalDate.parse("2019-08-01")),
             ENSLIG));
 
-    var bmBarnListe = new ArrayList<BarnIHusstandenPeriode>();
-    bmBarnListe.add(new BarnIHusstandenPeriode(BARN_I_HUSSTANDEN_REFERANSE_1, new Periode(LocalDate.parse("2006-12-19"), LocalDate.parse("2017-01-01")), 1d));
-    bmBarnListe.add(new BarnIHusstandenPeriode(BARN_I_HUSSTANDEN_REFERANSE_1, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-06-17")), 3d));
-    bmBarnListe.add(new BarnIHusstandenPeriode(BARN_I_HUSSTANDEN_REFERANSE_2, new Periode(LocalDate.parse("2018-06-17"), LocalDate.parse("2018-08-16")), 2d));
-    bmBarnListe.add(new BarnIHusstandenPeriode(BARN_I_HUSSTANDEN_REFERANSE_2, new Periode(LocalDate.parse("2018-08-16"), LocalDate.parse("2018-11-13")), 1d));
-    bmBarnListe.add(new BarnIHusstandenPeriode(BARN_I_HUSSTANDEN_REFERANSE_3, new Periode(LocalDate.parse("2018-11-13"), LocalDate.parse("2019-03-31")), 2d));
-    bmBarnListe.add(new BarnIHusstandenPeriode(BARN_I_HUSSTANDEN_REFERANSE_4, new Periode(LocalDate.parse("2019-03-31"), null), 3d));
+    var barnIHusstandenListe = new ArrayList<BarnIHusstandenPeriode>();
+    barnIHusstandenListe.add(new BarnIHusstandenPeriode(BARN_I_HUSSTANDEN_REFERANSE_1, new Periode(LocalDate.parse("2006-12-19"), LocalDate.parse("2017-01-01")), 1d));
+    barnIHusstandenListe.add(new BarnIHusstandenPeriode(BARN_I_HUSSTANDEN_REFERANSE_1, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-06-17")), 3d));
+    barnIHusstandenListe.add(new BarnIHusstandenPeriode(BARN_I_HUSSTANDEN_REFERANSE_2, new Periode(LocalDate.parse("2018-06-17"), LocalDate.parse("2018-08-16")), 2d));
+    barnIHusstandenListe.add(new BarnIHusstandenPeriode(BARN_I_HUSSTANDEN_REFERANSE_2, new Periode(LocalDate.parse("2018-08-16"), LocalDate.parse("2018-11-13")), 1d));
+    barnIHusstandenListe.add(new BarnIHusstandenPeriode(BARN_I_HUSSTANDEN_REFERANSE_3, new Periode(LocalDate.parse("2018-11-13"), LocalDate.parse("2019-03-31")), 2d));
+    barnIHusstandenListe.add(new BarnIHusstandenPeriode(BARN_I_HUSSTANDEN_REFERANSE_4, new Periode(LocalDate.parse("2019-03-31"), null), 3d));
 
     var sjablonPeriodeListe = TestUtil.byggSjablonPeriodeListe();
 
-    return new BeregnForskuddGrunnlag(LocalDate.parse(beregnDatoFra), LocalDate.parse(beregnDatoTil), soknadBarn, bmInntektListe, bmSivilstandListe,
-        bmBarnListe, sjablonPeriodeListe);
+    return new BeregnForskuddGrunnlag(LocalDate.parse(beregnDatoFra), LocalDate.parse(beregnDatoTil), soknadBarn, bostatusListe, inntektListe, sivilstandListe,
+        barnIHusstandenListe, sjablonPeriodeListe);
   }
 
   public static BeregnForskuddGrunnlag byggForskuddGrunnlagMedAvvik() {
     var beregnDatoFra = LocalDate.parse("2017-01-01");
     var beregnDatoTil = LocalDate.parse("2017-01-01");
 
-    var sBFodselsdato = LocalDate.parse("2006-12-19");
-    var sBBostedStatusListe = new ArrayList<BostatusPeriode>();
-    sBBostedStatusListe
+    var fodselsdato = LocalDate.parse("2006-12-19");
+    var bostatusListe = new ArrayList<BostatusPeriode>();
+    bostatusListe
         .add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_1, new Periode(LocalDate.parse("2006-12-19"), LocalDate.parse("2018-08-16")),
             MED_FORELDRE));
-    sBBostedStatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE, new Periode(LocalDate.parse("2018-08-16"), null),
+    bostatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE, new Periode(LocalDate.parse("2018-08-16"), null),
         MED_ANDRE_ENN_FORELDRE));
-    sBBostedStatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_2, new Periode(LocalDate.parse("2018-11-13"), null), MED_FORELDRE));
-    var soknadBarn = new SoknadBarn(SOKNADBARN_REFERANSE, sBFodselsdato, sBBostedStatusListe);
+    bostatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_2, new Periode(LocalDate.parse("2018-11-13"), null), MED_FORELDRE));
+    var soknadBarn = new SoknadBarn(SOKNADBARN_REFERANSE, fodselsdato);
 
-    var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_1, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
+    var inntektListe = new ArrayList<InntektPeriode>();
+    inntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_1, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
         InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(250000)));
-    bmInntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_2, new Periode(LocalDate.parse("2018-01-04"), LocalDate.parse("2019-01-01")),
+    inntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_2, new Periode(LocalDate.parse("2018-01-04"), LocalDate.parse("2019-01-01")),
         InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(400000)));
-    bmInntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_3, new Periode(LocalDate.parse("2019-01-01"), null),
+    inntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_3, new Periode(LocalDate.parse("2019-01-01"), null),
         InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(500000)));
 
-    var bmSivilstandListe = new ArrayList<SivilstandPeriode>();
-    bmSivilstandListe.add(new SivilstandPeriode(SIVILSTAND_REFERANSE_GIFT, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-01")),
+    var sivilstandListe = new ArrayList<SivilstandPeriode>();
+    sivilstandListe.add(new SivilstandPeriode(SIVILSTAND_REFERANSE_GIFT, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-01")),
         GIFT));
-    bmSivilstandListe
+    sivilstandListe
         .add(new SivilstandPeriode(SIVILSTAND_REFERANSE_ENSLIG, new Periode(LocalDate.parse("2018-03-17"), LocalDate.parse("2019-07-01")),
             ENSLIG));
 
-    var bmBarnListe = new ArrayList<BarnIHusstandenPeriode>();
-    bmBarnListe.add(new BarnIHusstandenPeriode(
+    var barnIHusstandenListe = new ArrayList<BarnIHusstandenPeriode>();
+    barnIHusstandenListe.add(new BarnIHusstandenPeriode(
         BARN_I_HUSSTANDEN_REFERANSE_1, new Periode(LocalDate.parse("2017-01-01"), null), 1d));
-    bmBarnListe.add(new BarnIHusstandenPeriode(
+    barnIHusstandenListe.add(new BarnIHusstandenPeriode(
         BARN_I_HUSSTANDEN_REFERANSE_2, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-06-17")), 1d));
-    bmBarnListe.add(new BarnIHusstandenPeriode(
+    barnIHusstandenListe.add(new BarnIHusstandenPeriode(
         BARN_I_HUSSTANDEN_REFERANSE_3, new Periode(LocalDate.parse("2019-03-31"), LocalDate.parse("2018-06-17")), 1d));
 
     var sjablonPeriodeListe = TestUtil.byggSjablonPeriodeListe();
 
-    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bmInntektListe, bmSivilstandListe, bmBarnListe, sjablonPeriodeListe);
+    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bostatusListe, inntektListe, sivilstandListe, barnIHusstandenListe, sjablonPeriodeListe);
   }
 
   public static BeregnForskuddGrunnlag byggForskuddGrunnlagMedUgyldigInntekt() {
     var beregnDatoFra = LocalDate.parse("2017-01-01");
     var beregnDatoTil = LocalDate.parse("2019-01-01");
 
-    var sBFodselsdato = LocalDate.parse("2006-12-19");
-    var sBBostedStatusListe = new ArrayList<BostatusPeriode>();
-    sBBostedStatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_1, new Periode(LocalDate.parse("2006-12-19"),
+    var fodselsdato = LocalDate.parse("2006-12-19");
+    var bostatusListe = new ArrayList<BostatusPeriode>();
+    bostatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_1, new Periode(LocalDate.parse("2006-12-19"),
         LocalDate.parse("2018-08-16")), MED_FORELDRE));
-    sBBostedStatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE, new Periode(LocalDate.parse("2018-08-16"),
+    bostatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE, new Periode(LocalDate.parse("2018-08-16"),
         LocalDate.parse("2018-11-13")), MED_ANDRE_ENN_FORELDRE));
-    sBBostedStatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_2, new Periode(LocalDate.parse("2018-11-13"), null), MED_FORELDRE));
-    var soknadBarn = new SoknadBarn(SOKNADBARN_REFERANSE, sBFodselsdato, sBBostedStatusListe);
+    bostatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_2, new Periode(LocalDate.parse("2018-11-13"), null), MED_FORELDRE));
+    var soknadBarn = new SoknadBarn(SOKNADBARN_REFERANSE, fodselsdato);
 
-    var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_1, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
+    var inntektListe = new ArrayList<InntektPeriode>();
+    inntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_1, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
         InntektType.ALOYSE, BigDecimal.valueOf(250000)));
-    bmInntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_2, new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
+    inntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_2, new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
         InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(400000)));
-    bmInntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_3, new Periode(LocalDate.parse("2019-01-01"), null),
+    inntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_3, new Periode(LocalDate.parse("2019-01-01"), null),
         InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(500000)));
 
-    var bmSivilstandListe = new ArrayList<SivilstandPeriode>();
-    bmSivilstandListe.add(new SivilstandPeriode(SIVILSTAND_REFERANSE_GIFT, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-17")),
+    var sivilstandListe = new ArrayList<SivilstandPeriode>();
+    sivilstandListe.add(new SivilstandPeriode(SIVILSTAND_REFERANSE_GIFT, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-17")),
         GIFT));
-    bmSivilstandListe
+    sivilstandListe
         .add(new SivilstandPeriode(SIVILSTAND_REFERANSE_ENSLIG, new Periode(LocalDate.parse("2018-04-17"), LocalDate.parse("2019-08-01")),
             ENSLIG));
 
-    var bmBarnListe = new ArrayList<BarnIHusstandenPeriode>();
-    bmBarnListe.add(new BarnIHusstandenPeriode(
+    var barnIHusstandenListe = new ArrayList<BarnIHusstandenPeriode>();
+    barnIHusstandenListe.add(new BarnIHusstandenPeriode(
         BARN_I_HUSSTANDEN_REFERANSE_1, new Periode(LocalDate.parse("2017-01-01"), null), 1d));
-    bmBarnListe.add(new BarnIHusstandenPeriode(
+    barnIHusstandenListe.add(new BarnIHusstandenPeriode(
         BARN_I_HUSSTANDEN_REFERANSE_2, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-06-17")), 1d));
-    bmBarnListe.add(new BarnIHusstandenPeriode(
+    barnIHusstandenListe.add(new BarnIHusstandenPeriode(
         BARN_I_HUSSTANDEN_REFERANSE_3, new Periode(LocalDate.parse("2019-03-31"), null), 1d));
 
     var sjablonPeriodeListe = TestUtil.byggSjablonPeriodeListe();
 
-    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bmInntektListe, bmSivilstandListe, bmBarnListe, sjablonPeriodeListe);
+    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bostatusListe, inntektListe, sivilstandListe, barnIHusstandenListe, sjablonPeriodeListe);
   }
 
   public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenAndreBarn() {
     var beregnDatoFra = LocalDate.parse("2017-01-01");
     var beregnDatoTil = LocalDate.parse("2017-02-01");
 
-    var sBFodselsdato = LocalDate.parse("2006-12-19");
-    var sBBostedStatusListe = new ArrayList<BostatusPeriode>();
-    sBBostedStatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_1, new Periode(LocalDate.parse("2006-12-19"), null), MED_FORELDRE));
-    var soknadBarn = new SoknadBarn(SOKNADBARN_REFERANSE, sBFodselsdato, sBBostedStatusListe);
+    var fodselsdato = LocalDate.parse("2006-12-19");
+    var bostatusListe = new ArrayList<BostatusPeriode>();
+    bostatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_1, new Periode(LocalDate.parse("2006-12-19"), null), MED_FORELDRE));
+    var soknadBarn = new SoknadBarn(SOKNADBARN_REFERANSE, fodselsdato);
 
-    var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_1, new Periode(LocalDate.parse("2017-01-01"), null),
+    var inntektListe = new ArrayList<InntektPeriode>();
+    inntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_1, new Periode(LocalDate.parse("2017-01-01"), null),
         InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(250000)));
 
-    var bmSivilstandListe = new ArrayList<SivilstandPeriode>();
-    bmSivilstandListe.add(new SivilstandPeriode(SIVILSTAND_REFERANSE_GIFT, new Periode(LocalDate.parse("2017-01-01"), null), GIFT));
+    var sivilstandListe = new ArrayList<SivilstandPeriode>();
+    sivilstandListe.add(new SivilstandPeriode(SIVILSTAND_REFERANSE_GIFT, new Periode(LocalDate.parse("2017-01-01"), null), GIFT));
 
-    var bmBarnListe = new ArrayList<BarnIHusstandenPeriode>();
-    bmBarnListe.add(new BarnIHusstandenPeriode(
+    var barnIHusstandenListe = new ArrayList<BarnIHusstandenPeriode>();
+    barnIHusstandenListe.add(new BarnIHusstandenPeriode(
         BARN_I_HUSSTANDEN_REFERANSE_1, new Periode(LocalDate.parse("2017-01-01"), null), 1d));
 
     var sjablonPeriodeListe = TestUtil.byggSjablonPeriodeListe();
 
-    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bmInntektListe, bmSivilstandListe, bmBarnListe,
+    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bostatusListe, inntektListe, sivilstandListe, barnIHusstandenListe,
         sjablonPeriodeListe);
   }
 
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagMedFlereInntekterISammePeriode(List<InntektPeriode> bmInntektListe) {
+  public static BeregnForskuddGrunnlag byggForskuddGrunnlagMedFlereInntekterISammePeriode(List<InntektPeriode> inntektListe) {
     var beregnDatoFra = LocalDate.parse("2017-01-01");
     var beregnDatoTil = LocalDate.parse("2018-01-01");
 
-    var sBFodselsdato = LocalDate.parse("2007-12-19");
-    var sBBostedStatusListe = new ArrayList<BostatusPeriode>();
-    sBBostedStatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_1, new Periode(LocalDate.parse("2017-01-01"), null), MED_FORELDRE));
-    var soknadBarn = new SoknadBarn(SOKNADBARN_REFERANSE, sBFodselsdato, sBBostedStatusListe);
+    var fodselsdato = LocalDate.parse("2007-12-19");
+    var bostatusListe = new ArrayList<BostatusPeriode>();
+    bostatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_1, new Periode(LocalDate.parse("2017-01-01"), null), MED_FORELDRE));
+    var soknadBarn = new SoknadBarn(SOKNADBARN_REFERANSE, fodselsdato);
 
-    var bmSivilstandListe = new ArrayList<SivilstandPeriode>();
-    bmSivilstandListe.add(new SivilstandPeriode(SIVILSTAND_REFERANSE_ENSLIG, new Periode(LocalDate.parse("2017-01-01"), null), ENSLIG));
+    var sivilstandListe = new ArrayList<SivilstandPeriode>();
+    sivilstandListe.add(new SivilstandPeriode(SIVILSTAND_REFERANSE_ENSLIG, new Periode(LocalDate.parse("2017-01-01"), null), ENSLIG));
 
-    var bmBarnListe = singletonList(new BarnIHusstandenPeriode(
+    var barnIHusstandenListe = singletonList(new BarnIHusstandenPeriode(
         BARN_I_HUSSTANDEN_REFERANSE_1, new Periode(LocalDate.parse("2017-01-01"), null), 2d));
 
     var sjablonPeriodeListe = TestUtil.byggSjablonPeriodeListe();
 
-    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bmInntektListe, bmSivilstandListe, bmBarnListe, sjablonPeriodeListe);
+    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bostatusListe, inntektListe, sivilstandListe, barnIHusstandenListe, sjablonPeriodeListe);
   }
 
   public static BeregnForskuddGrunnlag byggForskuddGrunnlagMedJusteringAvInntekter() {
     var beregnDatoFra = LocalDate.parse("2018-01-01");
     var beregnDatoTil = LocalDate.parse("2020-07-01");
 
-    var sBFodselsdato = LocalDate.parse("2015-01-01");
-    var sBBostedStatusListe = new ArrayList<BostatusPeriode>();
-    sBBostedStatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_1, new Periode(LocalDate.parse("2018-01-01"), null), MED_FORELDRE));
-    var soknadBarn = new SoknadBarn(SOKNADBARN_REFERANSE, sBFodselsdato, sBBostedStatusListe);
+    var fodselsdato = LocalDate.parse("2015-01-01");
+    var bostatusListe = new ArrayList<BostatusPeriode>();
+    bostatusListe.add(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_1, new Periode(LocalDate.parse("2018-01-01"), null), MED_FORELDRE));
+    var soknadBarn = new SoknadBarn(SOKNADBARN_REFERANSE, fodselsdato);
 
-    var bmSivilstandListe = new ArrayList<SivilstandPeriode>();
-    bmSivilstandListe.add(new SivilstandPeriode(SIVILSTAND_REFERANSE_ENSLIG, new Periode(LocalDate.parse("2018-01-01"), null), ENSLIG));
+    var sivilstandListe = new ArrayList<SivilstandPeriode>();
+    sivilstandListe.add(new SivilstandPeriode(SIVILSTAND_REFERANSE_ENSLIG, new Periode(LocalDate.parse("2018-01-01"), null), ENSLIG));
 
-    var bmBarnListe = singletonList(new BarnIHusstandenPeriode(
+    var barnIHusstandenListe = singletonList(new BarnIHusstandenPeriode(
         BARN_I_HUSSTANDEN_REFERANSE_1, new Periode(LocalDate.parse("2018-01-01"), null), 2d));
 
-    var bmInntektListe = new ArrayList<InntektPeriode>();
-    bmInntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_1, new Periode(LocalDate.parse("2018-01-01"), null),
+    var inntektListe = new ArrayList<InntektPeriode>();
+    inntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_1, new Periode(LocalDate.parse("2018-01-01"), null),
         InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(200000)));
-    bmInntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_2, new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
+    inntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_2, new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
         InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(150000)));
-    bmInntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_3, new Periode(LocalDate.parse("2019-01-01"), null),
+    inntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_3, new Periode(LocalDate.parse("2019-01-01"), null),
         InntektType.SAKSBEHANDLER_BEREGNET_INNTEKT, BigDecimal.valueOf(300000)));
-    bmInntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_4, new Periode(LocalDate.parse("2019-01-01"), null),
+    inntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_4, new Periode(LocalDate.parse("2019-01-01"), null),
         InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER, BigDecimal.valueOf(100000)));
-    bmInntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_5, new Periode(LocalDate.parse("2020-01-01"), null), InntektType.ATTFORING_AAP,
+    inntektListe.add(new InntektPeriode(INNTEKT_REFERANSE_5, new Periode(LocalDate.parse("2020-01-01"), null), InntektType.ATTFORING_AAP,
         BigDecimal.valueOf(250000)));
 
     var sjablonPeriodeListe = TestUtil.byggSjablonPeriodeListe();
 
-    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bmInntektListe, bmSivilstandListe, bmBarnListe, sjablonPeriodeListe);
+    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bostatusListe, inntektListe, sivilstandListe, barnIHusstandenListe, sjablonPeriodeListe);
   }
 }

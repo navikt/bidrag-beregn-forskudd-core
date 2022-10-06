@@ -15,6 +15,7 @@ data class BeregnForskuddGrunnlag(
   val beregnDatoFra: LocalDate,
   val beregnDatoTil: LocalDate,
   val soknadBarn: SoknadBarn,
+  val bostatusPeriodeListe: List<BostatusPeriode>,
   val inntektPeriodeListe: List<InntektPeriode>,
   val sivilstandPeriodeListe: List<SivilstandPeriode>,
   val barnIHusstandenPeriodeListe: List<BarnIHusstandenPeriode>,
@@ -23,8 +24,7 @@ data class BeregnForskuddGrunnlag(
 
 data class SoknadBarn(
   val referanse: String,
-  val fodselsdato: LocalDate,
-  val bostatusPeriodeListe: List<BostatusPeriode>
+  val fodselsdato: LocalDate
 )
 
 // Resultat periode

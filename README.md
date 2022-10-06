@@ -21,6 +21,7 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 | Versjon | Endringstype   | Beskrivelse                                                                                                    |
 |---------|----------------|----------------------------------------------------------------------------------------------------------------|
+| 0.6.7   | Endret         | Tatt bostatus ut av soknadsbarnobjektet og laget eget objekt for dette                                         |
 | 0.6.6   | Endret         | Endret logikk for barn i husstanden. Søknadsbarn er nå med i dette grunnlaget                                  |
 | 0.6.5   | Endret         | Oppdaterte avhengigheter (Snyk)                                                                                |
 | 0.6.4   | Endret         | Ny versjon av bidrag-beregn-felles                                                                             |
