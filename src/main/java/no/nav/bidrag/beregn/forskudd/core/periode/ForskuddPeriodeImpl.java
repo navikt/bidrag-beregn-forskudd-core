@@ -98,7 +98,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
             .collect(toCollection(ArrayList::new)));
 
     beregnForskuddListeGrunnlag.setJustertBostatusPeriodeListe(
-        periodeGrunnlag.getSoknadBarn().getBostatusPeriodeListe().stream()
+        periodeGrunnlag.getBostatusPeriodeListe().stream()
             .map(BostatusPeriode::new)
             .collect(toCollection(ArrayList::new)));
 
@@ -260,7 +260,7 @@ public class ForskuddPeriodeImpl implements ForskuddPeriode {
 
     // Sjekk perioder for bostatus
     var soknadBarnBostatusPeriodeListe = new ArrayList<Periode>();
-    for (BostatusPeriode soknadBarnBostatusPeriode : periodeGrunnlag.getSoknadBarn().getBostatusPeriodeListe()) {
+    for (BostatusPeriode soknadBarnBostatusPeriode : periodeGrunnlag.getBostatusPeriodeListe()) {
       soknadBarnBostatusPeriodeListe.add(soknadBarnBostatusPeriode.getPeriode());
     }
     avvikListe.addAll(

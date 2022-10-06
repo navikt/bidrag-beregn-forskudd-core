@@ -67,31 +67,31 @@ public class ForskuddCoreImpl implements ForskuddCore {
     var beregnDatoFra = grunnlag.getBeregnDatoFra();
     var beregnDatoTil = grunnlag.getBeregnDatoTil();
     var soknadBarn = mapSoknadBarn(grunnlag.getSoknadBarn());
+    var bostatusPeriodeListe = mapBostatusPeriodeListe(grunnlag.getBostatusPeriodeListe());
     var inntektPeriodeListe = mapInntektPeriodeListe(grunnlag.getInntektPeriodeListe());
     var sivilstandPeriodeListe = mapSivilstandPeriodeListe(grunnlag.getSivilstandPeriodeListe());
     var barnIHusstandenPeriodeListe = mapBarnIHusstandenPeriodeListe(grunnlag.getBarnIHusstandenPeriodeListe());
     var sjablonPeriodeListe = mapSjablonPeriodeListe(grunnlag.getSjablonPeriodeListe());
-    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, inntektPeriodeListe, sivilstandPeriodeListe, barnIHusstandenPeriodeListe,
+    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bostatusPeriodeListe, inntektPeriodeListe, sivilstandPeriodeListe, barnIHusstandenPeriodeListe,
         sjablonPeriodeListe);
   }
 
   private SoknadBarn mapSoknadBarn(SoknadBarnCore soknadBarnCore) {
     var sBReferanse = soknadBarnCore.getReferanse();
     var sBFodselsdato = soknadBarnCore.getFodselsdato();
-    var sBBostatusPeriodeListe = mapSoknadBarnBostatusPeriodeListe(soknadBarnCore.getBostatusPeriodeListe());
-    return new SoknadBarn(sBReferanse, sBFodselsdato, sBBostatusPeriodeListe);
+    return new SoknadBarn(sBReferanse, sBFodselsdato);
   }
 
-  private List<BostatusPeriode> mapSoknadBarnBostatusPeriodeListe(List<BostatusPeriodeCore> bidragMottakerBostatusPeriodeListeCore) {
-    var bidragMottakerBostatusPeriodeListe = new ArrayList<BostatusPeriode>();
-    for (BostatusPeriodeCore bidragMottakerBostatusPeriodeCore : bidragMottakerBostatusPeriodeListeCore) {
-      bidragMottakerBostatusPeriodeListe.add(new BostatusPeriode(
-          bidragMottakerBostatusPeriodeCore.getReferanse(),
-          new Periode(bidragMottakerBostatusPeriodeCore.getPeriode().getDatoFom(),
-              bidragMottakerBostatusPeriodeCore.getPeriode().getDatoTil()),
-          BostatusKode.valueOf(bidragMottakerBostatusPeriodeCore.getKode())));
+  private List<BostatusPeriode> mapBostatusPeriodeListe(List<BostatusPeriodeCore> bostatusPeriodeListeCore) {
+    var bostatusPeriodeListe = new ArrayList<BostatusPeriode>();
+    for (BostatusPeriodeCore bostatusPeriodeCore : bostatusPeriodeListeCore) {
+      bostatusPeriodeListe.add(new BostatusPeriode(
+          bostatusPeriodeCore.getReferanse(),
+          new Periode(bostatusPeriodeCore.getPeriode().getDatoFom(),
+              bostatusPeriodeCore.getPeriode().getDatoTil()),
+          BostatusKode.valueOf(bostatusPeriodeCore.getKode())));
     }
-    return bidragMottakerBostatusPeriodeListe.stream()
+    return bostatusPeriodeListe.stream()
         .sorted(comparing(bostatusPeriode -> bostatusPeriode.getPeriode().getDatoFom())).collect(toList());
   }
 

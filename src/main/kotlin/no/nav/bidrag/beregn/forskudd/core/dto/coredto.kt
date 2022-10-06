@@ -12,6 +12,7 @@ data class BeregnForskuddGrunnlagCore(
   val beregnDatoFra: LocalDate,
   val beregnDatoTil: LocalDate,
   val soknadBarn: SoknadBarnCore,
+  val bostatusPeriodeListe: List<BostatusPeriodeCore>,
   val inntektPeriodeListe: List<InntektPeriodeCore>,
   val sivilstandPeriodeListe: List<SivilstandPeriodeCore>,
   val barnIHusstandenPeriodeListe: List<BarnIHusstandenPeriodeCore>,
@@ -20,8 +21,7 @@ data class BeregnForskuddGrunnlagCore(
 
 data class SoknadBarnCore(
   val referanse: String,
-  val fodselsdato: LocalDate,
-  val bostatusPeriodeListe: List<BostatusPeriodeCore>
+  val fodselsdato: LocalDate
 )
 
 data class BostatusPeriodeCore(
