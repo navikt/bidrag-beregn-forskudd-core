@@ -4,6 +4,7 @@ import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.AVSLAG;
 import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.FORHOYET_FORSKUDD_100_PROSENT;
 import static no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode.ORDINAERT_FORSKUDD_75_PROSENT;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -24,8 +25,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("ForskuddCore (dto test)")
-public class ForskuddCoreTest {
+@DisplayName("ForskuddCoreTest")
+class ForskuddCoreTest {
 
   private static final String INNTEKT_REFERANSE_1 = "INNTEKT_REFERANSE_1";
   private static final String SIVILSTAND_REFERANSE_ENSLIG = "SIVILSTAND_REFERANSE_ENSLIG";
@@ -58,9 +59,9 @@ public class ForskuddCoreTest {
         () -> assertThat(beregnForskuddResultatCore).isNotNull(),
         () -> assertThat(beregnForskuddResultatCore.getAvvikListe()).isEmpty(),
         () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe()).isNotEmpty(),
-        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().size()).isEqualTo(3),
+        () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe()).hasSize(3),
         () -> assertThat(beregnForskuddResultatCore.getSjablonListe()).isNotEmpty(),
-        () -> assertThat(beregnForskuddResultatCore.getSjablonListe().size()).isEqualTo(TestUtil.byggSjablonPeriodeListe().size()),
+        () -> assertThat(beregnForskuddResultatCore.getSjablonListe()).hasSameSizeAs(TestUtil.byggSjablonPeriodeListe()),
 
         () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe().get(0).getPeriode().getDatoFom())
             .isEqualTo(LocalDate.parse("2017-01-01")),
@@ -123,5 +124,14 @@ public class ForskuddCoreTest {
         () -> assertThat(beregnForskuddResultatCore.getAvvikListe().get(0).getAvvikType()).isEqualTo(AvvikType.DATO_FOM_ETTER_DATO_TIL.toString()),
         () -> assertThat(beregnForskuddResultatCore.getBeregnetForskuddPeriodeListe()).isEmpty()
     );
+  }
+
+  @Test
+  @DisplayName("Skal kaste IllegalArgumentException ved ugyldig enum")
+  void skalKasteIllegalArgumentExceptionVedUgyldigEnum() {
+
+    assertThatExceptionOfType(IllegalArgumentException.class)
+        .isThrownBy(() -> forskuddCore.beregnForskudd(TestUtil.byggForskuddGrunnlagCore("BOR_HELT_ALENE")))
+        .withMessage("No enum constant no.nav.bidrag.beregn.felles.enums.BostatusKode.BOR_HELT_ALENE");
   }
 }

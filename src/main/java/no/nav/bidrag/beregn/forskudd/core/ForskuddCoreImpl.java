@@ -2,7 +2,6 @@ package no.nav.bidrag.beregn.forskudd.core;
 
 import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.toList;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -72,8 +71,8 @@ public class ForskuddCoreImpl implements ForskuddCore {
     var sivilstandPeriodeListe = mapSivilstandPeriodeListe(grunnlag.getSivilstandPeriodeListe());
     var barnIHusstandenPeriodeListe = mapBarnIHusstandenPeriodeListe(grunnlag.getBarnIHusstandenPeriodeListe());
     var sjablonPeriodeListe = mapSjablonPeriodeListe(grunnlag.getSjablonPeriodeListe());
-    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bostatusPeriodeListe, inntektPeriodeListe, sivilstandPeriodeListe, barnIHusstandenPeriodeListe,
-        sjablonPeriodeListe);
+    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn, bostatusPeriodeListe, inntektPeriodeListe, sivilstandPeriodeListe,
+        barnIHusstandenPeriodeListe, sjablonPeriodeListe);
   }
 
   private SoknadBarn mapSoknadBarn(SoknadBarnCore soknadBarnCore) {
@@ -92,7 +91,8 @@ public class ForskuddCoreImpl implements ForskuddCore {
           BostatusKode.valueOf(bostatusPeriodeCore.getKode())));
     }
     return bostatusPeriodeListe.stream()
-        .sorted(comparing(bostatusPeriode -> bostatusPeriode.getPeriode().getDatoFom())).collect(toList());
+        .sorted(comparing(bostatusPeriode -> bostatusPeriode.getPeriode().getDatoFom()))
+        .toList();
   }
 
   private List<InntektPeriode> mapInntektPeriodeListe(List<InntektPeriodeCore> bidragMottakerInntektPeriodeListeCore) {
@@ -106,7 +106,8 @@ public class ForskuddCoreImpl implements ForskuddCore {
           bidragMottakerInntektPeriodeCore.getBelop()));
     }
     return bidragMottakerInntektPeriodeListe.stream()
-        .sorted(comparing(inntektPeriode -> inntektPeriode.getPeriode().getDatoFom())).collect(toList());
+        .sorted(comparing(inntektPeriode -> inntektPeriode.getPeriode().getDatoFom()))
+        .toList();
   }
 
   private List<SivilstandPeriode> mapSivilstandPeriodeListe(List<SivilstandPeriodeCore> bidragMottakerSivilstandPeriodeListeCore) {
@@ -119,7 +120,8 @@ public class ForskuddCoreImpl implements ForskuddCore {
           SivilstandKode.valueOf(bidragMottakerSivilstandPeriodeCore.getKode())));
     }
     return bidragMottakerSivilstandPeriodeListe.stream()
-        .sorted(comparing(sivilstandPeriode -> sivilstandPeriode.getPeriode().getDatoFom())).collect(toList());
+        .sorted(comparing(sivilstandPeriode -> sivilstandPeriode.getPeriode().getDatoFom()))
+        .toList();
   }
 
   private List<BarnIHusstandenPeriode> mapBarnIHusstandenPeriodeListe(List<BarnIHusstandenPeriodeCore> barnIHusstandenPeriodeListeCore) {
@@ -130,10 +132,11 @@ public class ForskuddCoreImpl implements ForskuddCore {
           new Periode(barnIHusstandenPeriodeCore.getPeriode().getDatoFom(),
               barnIHusstandenPeriodeCore.getPeriode().getDatoTil()),
           barnIHusstandenPeriodeCore.getAntall()
-          ));
+      ));
     }
     return barnIHusstandenPeriodeListe.stream()
-        .sorted(comparing(barnIHusstandenPeriode -> barnIHusstandenPeriode.getPeriode().getDatoFom())).collect(toList());
+        .sorted(comparing(barnIHusstandenPeriode -> barnIHusstandenPeriode.getPeriode().getDatoFom()))
+        .toList();
   }
 
   private List<SjablonPeriode> mapSjablonPeriodeListe(List<SjablonPeriodeCore> sjablonPeriodeListeCore) {
@@ -181,7 +184,7 @@ public class ForskuddCoreImpl implements ForskuddCore {
     referanseListe.add(resultatGrunnlag.getBarnIHusstanden().getReferanse());
     referanseListe.add(resultatGrunnlag.getSoknadBarnAlder().getReferanse());
     referanseListe.add(resultatGrunnlag.getSoknadBarnBostatus().getReferanse());
-    referanseListe.addAll(sjablonListe.stream().map(this::lagSjablonReferanse).distinct().collect(toList()));
+    referanseListe.addAll(sjablonListe.stream().map(this::lagSjablonReferanse).distinct().toList());
     return referanseListe;
   }
 
@@ -194,14 +197,15 @@ public class ForskuddCoreImpl implements ForskuddCore {
         .map(resultatPeriode -> mapSjablonListe(resultatPeriode.getResultat().getSjablonListe()))
         .flatMap(Collection::stream)
         .distinct()
-        .collect(toList());
+        .toList();
   }
 
   private List<SjablonResultatGrunnlagCore> mapSjablonListe(List<SjablonPeriodeNavnVerdi> sjablonListe) {
     return sjablonListe.stream()
-        .map(sjablon -> new SjablonResultatGrunnlagCore(lagSjablonReferanse(sjablon), new PeriodeCore(sjablon.getPeriode().getDatoFom(), sjablon.getPeriode().getDatoTil()),
+        .map(sjablon -> new SjablonResultatGrunnlagCore(lagSjablonReferanse(sjablon),
+            new PeriodeCore(sjablon.getPeriode().getDatoFom(), sjablon.getPeriode().getDatoTil()),
             sjablon.getNavn(), sjablon.getVerdi()))
-        .collect(toList());
+        .toList();
   }
 
   private List<AvvikCore> mapAvvik(List<Avvik> avvikListe) {

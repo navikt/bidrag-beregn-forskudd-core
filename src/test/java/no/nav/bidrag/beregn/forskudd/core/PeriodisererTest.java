@@ -1,7 +1,7 @@
 package no.nav.bidrag.beregn.forskudd.core;
 
-import static no.nav.bidrag.beregn.felles.enums.BostatusKode.MED_ANDRE_ENN_FORELDRE;
-import static no.nav.bidrag.beregn.felles.enums.BostatusKode.MED_FORELDRE;
+import static no.nav.bidrag.beregn.felles.enums.BostatusKode.BOR_IKKE_MED_FORELDRE;
+import static no.nav.bidrag.beregn.felles.enums.BostatusKode.BOR_MED_FORELDRE;
 import static no.nav.bidrag.beregn.felles.enums.SivilstandKode.ENSLIG;
 import static no.nav.bidrag.beregn.felles.enums.SivilstandKode.GIFT;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,7 +46,7 @@ class PeriodisererTest {
 
     assertAll(
         () -> assertThat(perioder).isNotNull(),
-        () -> assertThat(perioder.size()).isEqualTo(3),
+        () -> assertThat(perioder).hasSize(3),
 
         () -> assertThat(perioder.get(0).getDatoFom()).isEqualTo(LocalDate.parse("2019-01-01")),
         () -> assertThat(perioder.get(0).getDatoTil()).isEqualTo(LocalDate.parse("2019-02-01")),
@@ -70,7 +70,7 @@ class PeriodisererTest {
 
     assertAll(
         () -> assertThat(perioder).isNotNull(),
-        () -> assertThat(perioder.size()).isEqualTo(2),
+        () -> assertThat(perioder).hasSize(2),
 
         () -> assertThat(perioder.get(0).getDatoFom()).isEqualTo(LocalDate.parse("2019-01-01")),
         () -> assertThat(perioder.get(0).getDatoTil()).isEqualTo(LocalDate.parse("2019-02-01")),
@@ -88,7 +88,7 @@ class PeriodisererTest {
 
     assertAll(
         () -> assertThat(perioder).isNotNull(),
-        () -> assertThat(perioder.size()).isEqualTo(1),
+        () -> assertThat(perioder).hasSize(1),
 
         () -> assertThat(perioder.get(0).getDatoFom()).isEqualTo(LocalDate.parse("2019-02-01")),
         () -> assertThat(perioder.get(0).getDatoTil()).isNull()
@@ -111,16 +111,16 @@ class PeriodisererTest {
         .addBruddpunkter(new BarnIHusstandenPeriode(BARN_REFERANSE_2, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-06-16")), 1d))
         .addBruddpunkter(new BarnIHusstandenPeriode(BARN_REFERANSE_3, new Periode(LocalDate.parse("2019-03-31"), null), 1d))
         .addBruddpunkter(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_1,
-            new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-08-16")), MED_FORELDRE))
+            new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-08-16")), BOR_MED_FORELDRE))
         .addBruddpunkter(new BostatusPeriode(BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE,
-            new Periode(LocalDate.parse("2018-08-16"), LocalDate.parse("2018-11-13")), MED_ANDRE_ENN_FORELDRE))
+            new Periode(LocalDate.parse("2018-08-16"), LocalDate.parse("2018-11-13")), BOR_IKKE_MED_FORELDRE))
         .addBruddpunkter(new BostatusPeriode(BOSTATUS_REFERANSE_MED_FORELDRE_2,
-            new Periode(LocalDate.parse("2018-11-13"), null), MED_FORELDRE))
+            new Periode(LocalDate.parse("2018-11-13"), null), BOR_MED_FORELDRE))
         .finnPerioder(LocalDate.parse("2000-01-01"), LocalDate.parse("2100-01-01"));
 
     assertAll(
         () -> assertThat(perioder).isNotNull(),
-        () -> assertThat(perioder.size()).isEqualTo(8),
+        () -> assertThat(perioder).hasSize(8),
 
         () -> assertThat(perioder.get(0).getDatoFom()).isEqualTo(LocalDate.parse("2017-01-01")),
         () -> assertThat(perioder.get(0).getDatoTil()).isEqualTo(LocalDate.parse("2018-01-01")),

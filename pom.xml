@@ -3,7 +3,7 @@
 
   <groupId>no.nav.bidrag</groupId>
   <artifactId>bidrag-beregn-forskudd-core</artifactId>
-  <version>0.6.8-SNAPSHOT</version>
+  <version>0.7.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>bidrag-beregn-forskudd-core</name>
   <description>Forskuddsberegning</description>
@@ -35,9 +35,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <!-- dependencies -->
-    <bidrag-beregn-felles.version>0.18.4</bidrag-beregn-felles.version>
+    <bidrag-beregn-felles.version>0.19.1</bidrag-beregn-felles.version>
     <guava.version>30.1.1-jre</guava.version>
-    <spring-boot.version>2.6.1</spring-boot.version>
+    <spring-boot.version>2.7.5</spring-boot.version>
   </properties>
 
   <distributionManagement>
