@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>no.nav.bidrag</groupId>
@@ -29,16 +30,23 @@
     <kotlin.version>1.8.10</kotlin.version>
 
     <!-- build -->
-    <build-helper-maven.version>3.2.0</build-helper-maven.version>
+    <build-helper-maven.version>3.3.0</build-helper-maven.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <!-- dependencies -->
     <bidrag-beregn-felles.version>0.19.1</bidrag-beregn-felles.version>
-    <guava.version>30.1.1-jre</guava.version>
-    <spring-boot.version>2.7.5</spring-boot.version>
+    <guava.version>31.1-jre</guava.version>
+    <spring-boot.version>3.0.6</spring-boot.version>
   </properties>
+
+  <repositories>
+    <repository>
+      <id>github</id>
+      <url>https://maven.pkg.github.com/navikt/bidrag-commons</url>
+    </repository>
+  </repositories>
 
   <distributionManagement>
     <repository>
