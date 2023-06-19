@@ -86,12 +86,12 @@ data class ResultatBeregning(
 // Hjelpeklasser
 data class BeregnForskuddListeGrunnlag(
   val periodeResultatListe: MutableList<ResultatPeriode> = mutableListOf(),
-  var justertInntektPeriodeListe: List<InntektPeriode> = emptyList(),
+  var justertInntektPeriodeListe: MutableList<InntektPeriode> = mutableListOf(),
   var justertinntektPeriodeListe: List<InntektPeriode> = emptyList(),
   var justertSivilstandPeriodeListe: List<SivilstandPeriode> = emptyList(),
   var justertBarnIHusstandenPeriodeListe: List<BarnIHusstandenPeriode> = emptyList(),
   var justertBostatusPeriodeListe: List<BostatusPeriode> = emptyList(),
   var justertAlderPeriodeListe: List<AlderPeriode> = emptyList(),
   var justertSjablonPeriodeListe: List<SjablonPeriode> = emptyList(),
-  var bruddPeriodeListe: List<Periode>? = emptyList()
+  var bruddPeriodeListe: MutableList<Periode> = mutableListOf()
 )
