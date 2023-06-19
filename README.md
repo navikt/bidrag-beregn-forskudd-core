@@ -21,6 +21,7 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 | Versjon | Endringstype   | Beskrivelse                                                                                                    |
 |---------|----------------|----------------------------------------------------------------------------------------------------------------|
+| 1.0.0   | Endret         | Konvertert til Kotlin                                                                                          |
 | 0.7.0   | Endret         | Forenklet beregningsregler, refaktorert kode og lagt til tester                                                |
 | 0.6.7   | Endret         | Tatt bostatus ut av soknadsbarnobjektet og laget eget objekt for dette                                         |
 | 0.6.6   | Endret         | Endret logikk for barn i husstanden. Søknadsbarn er nå med i dette grunnlaget                                  |
