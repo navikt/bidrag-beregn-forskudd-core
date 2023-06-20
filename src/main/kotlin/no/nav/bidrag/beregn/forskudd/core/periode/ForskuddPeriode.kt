@@ -24,7 +24,6 @@ import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters.firstDayOfMonth
 import java.time.temporal.TemporalAdjusters.firstDayOfNextMonth
-import java.util.function.Consumer
 import java.util.stream.Collectors.toCollection
 
 open class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning) {
@@ -44,7 +43,6 @@ open class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning) {
 
     // Justerer datoer på grunnlagslistene (blir gjort implisitt i xxxPeriode::new)
     private fun justerDatoerGrunnlagslister(periodeGrunnlag: BeregnForskuddGrunnlag, beregnForskuddListeGrunnlag: BeregnForskuddListeGrunnlag) {
-
         beregnForskuddListeGrunnlag.justertInntektPeriodeListe = periodeGrunnlag.inntektPeriodeListe.stream()
             .map { InntektPeriode(it) }
             .collect(toCollection { ArrayList() })
@@ -62,7 +60,9 @@ open class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning) {
             .collect(toCollection { ArrayList() })
 
         beregnForskuddListeGrunnlag.justertAlderPeriodeListe = settBarnAlderPerioder(
-            periodeGrunnlag.soknadBarn.fodselsdato, periodeGrunnlag.beregnDatoFra, periodeGrunnlag.beregnDatoTil
+            periodeGrunnlag.soknadBarn.fodselsdato,
+            periodeGrunnlag.beregnDatoFra,
+            periodeGrunnlag.beregnDatoTil
         ).stream()
             .map { AlderPeriode(periodeGrunnlag.soknadBarn.referanse, it.alderPeriode, it.alder) }
             .collect(toCollection { ArrayList() })
@@ -74,17 +74,16 @@ open class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning) {
 
     // Lagger bruddperioder ved å løpe gjennom alle periodelistene
     private fun lagBruddperioder(periodeGrunnlag: BeregnForskuddGrunnlag, beregnForskuddListeGrunnlag: BeregnForskuddListeGrunnlag) {
-
         // Bygger opp liste over perioder, basert på alle typer inputparametre
         beregnForskuddListeGrunnlag.bruddPeriodeListe = Periodiserer()
-            .addBruddpunkt(periodeGrunnlag.beregnDatoFra) //For å sikre bruddpunkt på start beregning fra-dato
+            .addBruddpunkt(periodeGrunnlag.beregnDatoFra) // For å sikre bruddpunkt på start beregning fra-dato
             .addBruddpunkter(beregnForskuddListeGrunnlag.justertInntektPeriodeListe)
             .addBruddpunkter(beregnForskuddListeGrunnlag.justertSivilstandPeriodeListe)
             .addBruddpunkter(beregnForskuddListeGrunnlag.justertBarnIHusstandenPeriodeListe)
             .addBruddpunkter(beregnForskuddListeGrunnlag.justertBostatusPeriodeListe)
             .addBruddpunkter(beregnForskuddListeGrunnlag.justertAlderPeriodeListe)
             .addBruddpunkter(beregnForskuddListeGrunnlag.justertSjablonPeriodeListe)
-            .addBruddpunkt(periodeGrunnlag.beregnDatoTil) //For å sikre bruddpunkt på start beregning til-dato
+            .addBruddpunkt(periodeGrunnlag.beregnDatoTil) // For å sikre bruddpunkt på start beregning til-dato
             .finnPerioder(periodeGrunnlag.beregnDatoFra, periodeGrunnlag.beregnDatoTil)
             .toMutableList()
 
@@ -95,7 +94,8 @@ open class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning) {
             val sisteTilDato = beregnForskuddListeGrunnlag.bruddPeriodeListe[bruddPeriodeListeAntallElementer - 1].datoTil
             if (periodeGrunnlag.beregnDatoTil == nestSisteTilDato && null == sisteTilDato) {
                 val nyPeriode = Periode(
-                    beregnForskuddListeGrunnlag.bruddPeriodeListe[bruddPeriodeListeAntallElementer - 2].datoFom, null
+                    beregnForskuddListeGrunnlag.bruddPeriodeListe[bruddPeriodeListeAntallElementer - 2].datoFom,
+                    null
                 )
                 beregnForskuddListeGrunnlag.bruddPeriodeListe.removeAt(bruddPeriodeListeAntallElementer - 1)
                 beregnForskuddListeGrunnlag.bruddPeriodeListe.removeAt(bruddPeriodeListeAntallElementer - 2)
@@ -106,11 +106,10 @@ open class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning) {
 
     // Løper gjennom alle bruddperioder og foretar beregning
     private fun beregnForskuddPerPeriode(beregnForskuddListeGrunnlag: BeregnForskuddListeGrunnlag) {
-
         // Løper gjennom periodene og finner matchende verdi for hver kategori
         // Kaller beregningsmodulen for hver beregningsperiode
 
-        beregnForskuddListeGrunnlag.bruddPeriodeListe.forEach(Consumer { beregningsperiode: Periode ->
+        beregnForskuddListeGrunnlag.bruddPeriodeListe.forEach { beregningsperiode: Periode ->
             val inntektListe = beregnForskuddListeGrunnlag.justertInntektPeriodeListe.stream()
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
                 .map { Inntekt(it.referanse, it.type, it.belop) }
@@ -141,7 +140,7 @@ open class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning) {
             val grunnlagBeregning = GrunnlagBeregning(inntektListe, sivilstand, barnIHusstanden, alder, bostatus, sjablonListe)
             beregnForskuddListeGrunnlag.periodeResultatListe
                 .add(ResultatPeriode(beregningsperiode, forskuddBeregning.beregn(grunnlagBeregning), grunnlagBeregning))
-        })
+        }
     }
 
     // Deler opp i aldersperioder med utgangspunkt i fødselsdato
@@ -199,7 +198,6 @@ open class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning) {
 
     // Validerer at input-verdier til forskuddsberegning er gyldige
     open fun validerInput(grunnlag: BeregnForskuddGrunnlag): List<Avvik> {
-
         // Sjekk beregn dato fra/til
         val avvikListe = PeriodeUtil.validerBeregnPeriodeInput(grunnlag.beregnDatoFra, grunnlag.beregnDatoTil)
 
@@ -210,8 +208,14 @@ open class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning) {
         }
         avvikListe.addAll(
             PeriodeUtil.validerInputDatoer(
-                grunnlag.beregnDatoFra, grunnlag.beregnDatoTil, "bidragMottakerInntektPeriodeListe", bidragMottakerInntektPeriodeListe,
-                false, true, false, true
+                grunnlag.beregnDatoFra,
+                grunnlag.beregnDatoTil,
+                "bidragMottakerInntektPeriodeListe",
+                bidragMottakerInntektPeriodeListe,
+                false,
+                true,
+                false,
+                true
             )
         )
 
@@ -222,8 +226,14 @@ open class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning) {
         }
         avvikListe.addAll(
             PeriodeUtil.validerInputDatoer(
-                grunnlag.beregnDatoFra, grunnlag.beregnDatoTil, "bidragMottakerSivilstandPeriodeListe",
-                bidragMottakerSivilstandPeriodeListe, true, true, true, true
+                grunnlag.beregnDatoFra,
+                grunnlag.beregnDatoTil,
+                "bidragMottakerSivilstandPeriodeListe",
+                bidragMottakerSivilstandPeriodeListe,
+                true,
+                true,
+                true,
+                true
             )
         )
 
@@ -234,8 +244,14 @@ open class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning) {
         }
         avvikListe.addAll(
             PeriodeUtil.validerInputDatoer(
-                grunnlag.beregnDatoFra, grunnlag.beregnDatoTil, "soknadBarnBostatusPeriodeListe", soknadBarnBostatusPeriodeListe,
-                true, true, true, true
+                grunnlag.beregnDatoFra,
+                grunnlag.beregnDatoTil,
+                "soknadBarnBostatusPeriodeListe",
+                soknadBarnBostatusPeriodeListe,
+                true,
+                true,
+                true,
+                true
             )
         )
 
@@ -246,8 +262,14 @@ open class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning) {
         }
         avvikListe.addAll(
             PeriodeUtil.validerInputDatoer(
-                grunnlag.beregnDatoFra, grunnlag.beregnDatoTil, "bidragMottakerBarnPeriodeListe", bidragMottakerBarnPeriodeListe,
-                false, false, false, false
+                grunnlag.beregnDatoFra,
+                grunnlag.beregnDatoTil,
+                "bidragMottakerBarnPeriodeListe",
+                bidragMottakerBarnPeriodeListe,
+                false,
+                false,
+                false,
+                false
             )
         )
 
@@ -259,8 +281,14 @@ open class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning) {
         avvikListe.addAll(
             PeriodeUtil
                 .validerInputDatoer(
-                    grunnlag.beregnDatoFra, grunnlag.beregnDatoTil, "sjablonPeriodeListe", sjablonPeriodeListe, false,
-                    false, false, false
+                    grunnlag.beregnDatoFra,
+                    grunnlag.beregnDatoTil,
+                    "sjablonPeriodeListe",
+                    sjablonPeriodeListe,
+                    false,
+                    false,
+                    false,
+                    false
                 )
         )
         return avvikListe

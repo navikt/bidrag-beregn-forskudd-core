@@ -54,10 +54,9 @@ object TestUtil {
     private const val BOSTATUS_REFERANSE_MED_FORELDRE_2 = "BOSTATUS_REFERANSE_MED_FORELDRE_2"
     private const val BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE = "BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE"
 
-    fun byggSjablonPeriodeNavnVerdiListe(): List<SjablonPeriodeNavnVerdi> {
-
+    fun byggSjablonPeriodeNavnVerdiListe() =
         // Sjablontall
-        val sjablonListe = listOf(
+        listOf(
             SjablonPeriodeNavnVerdi(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELOP.navn,
@@ -94,64 +93,67 @@ object TestUtil {
                 BigDecimal.valueOf(61700)
             )
         )
-        return sjablonListe
-    }
 
-    fun byggSjablonPeriodeListe(): List<SjablonPeriode> {
-        val sjablonPeriodeListe = listOf(
+    fun byggSjablonPeriodeListe() =
+
+        listOf(
             SjablonPeriode(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 Sjablon(
-                    SjablonTallNavn.FORSKUDDSSATS_BELOP.navn, emptyList(),
+                    SjablonTallNavn.FORSKUDDSSATS_BELOP.navn,
+                    emptyList(),
                     listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(1710)))
                 )
             ),
             SjablonPeriode(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 Sjablon(
-                    SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.navn, emptyList(),
+                    SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.navn,
+                    emptyList(),
                     listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(320)))
                 )
             ),
             SjablonPeriode(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 Sjablon(
-                    SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP.navn, emptyList(),
+                    SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP.navn,
+                    emptyList(),
                     listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(270200)))
                 )
             ),
             SjablonPeriode(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 Sjablon(
-                    SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP.navn, emptyList(),
+                    SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP.navn,
+                    emptyList(),
                     listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(419700)))
                 )
             ),
             SjablonPeriode(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 Sjablon(
-                    SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP.navn, emptyList(),
+                    SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP.navn,
+                    emptyList(),
                     listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(336500)))
                 )
             ),
             SjablonPeriode(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 Sjablon(
-                    SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP.navn, emptyList(),
+                    SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP.navn,
+                    emptyList(),
                     listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(61700)))
                 )
             ),
             SjablonPeriode(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 Sjablon(
-                    SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELOP.navn, emptyList(),
+                    SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELOP.navn,
+                    emptyList(),
                     listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(1280)))
                 )
             )
         )
-
-        return sjablonPeriodeListe
-    }
 
     fun byggForskuddGrunnlagCore(): BeregnForskuddGrunnlagCore {
         return byggForskuddGrunnlagCore(BostatusKode.BOR_MED_FORELDRE.toString())
@@ -193,15 +195,23 @@ object TestUtil {
         val bidragMottakerBarnPeriodeListe = listOf(
             BarnIHusstandenPeriodeCore(
                 BARN_I_HUSSTANDEN_REFERANSE_1,
-                PeriodeCore(LocalDate.parse("2017-01-01"),
-                    LocalDate.parse("2020-01-01")),
+                PeriodeCore(
+                    LocalDate.parse("2017-01-01"),
+                    LocalDate.parse("2020-01-01")
+                ),
                 1.0
             )
         )
 
         return BeregnForskuddGrunnlagCore(
-            LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01"), soknadBarn, bostatusPeriodeListe,
-            inntektPeriodeListe, bidragMottakerSivilstandPeriodeListe, bidragMottakerBarnPeriodeListe, emptyList()
+            LocalDate.parse("2017-01-01"),
+            LocalDate.parse("2020-01-01"),
+            soknadBarn,
+            bostatusPeriodeListe,
+            inntektPeriodeListe,
+            bidragMottakerSivilstandPeriodeListe,
+            bidragMottakerBarnPeriodeListe,
+            emptyList()
         )
     }
 
@@ -362,13 +372,18 @@ object TestUtil {
         )
 
         return BeregnForskuddGrunnlag(
-            LocalDate.parse(beregnDatoFra), LocalDate.parse(beregnDatoTil), soknadBarn, bostatusListe, inntektListe,
-            sivilstandListe, barnIHusstandenListe, byggSjablonPeriodeListe()
+            LocalDate.parse(beregnDatoFra),
+            LocalDate.parse(beregnDatoTil),
+            soknadBarn,
+            bostatusListe,
+            inntektListe,
+            sivilstandListe,
+            barnIHusstandenListe,
+            byggSjablonPeriodeListe()
         )
     }
 
     fun byggForskuddGrunnlagUtenSivilstand(): BeregnForskuddGrunnlag {
-
         val beregnDatoFra = LocalDate.parse("2017-01-01")
         val beregnDatoTil = LocalDate.parse("2017-02-01")
         val fodselsdato = LocalDate.parse("2006-12-19")
@@ -443,7 +458,13 @@ object TestUtil {
         )
 
         return BeregnForskuddGrunnlag(
-            beregnDatoFra, beregnDatoTil, soknadBarn, bostatusListe, inntektListe, emptyList(), barnIHusstandenListe,
+            beregnDatoFra,
+            beregnDatoTil,
+            soknadBarn,
+            bostatusListe,
+            inntektListe,
+            emptyList(),
+            barnIHusstandenListe,
             byggSjablonPeriodeListe()
         )
     }
@@ -526,7 +547,13 @@ object TestUtil {
         )
 
         return BeregnForskuddGrunnlag(
-            beregnDatoFra, beregnDatoTil, soknadBarn, bostatusListe, inntektListe, sivilstandListe, barnIHusstandenListe,
+            beregnDatoFra,
+            beregnDatoTil,
+            soknadBarn,
+            bostatusListe,
+            inntektListe,
+            sivilstandListe,
+            barnIHusstandenListe,
             byggSjablonPeriodeListe()
         )
     }
@@ -572,7 +599,13 @@ object TestUtil {
         )
 
         return BeregnForskuddGrunnlag(
-            beregnDatoFra, beregnDatoTil, soknadBarn, bostatusListe, inntektListe, sivilstandListe, barnIHusstandenListe,
+            beregnDatoFra,
+            beregnDatoTil,
+            soknadBarn,
+            bostatusListe,
+            inntektListe,
+            sivilstandListe,
+            barnIHusstandenListe,
             byggSjablonPeriodeListe()
         )
     }
@@ -609,7 +642,13 @@ object TestUtil {
         )
 
         return BeregnForskuddGrunnlag(
-            beregnDatoFra, beregnDatoTil, soknadBarn, bostatusListe, inntektListe, sivilstandListe, barnIHusstandenListe,
+            beregnDatoFra,
+            beregnDatoTil,
+            soknadBarn,
+            bostatusListe,
+            inntektListe,
+            sivilstandListe,
+            barnIHusstandenListe,
             byggSjablonPeriodeListe()
         )
     }
