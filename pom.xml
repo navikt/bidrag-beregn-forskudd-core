@@ -36,7 +36,7 @@
 
     <!-- dependencies -->
     <bidrag-beregn-felles.version>0.19.1</bidrag-beregn-felles.version>
-    <guava.version>31.1-jre</guava.version>
+    <guava.version>32.0.0-jre</guava.version>
     <spring-boot.version>3.0.6</spring-boot.version>
   </properties>
 
