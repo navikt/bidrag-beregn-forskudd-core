@@ -44,24 +44,20 @@ open class ForskuddCore(private val forskuddPeriode: ForskuddPeriode) {
         return mapFraBusinessObject(avvikListe, beregnForskuddResultat)
     }
 
-    private fun mapTilBusinessObject(grunnlag: BeregnForskuddGrunnlagCore): BeregnForskuddGrunnlag {
-        val beregnDatoFra = grunnlag.beregnDatoFra
-        val beregnDatoTil = grunnlag.beregnDatoTil
-        val soknadBarn = mapSoknadBarn(grunnlag.soknadBarn)
-        val bostatusPeriodeListe = mapBostatusPeriodeListe(grunnlag.bostatusPeriodeListe)
-        val inntektPeriodeListe = mapInntektPeriodeListe(grunnlag.inntektPeriodeListe)
-        val sivilstandPeriodeListe = mapSivilstandPeriodeListe(grunnlag.sivilstandPeriodeListe)
-        val barnIHusstandenPeriodeListe = mapBarnIHusstandenPeriodeListe(grunnlag.barnIHusstandenPeriodeListe)
-        val sjablonPeriodeListe = mapSjablonPeriodeListe(grunnlag.sjablonPeriodeListe)
-        return BeregnForskuddGrunnlag(
-            beregnDatoFra, beregnDatoTil, soknadBarn, bostatusPeriodeListe, inntektPeriodeListe, sivilstandPeriodeListe,
-            barnIHusstandenPeriodeListe, sjablonPeriodeListe
+    private fun mapTilBusinessObject(grunnlag: BeregnForskuddGrunnlagCore) =
+        BeregnForskuddGrunnlag(
+            beregnDatoFra = grunnlag.beregnDatoFra,
+            beregnDatoTil = grunnlag.beregnDatoTil,
+            soknadBarn = mapSoknadBarn(grunnlag.soknadBarn),
+            bostatusPeriodeListe = mapBostatusPeriodeListe(grunnlag.bostatusPeriodeListe),
+            inntektPeriodeListe = mapInntektPeriodeListe(grunnlag.inntektPeriodeListe),
+            sivilstandPeriodeListe = mapSivilstandPeriodeListe(grunnlag.sivilstandPeriodeListe),
+            barnIHusstandenPeriodeListe = mapBarnIHusstandenPeriodeListe(grunnlag.barnIHusstandenPeriodeListe),
+            sjablonPeriodeListe = mapSjablonPeriodeListe(grunnlag.sjablonPeriodeListe)
         )
-    }
 
-    private fun mapSoknadBarn(soknadBarnCore: SoknadBarnCore): SoknadBarn {
-        return SoknadBarn(soknadBarnCore.referanse, soknadBarnCore.fodselsdato)
-    }
+    private fun mapSoknadBarn(soknadBarnCore: SoknadBarnCore) =
+        SoknadBarn(soknadBarnCore.referanse, soknadBarnCore.fodselsdato)
 
     private fun mapBostatusPeriodeListe(bostatusPeriodeListeCore: List<BostatusPeriodeCore>): List<BostatusPeriode> {
         val bostatusPeriodeListe = mutableListOf<BostatusPeriode>()
@@ -125,13 +121,12 @@ open class ForskuddCore(private val forskuddPeriode: ForskuddPeriode) {
         return sjablonPeriodeListe
     }
 
-    private fun mapFraBusinessObject(avvikListe: List<Avvik>, resultat: BeregnForskuddResultat): BeregnetForskuddResultatCore {
-        return BeregnetForskuddResultatCore(
+    private fun mapFraBusinessObject(avvikListe: List<Avvik>, resultat: BeregnForskuddResultat) =
+        BeregnetForskuddResultatCore(
             mapResultatPeriode(resultat.beregnetForskuddPeriodeListe),
             mapSjablonGrunnlagListe(resultat.beregnetForskuddPeriodeListe),
             mapAvvik(avvikListe)
         )
-    }
 
     private fun mapResultatPeriode(periodeResultatListe: List<ResultatPeriode>): List<ResultatPeriodeCore> {
         val resultatPeriodeCoreListe = ArrayList<ResultatPeriodeCore>()
@@ -159,34 +154,36 @@ open class ForskuddCore(private val forskuddPeriode: ForskuddPeriode) {
         referanseListe.add(barnIHusstanden.referanse)
         referanseListe.add(soknadBarnAlder.referanse)
         referanseListe.add(soknadBarnBostatus.referanse)
-        referanseListe.addAll(sjablonListe.stream()
-            .map { lagSjablonReferanse(it) }
-            .distinct()
-            .toList())
+        referanseListe.addAll(
+            sjablonListe.stream()
+                .map { lagSjablonReferanse(it) }
+                .distinct()
+                .toList()
+        )
         return referanseListe
     }
 
-    private fun lagSjablonReferanse(sjablon: SjablonPeriodeNavnVerdi): String {
-        return "Sjablon_" + sjablon.navn + "_" + sjablon.periode.datoFom.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
-    }
+    private fun lagSjablonReferanse(sjablon: SjablonPeriodeNavnVerdi) =
+        "Sjablon_${sjablon.navn}_${sjablon.periode.datoFom.format(DateTimeFormatter.ofPattern("yyyyMMdd"))}"
 
-    private fun mapSjablonGrunnlagListe(periodeResultatListe: List<ResultatPeriode>): List<SjablonResultatGrunnlagCore> {
-        return periodeResultatListe.stream()
+    private fun mapSjablonGrunnlagListe(periodeResultatListe: List<ResultatPeriode>) =
+        periodeResultatListe.stream()
             .map { mapSjablonListe(it.resultat.sjablonListe) }
             .flatMap { it.stream() }
             .distinct()
             .toList()
-    }
 
-    private fun mapSjablonListe(sjablonListe: List<SjablonPeriodeNavnVerdi>): List<SjablonResultatGrunnlagCore> {
-        return sjablonListe.stream()
-            .map { SjablonResultatGrunnlagCore(
+    private fun mapSjablonListe(sjablonListe: List<SjablonPeriodeNavnVerdi>) =
+        sjablonListe.stream()
+            .map {
+                SjablonResultatGrunnlagCore(
                     lagSjablonReferanse(it),
-                    PeriodeCore(it.periode.datoFom, it.periode.datoTil), it.navn, it.verdi
+                    PeriodeCore(it.periode.datoFom, it.periode.datoTil),
+                    it.navn,
+                    it.verdi
                 )
             }
             .toList()
-    }
 
     private fun mapAvvik(avvikListe: List<Avvik>): List<AvvikCore> {
         val avvikCoreListe = mutableListOf<AvvikCore>()

@@ -109,7 +109,8 @@ internal class ForskuddBeregningTest {
     fun skalGiAvslagOverMaksGrense() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                INNTEKT_REFERANSE_1,
+                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
                 finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.FORSKUDDSSATS_BELOP).multiply(
                     finnSjablonVerdi(
                         sjablonPeriodeListe,
@@ -140,7 +141,8 @@ internal class ForskuddBeregningTest {
     fun skalGi125ProsentLavInntekt() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                INNTEKT_REFERANSE_1,
+                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
                 finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP)
             )
         )
@@ -166,7 +168,8 @@ internal class ForskuddBeregningTest {
     fun skalGi100ProsentLavInntekt() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                INNTEKT_REFERANSE_1,
+                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
                 finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP)
             )
         )
@@ -192,7 +195,8 @@ internal class ForskuddBeregningTest {
     fun skalGi75ProsentEnsligEttBarn() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                INNTEKT_REFERANSE_1,
+                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
                 finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP)
             )
         )
@@ -219,7 +223,8 @@ internal class ForskuddBeregningTest {
     fun skalGi50ProsentEnsligEttBarn() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                INNTEKT_REFERANSE_1,
+                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
                 finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP).add(BigDecimal.ONE)
             )
         )
@@ -246,7 +251,8 @@ internal class ForskuddBeregningTest {
     fun skalGi75ProsentEnsligMerEnnEttBarn() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                INNTEKT_REFERANSE_1,
+                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
                 finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP).add(
                     finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP)
                 )
@@ -275,7 +281,8 @@ internal class ForskuddBeregningTest {
     fun skalGi50ProsentEnsligMerEnnEttBarn() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                INNTEKT_REFERANSE_1,
+                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
                 finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP).add(
                     finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP)
                 ).add(BigDecimal.ONE)
@@ -304,7 +311,8 @@ internal class ForskuddBeregningTest {
     fun skalGi75ProsentGiftEttBarn() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                INNTEKT_REFERANSE_1,
+                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
                 finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP)
             )
         )
@@ -331,7 +339,8 @@ internal class ForskuddBeregningTest {
     fun skalGi50ProsentGiftEttBarn() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                INNTEKT_REFERANSE_1,
+                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
                 finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP).add(BigDecimal.ONE)
             )
         )
@@ -358,7 +367,8 @@ internal class ForskuddBeregningTest {
     fun skalGi75ProsentGiftMerEnnEttBarn() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                INNTEKT_REFERANSE_1,
+                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
                 finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP).add(
                     finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP)
                 )
@@ -387,7 +397,8 @@ internal class ForskuddBeregningTest {
     fun skalGi50ProsentGiftMerEnnEttBarn_EnInntekt() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                INNTEKT_REFERANSE_1,
+                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
                 finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP).add(
                     finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP).add(BigDecimal.ONE)
                 )
@@ -414,13 +425,15 @@ internal class ForskuddBeregningTest {
     @Order(16)
     @DisplayName("Regel 14: BM inntekt er høyere enn sats for 75% forskudd gift ++ og antall barn i husstand er mer enn 1 (2 inntekter)")
     fun skalGi50ProsentGiftMerEnnEttBarn_ToInntekter() {
-        val inntektListe = Arrays.asList(
+        val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                INNTEKT_REFERANSE_1,
+                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
                 finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP)
             ),
             Inntekt(
-                INNTEKT_REFERANSE_2, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                INNTEKT_REFERANSE_2,
+                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
                 finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP).add(BigDecimal.ONE)
             )
         )
