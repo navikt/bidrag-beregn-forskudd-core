@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>no.nav.bidrag</groupId>
   <artifactId>bidrag-beregn-forskudd-core</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.2-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>bidrag-beregn-forskudd-core</name>
   <description>Forskuddsberegning</description>
@@ -170,9 +169,8 @@
             <phase>verify</phase>
             <configuration>
               <target name="ktlint">
-                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true" classpathref="maven.plugin.classpath"
-                  classname="com.pinterest.ktlint.Main">
-                  <arg value="src/**/*.kt"/>
+                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true" classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
+                  <arg value="src/**/*.kt" />
                 </java>
               </target>
             </configuration>
@@ -185,12 +183,11 @@
             <phase>validate</phase>
             <configuration>
               <target name="ktlint">
-                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true" classpathref="maven.plugin.classpath"
-                  classname="com.pinterest.ktlint.Main">
-                  <jvmarg value="--add-opens"/>
-                  <jvmarg value="java.base/java.lang=ALL-UNNAMED"/>
-                  <arg value="-F"/>
-                  <arg value="src/**/*.kt"/>
+                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true" classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
+                  <jvmarg value="--add-opens" />
+                  <jvmarg value="java.base/java.lang=ALL-UNNAMED" />
+                  <arg value="-F" />
+                  <arg value="src/**/*.kt" />
                 </java>
               </target>
             </configuration>
