@@ -8,7 +8,7 @@ import no.nav.bidrag.beregn.felles.enums.SivilstandKode
 import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggSjablonPeriodeListe
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggSjablonPeriodeNavnVerdiListe
-import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregning
+import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregningImpl
 import no.nav.bidrag.beregn.forskudd.core.bo.Alder
 import no.nav.bidrag.beregn.forskudd.core.bo.BarnIHusstanden
 import no.nav.bidrag.beregn.forskudd.core.bo.Bostatus
@@ -33,7 +33,7 @@ import java.util.stream.Collectors
 @DisplayName("ForskuddBeregningTest")
 internal class ForskuddBeregningTest {
     private var grunnlag: GrunnlagBeregning? = null
-    private val forskuddBeregning = ForskuddBeregning()
+    private val forskuddBeregning = ForskuddBeregningImpl()
     private val sjablonPeriodeListe = byggSjablonPeriodeListe()
     private val sjablonPeriodeNavnVerdiListe = byggSjablonPeriodeNavnVerdiListe()
     private val forventetResultatBelop50Prosent = BigDecimal.valueOf(850)

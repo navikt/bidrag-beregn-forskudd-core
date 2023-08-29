@@ -6,7 +6,7 @@ import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggForskuddGrunnlagCore
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggForskuddResultat
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggSjablonPeriodeListe
 import no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode
-import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode
+import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriodeImpl
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Assertions.assertAll
@@ -26,10 +26,10 @@ import java.time.LocalDate
 internal class ForskuddCoreTest {
 
     @InjectMocks
-    private lateinit var forskuddCore: ForskuddCore
+    private lateinit var forskuddCore: ForskuddCoreImpl
 
     @Mock
-    private lateinit var forskuddPeriode: ForskuddPeriode
+    private lateinit var forskuddPeriode: ForskuddPeriodeImpl
 
     private val beregnForskuddGrunnlagCore = byggForskuddGrunnlagCore()
     private val beregnForskuddResultat = byggForskuddResultat()
