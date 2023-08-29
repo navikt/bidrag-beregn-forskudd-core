@@ -21,6 +21,7 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 | Versjon | Endringstype   | Beskrivelse                                                                                                    |
 |---------|----------------|----------------------------------------------------------------------------------------------------------------|
+| 1.0.2   | Endret         | Dto'er flyttet til bidrag-transport                                                                            |
 | 1.0.1   | Endret         | Lagt til ktlint + diverse justeringer                                                                          |
 | 1.0.0   | Endret         | Konvertert til Kotlin                                                                                          |
 | 0.7.0   | Endret         | Forenklet beregningsregler, refaktorert kode og lagt til tester                                                |
