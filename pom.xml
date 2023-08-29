@@ -3,7 +3,7 @@
 
   <groupId>no.nav.bidrag</groupId>
   <artifactId>bidrag-beregn-forskudd-core</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.0.3-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>bidrag-beregn-forskudd-core</name>
   <description>Forskuddsberegning</description>
@@ -177,7 +177,7 @@
             <configuration>
               <target name="ktlint">
                 <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true" classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
-                  <arg value="src/**/*.kt"/>
+                  <arg value="src/**/*.kt" />
                 </java>
               </target>
             </configuration>
@@ -191,10 +191,10 @@
             <configuration>
               <target name="ktlint">
                 <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true" classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
-                  <jvmarg value="--add-opens"/>
-                  <jvmarg value="java.base/java.lang=ALL-UNNAMED"/>
-                  <arg value="-F"/>
-                  <arg value="src/**/*.kt"/>
+                  <jvmarg value="--add-opens" />
+                  <jvmarg value="java.base/java.lang=ALL-UNNAMED" />
+                  <arg value="-F" />
+                  <arg value="src/**/*.kt" />
                 </java>
               </target>
             </configuration>
