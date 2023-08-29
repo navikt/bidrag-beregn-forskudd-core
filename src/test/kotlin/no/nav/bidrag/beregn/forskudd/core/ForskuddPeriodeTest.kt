@@ -13,12 +13,12 @@ import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggForskuddGrunnlagUtenAndre
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggForskuddGrunnlagUtenSivilstand
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggSjablonPeriodeListe
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggSjablonPeriodeNavnVerdiListe
-import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregning
+import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregningImpl
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode
 import no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode
-import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode
+import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriodeImpl
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Assertions.assertAll
@@ -34,8 +34,8 @@ import java.util.function.Consumer
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 @DisplayName("ForskuddPeriodeTest")
 internal class ForskuddPeriodeTest {
-    private val forskuddBeregning = ForskuddBeregning()
-    private val forskuddPeriode = ForskuddPeriode(forskuddBeregning)
+    private val forskuddBeregning = ForskuddBeregningImpl()
+    private val forskuddPeriode = ForskuddPeriodeImpl(forskuddBeregning)
     private val beregnForskuddGrunnlag = byggForskuddGrunnlag()
     private val beregnForskuddGrunnlagMedAvvik = byggForskuddGrunnlagMedAvvik()
     private val beregnForskuddGrunnlagUtenBarn = byggForskuddGrunnlagUtenAndreBarn()
