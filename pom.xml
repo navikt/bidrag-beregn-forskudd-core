@@ -37,7 +37,6 @@
     <bidrag-beregn-felles.version>0.19.1</bidrag-beregn-felles.version>
     <guava.version>32.1.2-jre</guava.version>
     <spring-boot.version>3.0.6</spring-boot.version>
-    <bidrag-transport.version>20230821134807_d0642b9</bidrag-transport.version>
   </properties>
 
   <repositories>
@@ -83,12 +82,6 @@
       <groupId>no.nav.bidrag</groupId>
       <artifactId>bidrag-beregn-felles</artifactId>
       <version>${bidrag-beregn-felles.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>no.nav.bidrag</groupId>
-      <artifactId>bidrag-transport</artifactId>
-      <version>${bidrag-transport.version}</version>
     </dependency>
 
     <dependency>

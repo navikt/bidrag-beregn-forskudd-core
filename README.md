@@ -21,6 +21,7 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 | Versjon | Endringstype   | Beskrivelse                                                                                                    |
 |---------|----------------|----------------------------------------------------------------------------------------------------------------|
+| 1.0.4   | Endret         | Dto'er lagt tilbake, se avklaringer i Github wiki                                                              |
 | 1.0.3   | Endret         | Lagt tilbake interfacer                                                                                        |
 | 1.0.2   | Endret         | Dto'er flyttet til bidrag-transport                                                                            |
 | 1.0.1   | Endret         | Lagt til ktlint + diverse justeringer                                                                          |

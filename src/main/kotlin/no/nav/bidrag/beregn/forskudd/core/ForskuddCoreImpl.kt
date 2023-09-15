@@ -7,6 +7,10 @@ import no.nav.bidrag.beregn.felles.bo.SjablonInnhold
 import no.nav.bidrag.beregn.felles.bo.SjablonNokkel
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriodeNavnVerdi
+import no.nav.bidrag.beregn.felles.dto.AvvikCore
+import no.nav.bidrag.beregn.felles.dto.PeriodeCore
+import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore
+import no.nav.bidrag.beregn.felles.dto.SjablonResultatGrunnlagCore
 import no.nav.bidrag.beregn.felles.enums.BostatusKode
 import no.nav.bidrag.beregn.felles.enums.InntektType
 import no.nav.bidrag.beregn.felles.enums.SivilstandKode
@@ -18,19 +22,16 @@ import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.SoknadBarn
+import no.nav.bidrag.beregn.forskudd.core.dto.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
+import no.nav.bidrag.beregn.forskudd.core.dto.BeregnetForskuddResultatCore
+import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore
+import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore
+import no.nav.bidrag.beregn.forskudd.core.dto.ResultatBeregningCore
+import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore
+import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
+import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode
-import no.nav.bidrag.transport.beregning.felles.AvvikCore
-import no.nav.bidrag.transport.beregning.felles.PeriodeCore
-import no.nav.bidrag.transport.beregning.felles.SjablonResultatGrunnlagCore
-import no.nav.bidrag.transport.beregning.forskudd.core.request.BarnIHusstandenPeriodeCore
-import no.nav.bidrag.transport.beregning.forskudd.core.request.BeregnForskuddGrunnlagCore
-import no.nav.bidrag.transport.beregning.forskudd.core.request.BostatusPeriodeCore
-import no.nav.bidrag.transport.beregning.forskudd.core.request.InntektPeriodeCore
-import no.nav.bidrag.transport.beregning.forskudd.core.request.SivilstandPeriodeCore
-import no.nav.bidrag.transport.beregning.forskudd.core.request.SoknadBarnCore
-import no.nav.bidrag.transport.beregning.forskudd.core.response.BeregnetForskuddResultatCore
-import no.nav.bidrag.transport.beregning.forskudd.core.response.ResultatBeregningCore
-import no.nav.bidrag.transport.beregning.forskudd.core.response.ResultatPeriodeCore
 import java.time.format.DateTimeFormatter
 import java.util.Comparator.comparing
 
@@ -103,7 +104,7 @@ open class ForskuddCoreImpl(private val forskuddPeriode: ForskuddPeriode): Forsk
             .toList()
     }
 
-    private fun mapSjablonPeriodeListe(sjablonPeriodeListeCore: List<no.nav.bidrag.transport.beregning.felles.SjablonPeriodeCore>): List<SjablonPeriode> {
+    private fun mapSjablonPeriodeListe(sjablonPeriodeListeCore: List<SjablonPeriodeCore>): List<SjablonPeriode> {
         val sjablonPeriodeListe = mutableListOf<SjablonPeriode>()
         sjablonPeriodeListeCore.forEach {
             val sjablonNokkelListe = mutableListOf<SjablonNokkel>()

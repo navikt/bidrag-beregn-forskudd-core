@@ -1,12 +1,8 @@
 package no.nav.bidrag.beregn.forskudd.core
 
+import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
+import no.nav.bidrag.beregn.forskudd.core.dto.BeregnetForskuddResultatCore
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode
-import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriodeImpl
-
-import no.nav.bidrag.transport.beregning.forskudd.core.request.BeregnForskuddGrunnlagCore
-
-import no.nav.bidrag.transport.beregning.forskudd.core.response.BeregnetForskuddResultatCore
-
 
 interface ForskuddCore {
     fun beregnForskudd(grunnlag: BeregnForskuddGrunnlagCore): BeregnetForskuddResultatCore

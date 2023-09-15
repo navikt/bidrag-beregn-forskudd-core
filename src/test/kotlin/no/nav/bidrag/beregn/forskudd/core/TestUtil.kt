@@ -6,6 +6,7 @@ import no.nav.bidrag.beregn.felles.bo.Sjablon
 import no.nav.bidrag.beregn.felles.bo.SjablonInnhold
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriodeNavnVerdi
+import no.nav.bidrag.beregn.felles.dto.PeriodeCore
 import no.nav.bidrag.beregn.felles.enums.AvvikType
 import no.nav.bidrag.beregn.felles.enums.BostatusKode
 import no.nav.bidrag.beregn.felles.enums.InntektType
@@ -27,14 +28,13 @@ import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.Sivilstand
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.SoknadBarn
+import no.nav.bidrag.beregn.forskudd.core.dto.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
+import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore
+import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore
+import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
+import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore
 import no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode
-import no.nav.bidrag.transport.beregning.felles.PeriodeCore
-import no.nav.bidrag.transport.beregning.forskudd.core.request.BarnIHusstandenPeriodeCore
-import no.nav.bidrag.transport.beregning.forskudd.core.request.BeregnForskuddGrunnlagCore
-import no.nav.bidrag.transport.beregning.forskudd.core.request.BostatusPeriodeCore
-import no.nav.bidrag.transport.beregning.forskudd.core.request.InntektPeriodeCore
-import no.nav.bidrag.transport.beregning.forskudd.core.request.SivilstandPeriodeCore
-import no.nav.bidrag.transport.beregning.forskudd.core.request.SoknadBarnCore
 import java.math.BigDecimal
 import java.time.LocalDate
 
