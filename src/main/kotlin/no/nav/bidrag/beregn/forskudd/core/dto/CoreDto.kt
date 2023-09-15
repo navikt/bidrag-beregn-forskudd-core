@@ -1,4 +1,3 @@
-/*
 package no.nav.bidrag.beregn.forskudd.core.dto
 
 import no.nav.bidrag.beregn.felles.dto.AvvikCore
@@ -68,4 +67,3 @@ data class ResultatBeregningCore(
     val kode: String,
     val regel: String
 )
-*/
