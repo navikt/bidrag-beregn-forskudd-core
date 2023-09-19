@@ -1,12 +1,12 @@
 package no.nav.bidrag.beregn.forskudd.core
 
-import no.nav.bidrag.beregn.felles.enums.AvvikType
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggAvvikListe
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggForskuddGrunnlagCore
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggForskuddResultat
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggSjablonPeriodeListe
-import no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriodeImpl
+import no.nav.bidrag.domain.enums.AvvikType
+import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeForskudd
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Assertions.assertAll
@@ -40,6 +40,7 @@ internal class ForskuddCoreTest {
     fun skalBeregneForskudd() {
         Mockito.`when`(forskuddPeriode.beregnPerioder(MockitoHelper.any())).thenReturn(beregnForskuddResultat)
         val beregnForskuddResultatCore = forskuddCore.beregnForskudd(beregnForskuddGrunnlagCore)
+
         assertAll(
             Executable { assertThat(beregnForskuddResultatCore).isNotNull() },
             Executable { assertThat(beregnForskuddResultatCore.avvikListe).isEmpty() },
@@ -61,7 +62,7 @@ internal class ForskuddCoreTest {
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].resultat.kode)
-                    .isEqualTo(ResultatKode.FORHOYET_FORSKUDD_100_PROSENT.toString())
+                    .isEqualTo(ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT.toString())
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].resultat.regel)
@@ -69,23 +70,23 @@ internal class ForskuddCoreTest {
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagReferanseListe[0])
-                    .isEqualTo(INNTEKT_REFERANSE_1)
-            },
-            Executable {
-                assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagReferanseListe[1])
-                    .isEqualTo(SIVILSTAND_REFERANSE_ENSLIG)
-            },
-            Executable {
-                assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagReferanseListe[2])
                     .isEqualTo(BARN_I_HUSSTANDEN_REFERANSE_1)
             },
             Executable {
+                assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagReferanseListe[1])
+                    .isEqualTo(BOSTATUS_REFERANSE_MED_FORELDRE_1)
+            },
+            Executable {
+                assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagReferanseListe[2])
+                    .isEqualTo(INNTEKT_REFERANSE_1)
+            },
+            Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagReferanseListe[3])
-                    .isEqualTo(SOKNADBARN_REFERANSE)
+                    .isEqualTo(SIVILSTAND_REFERANSE_ENSLIG)
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagReferanseListe[4])
-                    .isEqualTo(BOSTATUS_REFERANSE_MED_FORELDRE_1)
+                    .isEqualTo(SOKNADBARN_REFERANSE)
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[1].periode.datoFom)
@@ -101,7 +102,7 @@ internal class ForskuddCoreTest {
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[1].resultat.kode)
-                    .isEqualTo(ResultatKode.ORDINAERT_FORSKUDD_75_PROSENT.toString())
+                    .isEqualTo(ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT.toString())
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[1].resultat.regel)
@@ -121,7 +122,7 @@ internal class ForskuddCoreTest {
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[2].resultat.kode)
-                    .isEqualTo(ResultatKode.AVSLAG.toString())
+                    .isEqualTo(ResultatKodeForskudd.AVSLAG.toString())
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[2].resultat.regel)
@@ -135,16 +136,13 @@ internal class ForskuddCoreTest {
     fun skalIkkeBeregneForskuddVedAvvik() {
         Mockito.`when`(forskuddPeriode.validerInput(MockitoHelper.any())).thenReturn(avvikListe)
         val beregnForskuddResultatCore = forskuddCore.beregnForskudd(beregnForskuddGrunnlagCore)
+
         assertAll(
             Executable { assertThat(beregnForskuddResultatCore).isNotNull() },
             Executable { assertThat(beregnForskuddResultatCore.avvikListe).isNotEmpty() },
             Executable { assertThat(beregnForskuddResultatCore.avvikListe).hasSize(1) },
-            Executable {
-                assertThat(beregnForskuddResultatCore.avvikListe[0].avvikTekst).isEqualTo("beregnDatoTil må være etter beregnDatoFra")
-            },
-            Executable {
-                assertThat(beregnForskuddResultatCore.avvikListe[0].avvikType).isEqualTo(AvvikType.DATO_FOM_ETTER_DATO_TIL.toString())
-            },
+            Executable { assertThat(beregnForskuddResultatCore.avvikListe[0].avvikTekst).isEqualTo("beregnDatoTil må være etter beregnDatoFra") },
+            Executable { assertThat(beregnForskuddResultatCore.avvikListe[0].avvikType).isEqualTo(AvvikType.DATO_FOM_ETTER_DATO_TIL.toString()) },
             Executable { assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe).isEmpty() }
         )
     }
@@ -154,7 +152,7 @@ internal class ForskuddCoreTest {
     fun skalKasteIllegalArgumentExceptionVedUgyldigEnum() {
         assertThatExceptionOfType(IllegalArgumentException::class.java)
             .isThrownBy { forskuddCore.beregnForskudd(byggForskuddGrunnlagCore("BOR_HELT_ALENE")) }
-            .withMessage("No enum constant no.nav.bidrag.beregn.felles.enums.BostatusKode.BOR_HELT_ALENE")
+            .withMessage("No enum constant no.nav.bidrag.domain.enums.BostatusKode.BOR_HELT_ALENE")
     }
 
     companion object {
@@ -166,7 +164,6 @@ internal class ForskuddCoreTest {
     }
 
     object MockitoHelper {
-        fun <T> any(type: Class<T>): T = Mockito.any(type)
         fun <T> any(): T = Mockito.any()
     }
 }

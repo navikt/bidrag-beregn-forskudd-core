@@ -1,11 +1,7 @@
 package no.nav.bidrag.beregn.forskudd.core
 
-import no.nav.bidrag.beregn.felles.SjablonUtil
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
-import no.nav.bidrag.beregn.felles.enums.BostatusKode
-import no.nav.bidrag.beregn.felles.enums.InntektType
-import no.nav.bidrag.beregn.felles.enums.SivilstandKode
-import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn
+import no.nav.bidrag.beregn.felles.util.SjablonUtil
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggSjablonPeriodeListe
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggSjablonPeriodeNavnVerdiListe
 import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregningImpl
@@ -16,7 +12,11 @@ import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning
 import no.nav.bidrag.beregn.forskudd.core.bo.Inntekt
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning
 import no.nav.bidrag.beregn.forskudd.core.bo.Sivilstand
-import no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode
+import no.nav.bidrag.domain.enums.BostatusKode
+import no.nav.bidrag.domain.enums.InntektType
+import no.nav.bidrag.domain.enums.SivilstandKode
+import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.domain.enums.sjablon.SjablonTallNavn
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.DisplayName
@@ -26,8 +26,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
 import org.junit.jupiter.api.function.Executable
 import java.math.BigDecimal
-import java.util.*
-import java.util.stream.Collectors
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 @DisplayName("ForskuddBeregningTest")
@@ -42,427 +40,521 @@ internal class ForskuddBeregningTest {
     private val forventetResultatBelop125Prosent = BigDecimal.valueOf(2130)
 
     @Test
-    @Order(2)
+    @Order(1)
     @DisplayName("Regel 1: Søknadsbarn alder er høyere enn eller lik 18 år")
     fun skalGiAvslagBarnOver18Aar() {
-        val inntektListe = listOf(Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.ZERO))
-        val sivilstand = Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG)
-        val barn = BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1.0)
-        val alder = Alder(SOKNADBARN_REFERANSE, 18)
-        val bostatus = Bostatus(BOSTATUS_REFERANSE, BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus)
+        val inntektListe = listOf(
+            Inntekt(
+                referanse = INNTEKT_REFERANSE_1,
+                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                belop = BigDecimal.ZERO
+            )
+        )
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
+        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 18)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
+
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isZero() },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKode.AVSLAG) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.AVSLAG) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 1") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) }
         )
+
         printGrunnlagResultat(resultat, "   * ")
     }
 
     @Test
-    @Order(3)
+    @Order(2)
     @DisplayName("Regel 2: Søknadsbarn alder er høyere enn eller lik 11 år og bostedsstatus er ikke MED FORELDRE")
     fun skalGi125ProsentBorIkkeMedForeldre() {
-        val inntektListe = listOf(Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.ZERO))
-        val sivilstand = Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG)
-        val barn = BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1.0)
-        val alder = Alder(SOKNADBARN_REFERANSE, 11)
-        val bostatus = Bostatus(BOSTATUS_REFERANSE, BostatusKode.BOR_IKKE_MED_FORELDRE)
-        lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus)
+        val inntektListe = listOf(
+            Inntekt(
+                referanse = INNTEKT_REFERANSE_1,
+                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                belop = BigDecimal.ZERO
+            )
+        )
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
+        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_IKKE_MED_FORELDRE)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
+
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop125Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKode.FORHOYET_FORSKUDD_11_AAR_125_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.FORHOYET_FORSKUDD_11_AAR_125_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 2") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) }
         )
+
         printGrunnlagResultat(resultat, "   **")
     }
 
     @Test
-    @Order(4)
+    @Order(3)
     @DisplayName("Regel 3: Søknadsbarn alder er lavere enn 11 år og bostedsstatus er ikke MED FORELDRE")
     fun skalGi100ProsentBorIkkeMedForeldre() {
-        val inntektListe = listOf(Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.ZERO))
-        val sivilstand = Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG)
-        val barn = BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1.0)
-        val alder = Alder(SOKNADBARN_REFERANSE, 10)
-        val bostatus = Bostatus(BOSTATUS_REFERANSE, BostatusKode.BOR_IKKE_MED_FORELDRE)
-        lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus)
+        val inntektListe = listOf(
+            Inntekt(
+                referanse = INNTEKT_REFERANSE_1,
+                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                belop = BigDecimal.ZERO
+            )
+        )
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
+        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 10)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_IKKE_MED_FORELDRE)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
+
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop100Prosent) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 3") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) }
         )
+
         printGrunnlagResultat(resultat, "   **")
     }
 
     @Test
-    @Order(5)
+    @Order(4)
     @DisplayName("Regel 4: BM inntekt er over maksgrense")
     fun skalGiAvslagOverMaksGrense() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1,
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.FORSKUDDSSATS_BELOP).multiply(
-                    finnSjablonVerdi(
-                        sjablonPeriodeListe,
-                        SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR
-                    )
-                ).add(BigDecimal.ONE)
+                referanse = INNTEKT_REFERANSE_1,
+                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                belop = finnSjablonVerdi(sjablonPeriodeListe = sjablonPeriodeListe, sjablonTallNavn = SjablonTallNavn.FORSKUDDSSATS_BELOP)
+                    .multiply(
+                        finnSjablonVerdi(
+                            sjablonPeriodeListe = sjablonPeriodeListe,
+                            sjablonTallNavn = SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR
+                        )
+                    ).add(BigDecimal.ONE)
             )
         )
-        val sivilstand = Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG)
-        val barn = BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1.0)
-        val alder = Alder(SOKNADBARN_REFERANSE, 11)
-        val bostatus = Bostatus(BOSTATUS_REFERANSE, BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
+        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
+
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isZero() },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKode.AVSLAG) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.AVSLAG) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 4") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) }
         )
+
         printGrunnlagResultat(resultat, "*    ")
     }
 
     @Test
-    @Order(6)
+    @Order(5)
     @DisplayName("Regel 5: BM inntekt er lavere eller lik sats for fullt forskudd og søknadsbarn alder er høyere enn eller lik 11 år")
     fun skalGi125ProsentLavInntekt() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1,
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP)
+                referanse = INNTEKT_REFERANSE_1,
+                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                belop = finnSjablonVerdi(
+                    sjablonPeriodeListe = sjablonPeriodeListe,
+                    sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP
+                )
             )
         )
-        val sivilstand = Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG)
-        val barn = BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1.0)
-        val alder = Alder(SOKNADBARN_REFERANSE, 11)
-        val bostatus = Bostatus(BOSTATUS_REFERANSE, BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
+        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
+
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop125Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKode.FORHOYET_FORSKUDD_11_AAR_125_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.FORHOYET_FORSKUDD_11_AAR_125_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 5") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) }
         )
+
+        printGrunnlagResultat(resultat, "*  * ")
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Regel 6: BM inntekt er lavere eller lik sats for fullt forskudd og søknadsbarn alder er lavere enn 11 år")
+    fun skalGi100ProsentLavInntekt() {
+        val inntektListe = listOf(
+            Inntekt(
+                referanse = INNTEKT_REFERANSE_1,
+                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                belop = finnSjablonVerdi(
+                    sjablonPeriodeListe = sjablonPeriodeListe,
+                    sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP
+                )
+            )
+        )
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
+        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 10)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
+        val resultat = forskuddBeregning.beregn(grunnlag!!)
+
+        assertAll(
+            Executable { assertThat(resultat).isNotNull() },
+            Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop100Prosent) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT) },
+            Executable { assertThat(resultat.regel).isEqualTo("REGEL 6") },
+            Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) }
+        )
+
         printGrunnlagResultat(resultat, "*  * ")
     }
 
     @Test
     @Order(7)
-    @DisplayName("Regel 6: BM inntekt er lavere eller lik sats for fullt forskudd og søknadsbarn alder er lavere enn 11 år")
-    fun skalGi100ProsentLavInntekt() {
-        val inntektListe = listOf(
-            Inntekt(
-                INNTEKT_REFERANSE_1,
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP)
-            )
-        )
-        val sivilstand = Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG)
-        val barn = BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1.0)
-        val alder = Alder(SOKNADBARN_REFERANSE, 10)
-        val bostatus = Bostatus(BOSTATUS_REFERANSE, BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus)
-        val resultat = forskuddBeregning.beregn(grunnlag!!)
-        assertAll(
-            Executable { assertThat(resultat).isNotNull() },
-            Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop100Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKode.FORHOYET_FORSKUDD_100_PROSENT) },
-            Executable { assertThat(resultat.regel).isEqualTo("REGEL 6") },
-            Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) }
-        )
-        printGrunnlagResultat(resultat, "*  * ")
-    }
-
-    @Test
-    @Order(8)
     @DisplayName("Regel 7: BM inntekt er lavere eller lik sats for 75% forskudd enslig og antall barn i husstand er 1")
     fun skalGi75ProsentEnsligEttBarn() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1,
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP)
+                referanse = INNTEKT_REFERANSE_1,
+                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                belop = finnSjablonVerdi(
+                    sjablonPeriodeListe = sjablonPeriodeListe,
+                    sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP
+                )
             )
         )
-        val sivilstand = Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
-        val barnIHusstanden = BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1.0)
-        val alder = Alder(SOKNADBARN_REFERANSE, 11)
-        val bostatus = Bostatus(BOSTATUS_REFERANSE, BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntektListe, sivilstand, barnIHusstanden, alder, bostatus)
+        val barnIHusstanden = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barnIHusstanden, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
+
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop75Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKode.ORDINAERT_FORSKUDD_75_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 7") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) }
         )
+
+        printGrunnlagResultat(resultat, "***  ")
+    }
+
+    @Test
+    @Order(8)
+    @DisplayName("Regel 8: BM inntekt er høyere enn sats for 75% forskudd enslig og antall barn i husstand er 1")
+    fun skalGi50ProsentEnsligEttBarn() {
+        val inntektListe = listOf(
+            Inntekt(
+                referanse = INNTEKT_REFERANSE_1,
+                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                belop = finnSjablonVerdi(
+                    sjablonPeriodeListe = sjablonPeriodeListe,
+                    sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP
+                ).add(BigDecimal.ONE)
+            )
+        )
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
+        // Søknadsbarnet er med i grunnlag antall barn i husstanden
+        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
+        val resultat = forskuddBeregning.beregn(grunnlag!!)
+
+        assertAll(
+            Executable { assertThat(resultat).isNotNull() },
+            Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop50Prosent) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
+            Executable { assertThat(resultat.regel).isEqualTo("REGEL 8") },
+            Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) }
+        )
+
         printGrunnlagResultat(resultat, "***  ")
     }
 
     @Test
     @Order(9)
-    @DisplayName("Regel 8: BM inntekt er høyere enn sats for 75% forskudd enslig og antall barn i husstand er 1")
-    fun skalGi50ProsentEnsligEttBarn() {
+    @DisplayName("Regel 9: BM inntekt er lavere eller lik sats for 75% forskudd enslig ++ og antall barn i husstand er mer enn 1")
+    fun skalGi75ProsentEnsligMerEnnEttBarn() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1,
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP).add(BigDecimal.ONE)
+                referanse = INNTEKT_REFERANSE_1,
+                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                belop = finnSjablonVerdi(
+                    sjablonPeriodeListe = sjablonPeriodeListe,
+                    sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP
+                ).add(
+                    finnSjablonVerdi(sjablonPeriodeListe = sjablonPeriodeListe, sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP)
+                )
             )
         )
-        val sivilstand = Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
-        val barn = BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1.0)
-        val alder = Alder(SOKNADBARN_REFERANSE, 11)
-        val bostatus = Bostatus(BOSTATUS_REFERANSE, BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus)
+        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 2.0)
+        val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
+
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
-            Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop50Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKode.REDUSERT_FORSKUDD_50_PROSENT) },
-            Executable { assertThat(resultat.regel).isEqualTo("REGEL 8") },
+            Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop75Prosent) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT) },
+            Executable { assertThat(resultat.regel).isEqualTo("REGEL 9") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) }
         )
+
         printGrunnlagResultat(resultat, "***  ")
     }
 
     @Test
     @Order(10)
-    @DisplayName("Regel 9: BM inntekt er lavere eller lik sats for 75% forskudd enslig ++ og antall barn i husstand er mer enn 1")
-    fun skalGi75ProsentEnsligMerEnnEttBarn() {
+    @DisplayName("Regel 10: BM inntekt er høyere enn sats for 75% forskudd enslig ++ og antall barn i husstand er mer enn 1")
+    fun skalGi50ProsentEnsligMerEnnEttBarn() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1,
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP).add(
-                    finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP)
-                )
+                referanse = INNTEKT_REFERANSE_1,
+                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                belop = finnSjablonVerdi(
+                    sjablonPeriodeListe = sjablonPeriodeListe,
+                    sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP
+                ).add(
+                    finnSjablonVerdi(sjablonPeriodeListe = sjablonPeriodeListe, sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP)
+                ).add(BigDecimal.ONE)
             )
         )
-        val sivilstand = Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
-        val barn = BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 2.0)
-        val alder = Alder(SOKNADBARN_REFERANSE, 11)
-        val bostatus = Bostatus(BOSTATUS_REFERANSE, BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus)
+        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 2.0)
+        val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
+
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
-            Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop75Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKode.ORDINAERT_FORSKUDD_75_PROSENT) },
-            Executable { assertThat(resultat.regel).isEqualTo("REGEL 9") },
+            Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop50Prosent) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
+            Executable { assertThat(resultat.regel).isEqualTo("REGEL 10") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) }
         )
+
         printGrunnlagResultat(resultat, "***  ")
     }
 
     @Test
     @Order(11)
-    @DisplayName("Regel 10: BM inntekt er høyere enn sats for 75% forskudd enslig ++ og antall barn i husstand er mer enn 1")
-    fun skalGi50ProsentEnsligMerEnnEttBarn() {
+    @DisplayName("Regel 11: BM inntekt er lavere eller lik sats for 75% forskudd gift og antall barn i husstand er 1")
+    fun skalGi75ProsentGiftEttBarn() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1,
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP).add(
-                    finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP)
-                ).add(BigDecimal.ONE)
+                referanse = INNTEKT_REFERANSE_1,
+                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                belop = finnSjablonVerdi(
+                    sjablonPeriodeListe = sjablonPeriodeListe,
+                    sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP
+                )
             )
         )
-        val sivilstand = Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.ENSLIG)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.GIFT)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
-        val barn = BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 2.0)
-        val alder = Alder(SOKNADBARN_REFERANSE, 11)
-        val bostatus = Bostatus(BOSTATUS_REFERANSE, BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus)
+        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
+
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
-            Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop50Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKode.REDUSERT_FORSKUDD_50_PROSENT) },
-            Executable { assertThat(resultat.regel).isEqualTo("REGEL 10") },
+            Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop75Prosent) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT) },
+            Executable { assertThat(resultat.regel).isEqualTo("REGEL 11") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) }
         )
+
         printGrunnlagResultat(resultat, "***  ")
     }
 
     @Test
     @Order(12)
-    @DisplayName("Regel 11: BM inntekt er lavere eller lik sats for 75% forskudd gift og antall barn i husstand er 1")
-    fun skalGi75ProsentGiftEttBarn() {
+    @DisplayName("Regel 12: BM inntekt er høyere enn sats for 75% forskudd gift og antall barn i husstand er 1")
+    fun skalGi50ProsentGiftEttBarn() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1,
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP)
+                referanse = INNTEKT_REFERANSE_1,
+                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                belop = finnSjablonVerdi(
+                    sjablonPeriodeListe = sjablonPeriodeListe,
+                    sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP
+                ).add(BigDecimal.ONE)
             )
         )
-        val sivilstand = Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.GIFT)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.GIFT)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
-        val barn = BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1.0)
-        val alder = Alder(SOKNADBARN_REFERANSE, 11)
-        val bostatus = Bostatus(BOSTATUS_REFERANSE, BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus)
+        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
+
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
-            Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop75Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKode.ORDINAERT_FORSKUDD_75_PROSENT) },
-            Executable { assertThat(resultat.regel).isEqualTo("REGEL 11") },
+            Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop50Prosent) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
+            Executable { assertThat(resultat.regel).isEqualTo("REGEL 12") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) }
         )
+
         printGrunnlagResultat(resultat, "***  ")
     }
 
     @Test
     @Order(13)
-    @DisplayName("Regel 12: BM inntekt er høyere enn sats for 75% forskudd gift og antall barn i husstand er 1")
-    fun skalGi50ProsentGiftEttBarn() {
+    @DisplayName("Regel 13: BM inntekt er lavere eller lik sats for 75% forskudd gift ++ og antall barn i husstand er mer enn 1")
+    fun skalGi75ProsentGiftMerEnnEttBarn() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1,
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP).add(BigDecimal.ONE)
+                referanse = INNTEKT_REFERANSE_1,
+                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                belop = finnSjablonVerdi(
+                    sjablonPeriodeListe = sjablonPeriodeListe,
+                    sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP
+                ).add(
+                    finnSjablonVerdi(sjablonPeriodeListe = sjablonPeriodeListe, sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP)
+                )
             )
         )
-        val sivilstand = Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.GIFT)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.GIFT)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
-        val barn = BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1.0)
-        val alder = Alder(SOKNADBARN_REFERANSE, 11)
-        val bostatus = Bostatus(BOSTATUS_REFERANSE, BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus)
+        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 2.0)
+        val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
+
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
-            Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop50Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKode.REDUSERT_FORSKUDD_50_PROSENT) },
-            Executable { assertThat(resultat.regel).isEqualTo("REGEL 12") },
+            Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop75Prosent) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT) },
+            Executable { assertThat(resultat.regel).isEqualTo("REGEL 13") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) }
         )
+
         printGrunnlagResultat(resultat, "***  ")
     }
 
     @Test
     @Order(14)
-    @DisplayName("Regel 13: BM inntekt er lavere eller lik sats for 75% forskudd gift ++ og antall barn i husstand er mer enn 1")
-    fun skalGi75ProsentGiftMerEnnEttBarn() {
+    @DisplayName("Regel 14: BM inntekt er høyere enn sats for 75% forskudd gift ++ og antall barn i husstand er mer enn 1 (1 inntekt)")
+    fun skalGi50ProsentGiftMerEnnEttBarn_EnInntekt() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1,
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP).add(
-                    finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP)
+                referanse = INNTEKT_REFERANSE_1,
+                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                belop = finnSjablonVerdi(
+                    sjablonPeriodeListe = sjablonPeriodeListe,
+                    sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP
+                ).add(
+                    finnSjablonVerdi(
+                        sjablonPeriodeListe = sjablonPeriodeListe,
+                        sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP
+                    ).add(BigDecimal.ONE)
                 )
             )
         )
-        val sivilstand = Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.GIFT)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.GIFT)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
-        val barn = BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 2.0)
-        val alder = Alder(SOKNADBARN_REFERANSE, 11)
-        val bostatus = Bostatus(BOSTATUS_REFERANSE, BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus)
+        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 2.0)
+        val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
+
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
-            Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop75Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKode.ORDINAERT_FORSKUDD_75_PROSENT) },
-            Executable { assertThat(resultat.regel).isEqualTo("REGEL 13") },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
+            Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop50Prosent) },
+            Executable { assertThat(resultat.regel).isEqualTo("REGEL 14") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) }
         )
+
         printGrunnlagResultat(resultat, "***  ")
     }
 
     @Test
     @Order(15)
-    @DisplayName("Regel 14: BM inntekt er høyere enn sats for 75% forskudd gift ++ og antall barn i husstand er mer enn 1 (1 inntekt)")
-    fun skalGi50ProsentGiftMerEnnEttBarn_EnInntekt() {
-        val inntektListe = listOf(
-            Inntekt(
-                INNTEKT_REFERANSE_1,
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP).add(
-                    finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP).add(BigDecimal.ONE)
-                )
-            )
-        )
-        val sivilstand = Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.GIFT)
-        // Søknadsbarnet er med i grunnlag antall barn i husstanden
-        val barn = BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 2.0)
-        val alder = Alder(SOKNADBARN_REFERANSE, 11)
-        val bostatus = Bostatus(BOSTATUS_REFERANSE, BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus)
-        val resultat = forskuddBeregning.beregn(grunnlag!!)
-        assertAll(
-            Executable { assertThat(resultat).isNotNull() },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKode.REDUSERT_FORSKUDD_50_PROSENT) },
-            Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop50Prosent) },
-            Executable { assertThat(resultat.regel).isEqualTo("REGEL 14") },
-            Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) }
-        )
-        printGrunnlagResultat(resultat, "***  ")
-    }
-
-    @Test
-    @Order(16)
     @DisplayName("Regel 14: BM inntekt er høyere enn sats for 75% forskudd gift ++ og antall barn i husstand er mer enn 1 (2 inntekter)")
     fun skalGi50ProsentGiftMerEnnEttBarn_ToInntekter() {
         val inntektListe = listOf(
             Inntekt(
-                INNTEKT_REFERANSE_1,
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP)
+                referanse = INNTEKT_REFERANSE_1,
+                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                belop = finnSjablonVerdi(
+                    sjablonPeriodeListe = sjablonPeriodeListe,
+                    sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP
+                )
             ),
             Inntekt(
-                INNTEKT_REFERANSE_2,
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP).add(BigDecimal.ONE)
+                referanse = INNTEKT_REFERANSE_2,
+                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                belop = finnSjablonVerdi(
+                    sjablonPeriodeListe = sjablonPeriodeListe,
+                    sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP
+                ).add(BigDecimal.ONE)
             )
         )
-        val sivilstand = Sivilstand(SIVILSTAND_REFERANSE, SivilstandKode.GIFT)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.GIFT)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
-        val barn = BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 2.0)
-        val alder = Alder(SOKNADBARN_REFERANSE, 11)
-        val bostatus = Bostatus(BOSTATUS_REFERANSE, BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntektListe, sivilstand, barn, alder, bostatus)
+        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 2.0)
+        val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
+
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKode.REDUSERT_FORSKUDD_50_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop50Prosent) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 14") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) }
         )
+
         printGrunnlagResultat(resultat, "***  ")
     }
 
     private fun lagGrunnlag(inntekt: List<Inntekt>, sivilstand: Sivilstand, barnIHusstanden: BarnIHusstanden, alder: Alder, bostatus: Bostatus) {
-        grunnlag = GrunnlagBeregning(inntekt, sivilstand, barnIHusstanden, alder, bostatus, sjablonPeriodeListe)
+        grunnlag = GrunnlagBeregning(
+            inntektListe = inntekt,
+            sivilstand = sivilstand,
+            barnIHusstanden = barnIHusstanden,
+            soknadBarnAlder = alder,
+            soknadBarnBostatus = bostatus,
+            sjablonListe = sjablonPeriodeListe
+        )
     }
 
     private fun finnSjablonVerdi(sjablonPeriodeListe: List<SjablonPeriode>, sjablonTallNavn: SjablonTallNavn): BigDecimal {
-        val sjablonListe = sjablonPeriodeListe.stream()
-            .map(SjablonPeriode::sjablon)
-            .collect(Collectors.toList())
-        return SjablonUtil.hentSjablonverdi(sjablonListe, sjablonTallNavn)
+        val sjablonListe = sjablonPeriodeListe
+            .map { it.sjablon }
+        return SjablonUtil.hentSjablonverdi(sjablonListe = sjablonListe, sjablonTallNavn = sjablonTallNavn)
     }
 
     private fun printGrunnlagResultat(resultat: ResultatBeregning?, betydning: String) {

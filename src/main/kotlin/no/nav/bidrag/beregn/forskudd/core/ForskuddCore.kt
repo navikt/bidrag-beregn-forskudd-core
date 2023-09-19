@@ -4,7 +4,7 @@ import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnetForskuddResultatCore
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode
 
-interface ForskuddCore {
+fun interface ForskuddCore {
     fun beregnForskudd(grunnlag: BeregnForskuddGrunnlagCore): BeregnetForskuddResultatCore
 
     companion object {

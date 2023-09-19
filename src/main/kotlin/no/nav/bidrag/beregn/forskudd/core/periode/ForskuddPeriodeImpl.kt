@@ -1,10 +1,10 @@
 package no.nav.bidrag.beregn.forskudd.core.periode
 
-import no.nav.bidrag.beregn.felles.PeriodeUtil
 import no.nav.bidrag.beregn.felles.bo.Avvik
 import no.nav.bidrag.beregn.felles.bo.Periode
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
 import no.nav.bidrag.beregn.felles.periode.Periodiserer
+import no.nav.bidrag.beregn.felles.util.PeriodeUtil
 import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregning
 import no.nav.bidrag.beregn.forskudd.core.bo.Alder
 import no.nav.bidrag.beregn.forskudd.core.bo.AlderPeriode
@@ -24,53 +24,47 @@ import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters.firstDayOfMonth
 import java.time.temporal.TemporalAdjusters.firstDayOfNextMonth
-import java.util.stream.Collectors.toCollection
 
-open class ForskuddPeriodeImpl(private val forskuddBeregning: ForskuddBeregning): ForskuddPeriode {
+open class ForskuddPeriodeImpl(private val forskuddBeregning: ForskuddBeregning) : ForskuddPeriode {
 
-    override fun beregnPerioder(periodeGrunnlag: BeregnForskuddGrunnlag): BeregnForskuddResultat {
+    override fun beregnPerioder(grunnlag: BeregnForskuddGrunnlag): BeregnForskuddResultat {
         val beregnForskuddListeGrunnlag = BeregnForskuddListeGrunnlag()
 
         // Juster datoer
-        justerDatoerGrunnlagslister(periodeGrunnlag, beregnForskuddListeGrunnlag)
+        justerDatoerGrunnlagslister(periodeGrunnlag = grunnlag, beregnForskuddListeGrunnlag = beregnForskuddListeGrunnlag)
 
         // Lag bruddperioder
-        lagBruddperioder(periodeGrunnlag, beregnForskuddListeGrunnlag)
+        lagBruddperioder(periodeGrunnlag = grunnlag, beregnForskuddListeGrunnlag = beregnForskuddListeGrunnlag)
 
         // Foreta beregning
         beregnForskuddPerPeriode(beregnForskuddListeGrunnlag)
+
         return BeregnForskuddResultat(beregnForskuddListeGrunnlag.periodeResultatListe)
     }
 
     // Justerer datoer på grunnlagslistene (blir gjort implisitt i xxxPeriode::new)
     private fun justerDatoerGrunnlagslister(periodeGrunnlag: BeregnForskuddGrunnlag, beregnForskuddListeGrunnlag: BeregnForskuddListeGrunnlag) {
-        beregnForskuddListeGrunnlag.justertInntektPeriodeListe = periodeGrunnlag.inntektPeriodeListe.stream()
+        beregnForskuddListeGrunnlag.justertInntektPeriodeListe = periodeGrunnlag.inntektPeriodeListe
             .map { InntektPeriode(it) }
-            .collect(toCollection { ArrayList() })
 
-        beregnForskuddListeGrunnlag.justertSivilstandPeriodeListe = periodeGrunnlag.sivilstandPeriodeListe.stream()
+        beregnForskuddListeGrunnlag.justertSivilstandPeriodeListe = periodeGrunnlag.sivilstandPeriodeListe
             .map { SivilstandPeriode(it) }
-            .collect(toCollection { ArrayList() })
 
-        beregnForskuddListeGrunnlag.justertBarnIHusstandenPeriodeListe = periodeGrunnlag.barnIHusstandenPeriodeListe.stream()
+        beregnForskuddListeGrunnlag.justertBarnIHusstandenPeriodeListe = periodeGrunnlag.barnIHusstandenPeriodeListe
             .map { BarnIHusstandenPeriode(it) }
-            .collect(toCollection { ArrayList() })
 
-        beregnForskuddListeGrunnlag.justertBostatusPeriodeListe = periodeGrunnlag.bostatusPeriodeListe.stream()
+        beregnForskuddListeGrunnlag.justertBostatusPeriodeListe = periodeGrunnlag.bostatusPeriodeListe
             .map { BostatusPeriode(it) }
-            .collect(toCollection { ArrayList() })
 
         beregnForskuddListeGrunnlag.justertAlderPeriodeListe = settBarnAlderPerioder(
-            periodeGrunnlag.soknadBarn.fodselsdato,
-            periodeGrunnlag.beregnDatoFra,
-            periodeGrunnlag.beregnDatoTil
-        ).stream()
-            .map { AlderPeriode(periodeGrunnlag.soknadBarn.referanse, it.alderPeriode, it.alder) }
-            .collect(toCollection { ArrayList() })
+            fodselDato = periodeGrunnlag.soknadBarn.fodselsdato,
+            beregnDatoFra = periodeGrunnlag.beregnDatoFra,
+            beregnDatoTil = periodeGrunnlag.beregnDatoTil
+        )
+            .map { AlderPeriode(referanse = periodeGrunnlag.soknadBarn.referanse, alderPeriode = it.alderPeriode, alder = it.alder) }
 
-        beregnForskuddListeGrunnlag.justertSjablonPeriodeListe = periodeGrunnlag.sjablonPeriodeListe.stream()
+        beregnForskuddListeGrunnlag.justertSjablonPeriodeListe = periodeGrunnlag.sjablonPeriodeListe
             .map { SjablonPeriode(it) }
-            .collect(toCollection { ArrayList() })
     }
 
     // Lagger bruddperioder ved å løpe gjennom alle periodelistene
@@ -85,7 +79,7 @@ open class ForskuddPeriodeImpl(private val forskuddBeregning: ForskuddBeregning)
             .addBruddpunkter(beregnForskuddListeGrunnlag.justertAlderPeriodeListe)
             .addBruddpunkter(beregnForskuddListeGrunnlag.justertSjablonPeriodeListe)
             .addBruddpunkt(periodeGrunnlag.beregnDatoTil) // For å sikre bruddpunkt på start beregning til-dato
-            .finnPerioder(periodeGrunnlag.beregnDatoFra, periodeGrunnlag.beregnDatoTil)
+            .finnPerioder(beregnDatoFom = periodeGrunnlag.beregnDatoFra, beregnDatoTil = periodeGrunnlag.beregnDatoTil)
             .toMutableList()
 
         // Hvis det ligger 2 perioder på slutten som i til-dato inneholder hhv. beregningsperiodens til-dato og null slås de sammen
@@ -95,8 +89,8 @@ open class ForskuddPeriodeImpl(private val forskuddBeregning: ForskuddBeregning)
             val sisteTilDato = beregnForskuddListeGrunnlag.bruddPeriodeListe[bruddPeriodeListeAntallElementer - 1].datoTil
             if (periodeGrunnlag.beregnDatoTil == nestSisteTilDato && null == sisteTilDato) {
                 val nyPeriode = Periode(
-                    beregnForskuddListeGrunnlag.bruddPeriodeListe[bruddPeriodeListeAntallElementer - 2].datoFom,
-                    null
+                    datoFom = beregnForskuddListeGrunnlag.bruddPeriodeListe[bruddPeriodeListeAntallElementer - 2].datoFom,
+                    datoTil = null
                 )
                 beregnForskuddListeGrunnlag.bruddPeriodeListe.removeAt(bruddPeriodeListeAntallElementer - 1)
                 beregnForskuddListeGrunnlag.bruddPeriodeListe.removeAt(bruddPeriodeListeAntallElementer - 2)
@@ -111,36 +105,54 @@ open class ForskuddPeriodeImpl(private val forskuddBeregning: ForskuddBeregning)
         // Kaller beregningsmodulen for hver beregningsperiode
 
         beregnForskuddListeGrunnlag.bruddPeriodeListe.forEach { beregningsperiode: Periode ->
-            val inntektListe = beregnForskuddListeGrunnlag.justertInntektPeriodeListe.stream()
+            val inntektListe = beregnForskuddListeGrunnlag.justertInntektPeriodeListe
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                .map { Inntekt(it.referanse, it.type, it.belop) }
-                .toList()
+                .map { Inntekt(referanse = it.referanse, type = it.type, belop = it.belop) }
+
             val sivilstand = beregnForskuddListeGrunnlag.justertSivilstandPeriodeListe.stream()
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                .map { Sivilstand(it.referanse, it.kode) }
+                .map { Sivilstand(referanse = it.referanse, kode = it.kode) }
                 .findFirst()
-                .orElseThrow { IllegalArgumentException("Grunnlagsobjekt SIVILSTAND mangler data for periode: " + beregningsperiode.getPeriode()) }
+                .orElseThrow { IllegalArgumentException("Grunnlagsobjekt SIVILSTAND mangler data for periode: ${beregningsperiode.getPeriode()}") }
+
             val alder = beregnForskuddListeGrunnlag.justertAlderPeriodeListe.stream()
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                .map { Alder(it.referanse, it.alder) }
+                .map { Alder(referanse = it.referanse, alder = it.alder) }
                 .findFirst()
-                .orElseThrow { IllegalArgumentException("Ikke mulig å beregne søknadsbarnets alder for periode: " + beregningsperiode.getPeriode()) }
+                .orElseThrow { IllegalArgumentException("Ikke mulig å beregne søknadsbarnets alder for periode: ${beregningsperiode.getPeriode()}") }
+
             val bostatus = beregnForskuddListeGrunnlag.justertBostatusPeriodeListe.stream()
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                .map { Bostatus(it.referanse, it.kode) }
+                .map { Bostatus(referanse = it.referanse, kode = it.kode) }
                 .findFirst()
-                .orElseThrow { IllegalArgumentException("Grunnlagsobjekt BOSTATUS mangler data for periode: " + beregningsperiode.getPeriode()) }
+                .orElseThrow { IllegalArgumentException("Grunnlagsobjekt BOSTATUS mangler data for periode: ${beregningsperiode.getPeriode()}") }
+
             val barnIHusstanden = beregnForskuddListeGrunnlag.justertBarnIHusstandenPeriodeListe.stream()
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                .map { BarnIHusstanden(it.referanse, it.antall) }
+                .map { BarnIHusstanden(referanse = it.referanse, antall = it.antall) }
                 .findFirst()
-                .orElseThrow { IllegalArgumentException("Grunnlagsobjekt BARN_I_HUSSTAND mangler data for periode: " + beregningsperiode.getPeriode()) }
-            val sjablonListe = beregnForskuddListeGrunnlag.justertSjablonPeriodeListe.stream()
+                .orElseThrow { IllegalArgumentException("Grunnlagsobjekt BARN_I_HUSSTAND mangler data for periode: ${beregningsperiode.getPeriode()}") }
+
+            val sjablonListe = beregnForskuddListeGrunnlag.justertSjablonPeriodeListe
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                .toList()
-            val grunnlagBeregning = GrunnlagBeregning(inntektListe, sivilstand, barnIHusstanden, alder, bostatus, sjablonListe)
+
+            val grunnlagBeregning = GrunnlagBeregning(
+                inntektListe = inntektListe,
+                sivilstand = sivilstand,
+                barnIHusstanden = barnIHusstanden,
+                soknadBarnAlder = alder,
+                soknadBarnBostatus = bostatus,
+                sjablonListe = sjablonListe
+            )
+
             beregnForskuddListeGrunnlag.periodeResultatListe
-                .add(ResultatPeriode(beregningsperiode, forskuddBeregning.beregn(grunnlagBeregning), grunnlagBeregning))
+                .add(
+                    ResultatPeriode(
+                        periode = beregningsperiode,
+                        resultat = forskuddBeregning.beregn(grunnlagBeregning),
+                        grunnlag = grunnlagBeregning
+                    )
+                )
         }
     }
 
@@ -163,35 +175,59 @@ open class ForskuddPeriodeImpl(private val forskuddBeregning: ForskuddBeregning)
         if (barn11AarIPerioden) {
             bruddAlderListe.add(
                 AlderPeriode(
-                    "",
-                    Periode(beregnDatoFra.with(firstDayOfMonth()), barn11AarDato.with(firstDayOfMonth())),
-                    0
+                    referanse = "",
+                    alderPeriode = Periode(datoFom = beregnDatoFra.with(firstDayOfMonth()), datoTil = barn11AarDato.with(firstDayOfMonth())),
+                    alder = 0
                 )
             )
             if (barn18AarIPerioden) {
                 bruddAlderListe.add(
                     AlderPeriode(
-                        "",
-                        Periode(barn11AarDato.with(firstDayOfMonth()), barn18AarDato.with(firstDayOfMonth())),
-                        11
+                        referanse = "",
+                        alderPeriode = Periode(datoFom = barn11AarDato.with(firstDayOfMonth()), datoTil = barn18AarDato.with(firstDayOfMonth())),
+                        alder = 11
                     )
                 )
-                bruddAlderListe.add(AlderPeriode("", Periode(barn18AarDato.with(firstDayOfMonth()), null), 18))
+                bruddAlderListe.add(
+                    AlderPeriode(
+                        referanse = "",
+                        alderPeriode = Periode(datoFom = barn18AarDato.with(firstDayOfMonth()), datoTil = null),
+                        alder = 18
+                    )
+                )
             } else {
-                bruddAlderListe.add(AlderPeriode("", Periode(barn11AarDato.with(firstDayOfMonth()), null), 11))
+                bruddAlderListe.add(
+                    AlderPeriode(
+                        referanse = "",
+                        alderPeriode = Periode(datoFom = barn11AarDato.with(firstDayOfMonth()), datoTil = null),
+                        alder = 11
+                    )
+                )
             }
         } else {
             if (barn18AarIPerioden) {
                 bruddAlderListe.add(
                     AlderPeriode(
-                        "",
-                        Periode(beregnDatoFra.with(firstDayOfMonth()), barn18AarDato.with(firstDayOfMonth())),
-                        11
+                        referanse = "",
+                        alderPeriode = Periode(datoFom = beregnDatoFra.with(firstDayOfMonth()), datoTil = barn18AarDato.with(firstDayOfMonth())),
+                        alder = 11
                     )
                 )
-                bruddAlderListe.add(AlderPeriode("", Periode(barn18AarDato.with(firstDayOfMonth()), null), 18))
+                bruddAlderListe.add(
+                    AlderPeriode(
+                        referanse = "",
+                        alderPeriode = Periode(datoFom = barn18AarDato.with(firstDayOfMonth()), datoTil = null),
+                        alder = 18
+                    )
+                )
             } else {
-                bruddAlderListe.add(AlderPeriode("", Periode(beregnDatoFra.with(firstDayOfMonth()), null), alderStartPeriode))
+                bruddAlderListe.add(
+                    AlderPeriode(
+                        referanse = "",
+                        alderPeriode = Periode(datoFom = beregnDatoFra.with(firstDayOfMonth()), datoTil = null),
+                        alder = alderStartPeriode
+                    )
+                )
             }
         }
         return bruddAlderListe
@@ -200,97 +236,77 @@ open class ForskuddPeriodeImpl(private val forskuddBeregning: ForskuddBeregning)
     // Validerer at input-verdier til forskuddsberegning er gyldige
     override fun validerInput(grunnlag: BeregnForskuddGrunnlag): List<Avvik> {
         // Sjekk beregn dato fra/til
-        val avvikListe = PeriodeUtil.validerBeregnPeriodeInput(grunnlag.beregnDatoFra, grunnlag.beregnDatoTil)
+        val avvikListe =
+            PeriodeUtil.validerBeregnPeriodeInput(beregnDatoFra = grunnlag.beregnDatoFra, beregnDatoTil = grunnlag.beregnDatoTil).toMutableList()
 
         // Sjekk perioder for inntekt
-        val bidragMottakerInntektPeriodeListe = mutableListOf<Periode>()
-        for (bidragMottakerInntektPeriode in grunnlag.inntektPeriodeListe) {
-            bidragMottakerInntektPeriodeListe.add(bidragMottakerInntektPeriode.getPeriode())
-        }
         avvikListe.addAll(
             PeriodeUtil.validerInputDatoer(
-                grunnlag.beregnDatoFra,
-                grunnlag.beregnDatoTil,
-                "bidragMottakerInntektPeriodeListe",
-                bidragMottakerInntektPeriodeListe,
-                false,
-                true,
-                false,
-                true
+                beregnDatoFom = grunnlag.beregnDatoFra,
+                beregnDatoTil = grunnlag.beregnDatoTil,
+                dataElement = "bidragMottakerInntektPeriodeListe",
+                periodeListe = grunnlag.inntektPeriodeListe.map { it.getPeriode() },
+                sjekkOverlapp = false,
+                sjekkOpphold = true,
+                sjekkNull = false,
+                sjekkBeregnPeriode = true
             )
         )
 
         // Sjekk perioder for sivilstand
-        val bidragMottakerSivilstandPeriodeListe = mutableListOf<Periode>()
-        for (bidragMottakerSivilstandPeriode in grunnlag.sivilstandPeriodeListe) {
-            bidragMottakerSivilstandPeriodeListe.add(bidragMottakerSivilstandPeriode.getPeriode())
-        }
         avvikListe.addAll(
             PeriodeUtil.validerInputDatoer(
-                grunnlag.beregnDatoFra,
-                grunnlag.beregnDatoTil,
-                "bidragMottakerSivilstandPeriodeListe",
-                bidragMottakerSivilstandPeriodeListe,
-                true,
-                true,
-                true,
-                true
+                beregnDatoFom = grunnlag.beregnDatoFra,
+                beregnDatoTil = grunnlag.beregnDatoTil,
+                dataElement = "bidragMottakerSivilstandPeriodeListe",
+                periodeListe = grunnlag.sivilstandPeriodeListe.map { it.getPeriode() },
+                sjekkOverlapp = true,
+                sjekkOpphold = true,
+                sjekkNull = true,
+                sjekkBeregnPeriode = true
             )
         )
 
         // Sjekk perioder for bostatus
-        val soknadBarnBostatusPeriodeListe = mutableListOf<Periode>()
-        for (soknadBarnBostatusPeriode in grunnlag.bostatusPeriodeListe) {
-            soknadBarnBostatusPeriodeListe.add(soknadBarnBostatusPeriode.getPeriode())
-        }
         avvikListe.addAll(
             PeriodeUtil.validerInputDatoer(
-                grunnlag.beregnDatoFra,
-                grunnlag.beregnDatoTil,
-                "soknadBarnBostatusPeriodeListe",
-                soknadBarnBostatusPeriodeListe,
-                true,
-                true,
-                true,
-                true
+                beregnDatoFom = grunnlag.beregnDatoFra,
+                beregnDatoTil = grunnlag.beregnDatoTil,
+                dataElement = "soknadBarnBostatusPeriodeListe",
+                periodeListe = grunnlag.bostatusPeriodeListe.map { it.getPeriode() },
+                sjekkOverlapp = true,
+                sjekkOpphold = true,
+                sjekkNull = true,
+                sjekkBeregnPeriode = true
             )
         )
 
         // Sjekk perioder for barn
-        val bidragMottakerBarnPeriodeListe = mutableListOf<Periode>()
-        for (bidragMottakerBarnIHusstandenPeriode in grunnlag.barnIHusstandenPeriodeListe) {
-            bidragMottakerBarnPeriodeListe.add(bidragMottakerBarnIHusstandenPeriode.getPeriode())
-        }
         avvikListe.addAll(
             PeriodeUtil.validerInputDatoer(
-                grunnlag.beregnDatoFra,
-                grunnlag.beregnDatoTil,
-                "bidragMottakerBarnPeriodeListe",
-                bidragMottakerBarnPeriodeListe,
-                false,
-                false,
-                false,
-                false
+                beregnDatoFom = grunnlag.beregnDatoFra,
+                beregnDatoTil = grunnlag.beregnDatoTil,
+                dataElement = "bidragMottakerBarnPeriodeListe",
+                periodeListe = grunnlag.barnIHusstandenPeriodeListe.map { it.getPeriode() },
+                sjekkOverlapp = false,
+                sjekkOpphold = false,
+                sjekkNull = false,
+                sjekkBeregnPeriode = false
             )
         )
 
         // Sjekk perioder for sjablonliste
-        val sjablonPeriodeListe = mutableListOf<Periode>()
-        for (sjablonPeriode in grunnlag.sjablonPeriodeListe) {
-            sjablonPeriodeListe.add(sjablonPeriode.getPeriode())
-        }
         avvikListe.addAll(
-            PeriodeUtil
-                .validerInputDatoer(
-                    grunnlag.beregnDatoFra,
-                    grunnlag.beregnDatoTil,
-                    "sjablonPeriodeListe",
-                    sjablonPeriodeListe,
-                    false,
-                    false,
-                    false,
-                    false
-                )
+            PeriodeUtil.validerInputDatoer(
+                beregnDatoFom = grunnlag.beregnDatoFra,
+                beregnDatoTil = grunnlag.beregnDatoTil,
+                dataElement = "sjablonPeriodeListe",
+                periodeListe = grunnlag.sjablonPeriodeListe.map { it.getPeriode() },
+                sjekkOverlapp = false,
+                sjekkOpphold = false,
+                sjekkNull = false,
+                sjekkBeregnPeriode = false
+            )
         )
         return avvikListe
     }

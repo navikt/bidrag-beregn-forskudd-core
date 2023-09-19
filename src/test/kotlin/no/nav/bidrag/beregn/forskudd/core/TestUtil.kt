@@ -7,12 +7,6 @@ import no.nav.bidrag.beregn.felles.bo.SjablonInnhold
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriodeNavnVerdi
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore
-import no.nav.bidrag.beregn.felles.enums.AvvikType
-import no.nav.bidrag.beregn.felles.enums.BostatusKode
-import no.nav.bidrag.beregn.felles.enums.InntektType
-import no.nav.bidrag.beregn.felles.enums.SivilstandKode
-import no.nav.bidrag.beregn.felles.enums.SjablonInnholdNavn
-import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn
 import no.nav.bidrag.beregn.forskudd.core.bo.Alder
 import no.nav.bidrag.beregn.forskudd.core.bo.BarnIHusstanden
 import no.nav.bidrag.beregn.forskudd.core.bo.BarnIHusstandenPeriode
@@ -34,7 +28,13 @@ import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore
-import no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode
+import no.nav.bidrag.domain.enums.AvvikType
+import no.nav.bidrag.domain.enums.BostatusKode
+import no.nav.bidrag.domain.enums.InntektType
+import no.nav.bidrag.domain.enums.SivilstandKode
+import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.domain.enums.sjablon.SjablonInnholdNavn
+import no.nav.bidrag.domain.enums.sjablon.SjablonTallNavn
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -221,7 +221,7 @@ object TestUtil {
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
                 ResultatBeregning(
                     BigDecimal.valueOf(1600),
-                    ResultatKode.FORHOYET_FORSKUDD_100_PROSENT,
+                    ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT,
                     "REGEL 1",
                     byggSjablonPeriodeNavnVerdiListe()
                 ),
@@ -240,7 +240,7 @@ object TestUtil {
                 Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
                 ResultatBeregning(
                     BigDecimal.valueOf(1200),
-                    ResultatKode.ORDINAERT_FORSKUDD_75_PROSENT,
+                    ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT,
                     "REGEL 2",
                     byggSjablonPeriodeNavnVerdiListe()
                 ),
@@ -257,7 +257,7 @@ object TestUtil {
             ),
             ResultatPeriode(
                 Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")),
-                ResultatBeregning(BigDecimal.valueOf(0), ResultatKode.AVSLAG, "REGEL 11", byggSjablonPeriodeNavnVerdiListe()),
+                ResultatBeregning(BigDecimal.valueOf(0), ResultatKodeForskudd.AVSLAG, "REGEL 11", byggSjablonPeriodeNavnVerdiListe()),
                 GrunnlagBeregning(
                     listOf(
                         Inntekt(INNTEKT_REFERANSE_3, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(500000))

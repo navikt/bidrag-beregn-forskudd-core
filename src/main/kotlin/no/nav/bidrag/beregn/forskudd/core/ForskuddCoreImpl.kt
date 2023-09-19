@@ -11,9 +11,6 @@ import no.nav.bidrag.beregn.felles.dto.AvvikCore
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore
 import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.felles.dto.SjablonResultatGrunnlagCore
-import no.nav.bidrag.beregn.felles.enums.BostatusKode
-import no.nav.bidrag.beregn.felles.enums.InntektType
-import no.nav.bidrag.beregn.felles.enums.SivilstandKode
 import no.nav.bidrag.beregn.forskudd.core.bo.BarnIHusstandenPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddGrunnlag
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat
@@ -32,17 +29,23 @@ import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode
+import no.nav.bidrag.domain.enums.BostatusKode
+import no.nav.bidrag.domain.enums.InntektType
+import no.nav.bidrag.domain.enums.SivilstandKode
 import java.time.format.DateTimeFormatter
-import java.util.Comparator.comparing
 
-open class ForskuddCoreImpl(private val forskuddPeriode: ForskuddPeriode): ForskuddCore {
+open class ForskuddCoreImpl(private val forskuddPeriode: ForskuddPeriode) : ForskuddCore {
 
     override fun beregnForskudd(grunnlag: BeregnForskuddGrunnlagCore): BeregnetForskuddResultatCore {
         val beregnForskuddGrunnlag = mapTilBusinessObject(grunnlag)
         val avvikListe = forskuddPeriode.validerInput(beregnForskuddGrunnlag)
         val beregnForskuddResultat =
-            if (avvikListe.isEmpty()) forskuddPeriode.beregnPerioder(beregnForskuddGrunnlag) else BeregnForskuddResultat(emptyList())
-        return mapFraBusinessObject(avvikListe, beregnForskuddResultat)
+            if (avvikListe.isEmpty()) {
+                forskuddPeriode.beregnPerioder(beregnForskuddGrunnlag)
+            } else {
+                BeregnForskuddResultat(emptyList())
+            }
+        return mapFraBusinessObject(avvikListe = avvikListe, resultat = beregnForskuddResultat)
     }
 
     private fun mapTilBusinessObject(grunnlag: BeregnForskuddGrunnlagCore) =
@@ -57,51 +60,71 @@ open class ForskuddCoreImpl(private val forskuddPeriode: ForskuddPeriode): Forsk
             sjablonPeriodeListe = mapSjablonPeriodeListe(grunnlag.sjablonPeriodeListe)
         )
 
+    private fun mapFraBusinessObject(avvikListe: List<Avvik>, resultat: BeregnForskuddResultat) =
+        BeregnetForskuddResultatCore(
+            beregnetForskuddPeriodeListe = mapResultatPeriode(resultat.beregnetForskuddPeriodeListe),
+            sjablonListe = mapSjablonGrunnlagListe(resultat.beregnetForskuddPeriodeListe),
+            avvikListe = mapAvvik(avvikListe)
+        )
+
     private fun mapSoknadBarn(soknadBarnCore: SoknadBarnCore) =
-        SoknadBarn(soknadBarnCore.referanse, soknadBarnCore.fodselsdato)
+        SoknadBarn(referanse = soknadBarnCore.referanse, fodselsdato = soknadBarnCore.fodselsdato)
 
     private fun mapBostatusPeriodeListe(bostatusPeriodeListeCore: List<BostatusPeriodeCore>): List<BostatusPeriode> {
         val bostatusPeriodeListe = mutableListOf<BostatusPeriode>()
         bostatusPeriodeListeCore.forEach {
-            bostatusPeriodeListe.add(BostatusPeriode(it.referanse, Periode(it.periode.datoFom, it.periode.datoTil), BostatusKode.valueOf(it.kode)))
+            bostatusPeriodeListe.add(
+                BostatusPeriode(
+                    referanse = it.referanse,
+                    bostatusPeriode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
+                    kode = BostatusKode.valueOf(it.kode)
+                )
+            )
         }
-        return bostatusPeriodeListe.stream()
-            .sorted(comparing { bostatusPeriode: BostatusPeriode -> bostatusPeriode.getPeriode().datoFom })
-            .toList()
+        return bostatusPeriodeListe.sortedBy { it.getPeriode().datoFom }
     }
 
     private fun mapInntektPeriodeListe(bidragMottakerInntektPeriodeListeCore: List<InntektPeriodeCore>): List<InntektPeriode> {
         val bidragMottakerInntektPeriodeListe = mutableListOf<InntektPeriode>()
         bidragMottakerInntektPeriodeListeCore.forEach {
             bidragMottakerInntektPeriodeListe.add(
-                InntektPeriode(it.referanse, Periode(it.periode.datoFom, it.periode.datoTil), InntektType.valueOf(it.type), it.belop)
+                InntektPeriode(
+                    referanse = it.referanse,
+                    inntektPeriode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
+                    type = InntektType.valueOf(it.type),
+                    belop = it.belop
+                )
             )
         }
-        return bidragMottakerInntektPeriodeListe.stream()
-            .sorted(comparing { inntektPeriode: InntektPeriode -> inntektPeriode.getPeriode().datoFom })
-            .toList()
+        return bidragMottakerInntektPeriodeListe.sortedBy { it.getPeriode().datoFom }
     }
 
     private fun mapSivilstandPeriodeListe(bidragMottakerSivilstandPeriodeListeCore: List<SivilstandPeriodeCore>): List<SivilstandPeriode> {
         val bidragMottakerSivilstandPeriodeListe = mutableListOf<SivilstandPeriode>()
         bidragMottakerSivilstandPeriodeListeCore.forEach {
             bidragMottakerSivilstandPeriodeListe.add(
-                SivilstandPeriode(it.referanse, Periode(it.periode.datoFom, it.periode.datoTil), SivilstandKode.valueOf(it.kode))
+                SivilstandPeriode(
+                    referanse = it.referanse,
+                    sivilstandPeriode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
+                    kode = SivilstandKode.valueOf(it.kode)
+                )
             )
         }
-        return bidragMottakerSivilstandPeriodeListe.stream()
-            .sorted(comparing { sivilstandPeriode: SivilstandPeriode -> sivilstandPeriode.getPeriode().datoFom })
-            .toList()
+        return bidragMottakerSivilstandPeriodeListe.sortedBy { it.getPeriode().datoFom }
     }
 
     private fun mapBarnIHusstandenPeriodeListe(barnIHusstandenPeriodeListeCore: List<BarnIHusstandenPeriodeCore>): List<BarnIHusstandenPeriode> {
         val barnIHusstandenPeriodeListe = mutableListOf<BarnIHusstandenPeriode>()
         barnIHusstandenPeriodeListeCore.forEach {
-            barnIHusstandenPeriodeListe.add(BarnIHusstandenPeriode(it.referanse, Periode(it.periode.datoFom, it.periode.datoTil), it.antall))
+            barnIHusstandenPeriodeListe.add(
+                BarnIHusstandenPeriode(
+                    referanse = it.referanse,
+                    barnIHusstandenPeriode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
+                    antall = it.antall
+                )
+            )
         }
-        return barnIHusstandenPeriodeListe.stream()
-            .sorted(comparing { barnIHusstandenPeriode: BarnIHusstandenPeriode -> barnIHusstandenPeriode.getPeriode().datoFom })
-            .toList()
+        return barnIHusstandenPeriodeListe.sortedBy { it.getPeriode().datoFom }
     }
 
     private fun mapSjablonPeriodeListe(sjablonPeriodeListeCore: List<SjablonPeriodeCore>): List<SjablonPeriode> {
@@ -110,34 +133,29 @@ open class ForskuddCoreImpl(private val forskuddPeriode: ForskuddPeriode): Forsk
             val sjablonNokkelListe = mutableListOf<SjablonNokkel>()
             val sjablonInnholdListe = mutableListOf<SjablonInnhold>()
             it.nokkelListe!!.forEach { nokkel ->
-                sjablonNokkelListe.add(SjablonNokkel(nokkel.navn, nokkel.verdi))
+                sjablonNokkelListe.add(SjablonNokkel(navn = nokkel.navn, verdi = nokkel.verdi))
             }
             it.innholdListe.forEach { innhold ->
-                sjablonInnholdListe.add(SjablonInnhold(innhold.navn, innhold.verdi))
+                sjablonInnholdListe.add(SjablonInnhold(navn = innhold.navn, verdi = innhold.verdi))
             }
             sjablonPeriodeListe.add(
-                SjablonPeriode(Periode(it.periode.datoFom, it.periode.datoTil), Sjablon(it.navn, sjablonNokkelListe, sjablonInnholdListe))
+                SjablonPeriode(
+                    sjablonPeriode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
+                    sjablon = Sjablon(navn = it.navn, nokkelListe = sjablonNokkelListe, innholdListe = sjablonInnholdListe)
+                )
             )
         }
         return sjablonPeriodeListe
     }
 
-    private fun mapFraBusinessObject(avvikListe: List<Avvik>, resultat: BeregnForskuddResultat) =
-        BeregnetForskuddResultatCore(
-            mapResultatPeriode(resultat.beregnetForskuddPeriodeListe),
-            mapSjablonGrunnlagListe(resultat.beregnetForskuddPeriodeListe),
-            mapAvvik(avvikListe)
-        )
-
     private fun mapResultatPeriode(periodeResultatListe: List<ResultatPeriode>): List<ResultatPeriodeCore> {
-        val resultatPeriodeCoreListe = ArrayList<ResultatPeriodeCore>()
-        for (periodeResultat in periodeResultatListe) {
-            val (belop, kode, regel) = periodeResultat.resultat
+        val resultatPeriodeCoreListe = mutableListOf<ResultatPeriodeCore>()
+        periodeResultatListe.forEach {
             resultatPeriodeCoreListe.add(
                 ResultatPeriodeCore(
-                    PeriodeCore(periodeResultat.periode.datoFom, periodeResultat.periode.datoTil),
-                    ResultatBeregningCore(belop, kode.toString(), regel),
-                    mapReferanseListe(periodeResultat)
+                    PeriodeCore(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
+                    ResultatBeregningCore(belop = it.resultat.belop, kode = it.resultat.kode.toString(), regel = it.resultat.regel),
+                    mapReferanseListe(it)
                 )
             )
         }
@@ -155,13 +173,8 @@ open class ForskuddCoreImpl(private val forskuddPeriode: ForskuddPeriode): Forsk
         referanseListe.add(barnIHusstanden.referanse)
         referanseListe.add(soknadBarnAlder.referanse)
         referanseListe.add(soknadBarnBostatus.referanse)
-        referanseListe.addAll(
-            sjablonListe.stream()
-                .map { lagSjablonReferanse(it) }
-                .distinct()
-                .toList()
-        )
-        return referanseListe
+        referanseListe.addAll(sjablonListe.map { lagSjablonReferanse(it) }.distinct())
+        return referanseListe.sorted()
     }
 
     private fun lagSjablonReferanse(sjablon: SjablonPeriodeNavnVerdi) =
@@ -175,21 +188,20 @@ open class ForskuddCoreImpl(private val forskuddPeriode: ForskuddPeriode): Forsk
             .toList()
 
     private fun mapSjablonListe(sjablonListe: List<SjablonPeriodeNavnVerdi>) =
-        sjablonListe.stream()
+        sjablonListe
             .map {
                 SjablonResultatGrunnlagCore(
-                    lagSjablonReferanse(it),
-                    PeriodeCore(it.periode.datoFom, it.periode.datoTil),
-                    it.navn,
-                    it.verdi
+                    referanse = lagSjablonReferanse(it),
+                    periode = PeriodeCore(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
+                    navn = it.navn,
+                    verdi = it.verdi
                 )
             }
-            .toList()
 
     private fun mapAvvik(avvikListe: List<Avvik>): List<AvvikCore> {
         val avvikCoreListe = mutableListOf<AvvikCore>()
         avvikListe.forEach {
-            avvikCoreListe.add(AvvikCore(it.avvikTekst, it.avvikType.toString()))
+            avvikCoreListe.add(AvvikCore(avvikTekst = it.avvikTekst, avvikType = it.avvikType.toString()))
         }
         return avvikCoreListe
     }
