@@ -1,14 +1,14 @@
 package no.nav.bidrag.beregn.forskudd.core
 
 import no.nav.bidrag.beregn.felles.bo.Periode
-import no.nav.bidrag.beregn.felles.enums.BostatusKode
-import no.nav.bidrag.beregn.felles.enums.InntektType
-import no.nav.bidrag.beregn.felles.enums.SivilstandKode
 import no.nav.bidrag.beregn.felles.periode.Periodiserer
 import no.nav.bidrag.beregn.forskudd.core.bo.BarnIHusstandenPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode
+import no.nav.bidrag.domain.enums.BostatusKode
+import no.nav.bidrag.domain.enums.InntektType
+import no.nav.bidrag.domain.enums.SivilstandKode
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.DisplayName
@@ -24,20 +24,20 @@ internal class PeriodisererTest {
         val perioder = Periodiserer()
             .addBruddpunkter(
                 InntektPeriode(
-                    INNTEKT_REFERANSE_1,
-                    Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-03-01")),
-                    InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                    BigDecimal.valueOf(1000)
+                    referanse = INNTEKT_REFERANSE_1,
+                    inntektPeriode = Periode(datoFom = LocalDate.parse("2019-01-01"), datoTil = LocalDate.parse("2019-03-01")),
+                    type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                    belop = BigDecimal.valueOf(1000)
                 )
             )
             .addBruddpunkter(
                 SivilstandPeriode(
-                    SIVILSTAND_REFERANSE_GIFT,
-                    Periode(LocalDate.parse("2019-02-01"), LocalDate.parse("2019-04-01")),
-                    SivilstandKode.GIFT
+                    referanse = SIVILSTAND_REFERANSE_GIFT,
+                    sivilstandPeriode = Periode(datoFom = LocalDate.parse("2019-02-01"), datoTil = LocalDate.parse("2019-04-01")),
+                    kode = SivilstandKode.GIFT
                 )
             )
-            .finnPerioder(LocalDate.parse("2000-01-01"), LocalDate.parse("2100-01-01"))
+            .finnPerioder(beregnDatoFom = LocalDate.parse("2000-01-01"), beregnDatoTil = LocalDate.parse("2100-01-01"))
 
         assertAll(
             Executable { assertThat(perioder).isNotNull() },
@@ -56,17 +56,17 @@ internal class PeriodisererTest {
         val perioder = Periodiserer()
             .addBruddpunkter(
                 InntektPeriode(
-                    INNTEKT_REFERANSE_1,
-                    Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-04-01")),
-                    InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                    BigDecimal.valueOf(1000)
+                    referanse = INNTEKT_REFERANSE_1,
+                    inntektPeriode = Periode(datoFom = LocalDate.parse("2019-01-01"), datoTil = LocalDate.parse("2019-04-01")),
+                    type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                    belop = BigDecimal.valueOf(1000)
                 )
             )
             .addBruddpunkter(
                 SivilstandPeriode(
-                    SIVILSTAND_REFERANSE_GIFT,
-                    Periode(LocalDate.parse("2019-02-01"), LocalDate.parse("2019-04-01")),
-                    SivilstandKode.GIFT
+                    referanse = SIVILSTAND_REFERANSE_GIFT,
+                    sivilstandPeriode = Periode(datoFom = LocalDate.parse("2019-02-01"), datoTil = LocalDate.parse("2019-04-01")),
+                    kode = SivilstandKode.GIFT
                 )
             )
             .finnPerioder(LocalDate.parse("2000-01-01"), LocalDate.parse("2100-01-01"))
@@ -84,8 +84,14 @@ internal class PeriodisererTest {
     @Test
     fun testPeriodiseringMedGrunnlagOgAapenSlutt() {
         val perioder = Periodiserer()
-            .addBruddpunkter(SivilstandPeriode(SIVILSTAND_REFERANSE_GIFT, Periode(LocalDate.parse("2019-02-01"), null), SivilstandKode.GIFT))
-            .finnPerioder(LocalDate.parse("2000-01-01"), LocalDate.parse("2100-01-01"))
+            .addBruddpunkter(
+                SivilstandPeriode(
+                    referanse = SIVILSTAND_REFERANSE_GIFT,
+                    sivilstandPeriode = Periode(datoFom = LocalDate.parse("2019-02-01"), datoTil = null),
+                    kode = SivilstandKode.GIFT
+                )
+            )
+            .finnPerioder(beregnDatoFom = LocalDate.parse("2000-01-01"), beregnDatoTil = LocalDate.parse("2100-01-01"))
 
         assertAll(
             Executable { assertThat(perioder).isNotNull() },
@@ -100,85 +106,85 @@ internal class PeriodisererTest {
         val perioder = Periodiserer()
             .addBruddpunkter(
                 InntektPeriode(
-                    INNTEKT_REFERANSE_1,
-                    Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
-                    InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                    BigDecimal.valueOf(250000)
+                    referanse = INNTEKT_REFERANSE_1,
+                    inntektPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2018-01-01")),
+                    type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                    belop = BigDecimal.valueOf(250000)
                 )
             )
             .addBruddpunkter(
                 InntektPeriode(
-                    INNTEKT_REFERANSE_2,
-                    Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
-                    InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                    BigDecimal.valueOf(400000)
+                    referanse = INNTEKT_REFERANSE_2,
+                    inntektPeriode = Periode(datoFom = LocalDate.parse("2018-01-01"), datoTil = LocalDate.parse("2019-01-01")),
+                    type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                    belop = BigDecimal.valueOf(400000)
                 )
             )
             .addBruddpunkter(
                 InntektPeriode(
-                    INNTEKT_REFERANSE_3,
-                    Periode(LocalDate.parse("2019-01-01"), null),
-                    InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                    BigDecimal.valueOf(500000)
+                    referanse = INNTEKT_REFERANSE_3,
+                    inntektPeriode = Periode(datoFom = LocalDate.parse("2019-01-01"), datoTil = null),
+                    type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                    belop = BigDecimal.valueOf(500000)
                 )
             )
             .addBruddpunkter(
                 SivilstandPeriode(
-                    SIVILSTAND_REFERANSE_GIFT,
-                    Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-17")),
-                    SivilstandKode.GIFT
+                    referanse = SIVILSTAND_REFERANSE_GIFT,
+                    sivilstandPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2018-04-17")),
+                    kode = SivilstandKode.GIFT
                 )
             )
             .addBruddpunkter(
                 SivilstandPeriode(
-                    SIVILSTAND_REFERANSE_ENSLIG,
-                    Periode(LocalDate.parse("2018-04-17"), null),
-                    SivilstandKode.ENSLIG
+                    referanse = SIVILSTAND_REFERANSE_ENSLIG,
+                    sivilstandPeriode = Periode(datoFom = LocalDate.parse("2018-04-17"), datoTil = null),
+                    kode = SivilstandKode.ENSLIG
                 )
             )
             .addBruddpunkter(
                 BarnIHusstandenPeriode(
-                    BARN_REFERANSE_1,
-                    Periode(LocalDate.parse("2017-01-01"), null),
-                    1.0
+                    referanse = BARN_REFERANSE_1,
+                    barnIHusstandenPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = null),
+                    antall = 1.0
                 )
             )
             .addBruddpunkter(
                 BarnIHusstandenPeriode(
-                    BARN_REFERANSE_2,
-                    Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-06-16")),
-                    1.0
+                    referanse = BARN_REFERANSE_2,
+                    barnIHusstandenPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2018-06-16")),
+                    antall = 1.0
                 )
             )
             .addBruddpunkter(
                 BarnIHusstandenPeriode(
-                    BARN_REFERANSE_3,
-                    Periode(LocalDate.parse("2019-03-31"), null),
-                    1.0
+                    referanse = BARN_REFERANSE_3,
+                    barnIHusstandenPeriode = Periode(datoFom = LocalDate.parse("2019-03-31"), datoTil = null),
+                    antall = 1.0
                 )
             )
             .addBruddpunkter(
                 BostatusPeriode(
-                    BOSTATUS_REFERANSE_MED_FORELDRE_1,
-                    Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-08-16")),
-                    BostatusKode.BOR_MED_FORELDRE
+                    referanse = BOSTATUS_REFERANSE_MED_FORELDRE_1,
+                    bostatusPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2018-08-16")),
+                    kode = BostatusKode.BOR_MED_FORELDRE
                 )
             )
             .addBruddpunkter(
                 BostatusPeriode(
-                    BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE,
-                    Periode(LocalDate.parse("2018-08-16"), LocalDate.parse("2018-11-13")),
-                    BostatusKode.BOR_IKKE_MED_FORELDRE
+                    referanse = BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE,
+                    bostatusPeriode = Periode(datoFom = LocalDate.parse("2018-08-16"), datoTil = LocalDate.parse("2018-11-13")),
+                    kode = BostatusKode.BOR_IKKE_MED_FORELDRE
                 )
             )
             .addBruddpunkter(
                 BostatusPeriode(
-                    BOSTATUS_REFERANSE_MED_FORELDRE_2,
-                    Periode(LocalDate.parse("2018-11-13"), null),
-                    BostatusKode.BOR_MED_FORELDRE
+                    referanse = BOSTATUS_REFERANSE_MED_FORELDRE_2,
+                    bostatusPeriode = Periode(datoFom = LocalDate.parse("2018-11-13"), datoTil = null),
+                    kode = BostatusKode.BOR_MED_FORELDRE
                 )
             )
-            .finnPerioder(LocalDate.parse("2000-01-01"), LocalDate.parse("2100-01-01"))
+            .finnPerioder(beregnDatoFom = LocalDate.parse("2000-01-01"), beregnDatoTil = LocalDate.parse("2100-01-01"))
 
         assertAll(
             Executable { assertThat(perioder).isNotNull() },

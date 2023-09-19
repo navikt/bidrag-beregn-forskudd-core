@@ -3,10 +3,10 @@ package no.nav.bidrag.beregn.forskudd.core.bo
 import no.nav.bidrag.beregn.felles.bo.Periode
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriodeNavnVerdi
-import no.nav.bidrag.beregn.felles.enums.BostatusKode
-import no.nav.bidrag.beregn.felles.enums.InntektType
-import no.nav.bidrag.beregn.felles.enums.SivilstandKode
-import no.nav.bidrag.beregn.forskudd.core.enums.ResultatKode
+import no.nav.bidrag.domain.enums.BostatusKode
+import no.nav.bidrag.domain.enums.InntektType
+import no.nav.bidrag.domain.enums.SivilstandKode
+import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeForskudd
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -77,7 +77,7 @@ data class Bostatus(
 // Resultat beregning
 data class ResultatBeregning(
     val belop: BigDecimal,
-    val kode: ResultatKode,
+    val kode: ResultatKodeForskudd,
     val regel: String,
     val sjablonListe: List<SjablonPeriodeNavnVerdi>
 )
@@ -85,12 +85,21 @@ data class ResultatBeregning(
 // Hjelpeklasser
 data class BeregnForskuddListeGrunnlag(
     val periodeResultatListe: MutableList<ResultatPeriode> = mutableListOf(),
-    var justertInntektPeriodeListe: MutableList<InntektPeriode> = mutableListOf(),
-    var justertinntektPeriodeListe: List<InntektPeriode> = emptyList(),
+    var justertInntektPeriodeListe: List<InntektPeriode> = emptyList(),
     var justertSivilstandPeriodeListe: List<SivilstandPeriode> = emptyList(),
     var justertBarnIHusstandenPeriodeListe: List<BarnIHusstandenPeriode> = emptyList(),
     var justertBostatusPeriodeListe: List<BostatusPeriode> = emptyList(),
     var justertAlderPeriodeListe: List<AlderPeriode> = emptyList(),
     var justertSjablonPeriodeListe: List<SjablonPeriode> = emptyList(),
     var bruddPeriodeListe: MutableList<Periode> = mutableListOf()
+)
+
+data class Sjablonverdier(
+    var maksInntektForskuddMottakerMultiplikator: BigDecimal = BigDecimal.ZERO,
+    var inntektsintervallForskuddBelop: BigDecimal = BigDecimal.ZERO,
+    var forskuddssats75ProsentBelop: BigDecimal = BigDecimal.ZERO,
+    var forskuddssats100ProsentBelop: BigDecimal = BigDecimal.ZERO,
+    var inntektsgrense100ProsentForskuddBelop: BigDecimal = BigDecimal.ZERO,
+    var inntektsgrenseEnslig75ProsentForskuddBelop: BigDecimal = BigDecimal.ZERO,
+    var inntektsgrenseGiftSamboer75ProsentForskuddBelop: BigDecimal = BigDecimal.ZERO
 )
