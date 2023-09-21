@@ -227,7 +227,7 @@ object TestUtil {
                 ),
                 GrunnlagBeregning(
                     listOf(
-                        Inntekt(INNTEKT_REFERANSE_1, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(500000))
+                        Inntekt(INNTEKT_REFERANSE_1, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000))
                     ),
                     Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandKode.ENSLIG),
                     BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 2.0),
@@ -246,7 +246,7 @@ object TestUtil {
                 ),
                 GrunnlagBeregning(
                     listOf(
-                        Inntekt(INNTEKT_REFERANSE_2, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(500000))
+                        Inntekt(INNTEKT_REFERANSE_2, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000))
                     ),
                     Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandKode.ENSLIG),
                     BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 2.0),
@@ -260,7 +260,7 @@ object TestUtil {
                 ResultatBeregning(BigDecimal.valueOf(0), ResultatKodeForskudd.AVSLAG, "REGEL 11", byggSjablonPeriodeNavnVerdiListe()),
                 GrunnlagBeregning(
                     listOf(
-                        Inntekt(INNTEKT_REFERANSE_3, InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(500000))
+                        Inntekt(INNTEKT_REFERANSE_3, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000))
                     ),
                     Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandKode.ENSLIG),
                     BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 2.0),
@@ -308,19 +308,19 @@ object TestUtil {
             InntektPeriode(
                 INNTEKT_REFERANSE_1,
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 BigDecimal.valueOf(250000)
             ),
             InntektPeriode(
                 INNTEKT_REFERANSE_2,
                 Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 BigDecimal.valueOf(400000)
             ),
             InntektPeriode(
                 INNTEKT_REFERANSE_3,
                 Periode(LocalDate.parse("2019-01-01"), null),
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 BigDecimal.valueOf(500000)
             )
         )
@@ -412,19 +412,19 @@ object TestUtil {
             InntektPeriode(
                 INNTEKT_REFERANSE_1,
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 BigDecimal.valueOf(250000)
             ),
             InntektPeriode(
                 INNTEKT_REFERANSE_2,
                 Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 BigDecimal.valueOf(400000)
             ),
             InntektPeriode(
                 INNTEKT_REFERANSE_3,
                 Periode(LocalDate.parse("2019-01-01"), null),
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 BigDecimal.valueOf(500000)
             )
         )
@@ -498,19 +498,19 @@ object TestUtil {
             InntektPeriode(
                 INNTEKT_REFERANSE_1,
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 BigDecimal.valueOf(250000)
             ),
             InntektPeriode(
                 INNTEKT_REFERANSE_2,
                 Periode(LocalDate.parse("2018-01-04"), LocalDate.parse("2019-01-01")),
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 BigDecimal.valueOf(400000)
             ),
             InntektPeriode(
                 INNTEKT_REFERANSE_3,
                 Periode(LocalDate.parse("2019-01-01"), null),
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 BigDecimal.valueOf(500000)
             )
         )
@@ -577,7 +577,7 @@ object TestUtil {
             InntektPeriode(
                 INNTEKT_REFERANSE_1,
                 Periode(LocalDate.parse("2017-01-01"), null),
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 BigDecimal.valueOf(250000)
             )
         )

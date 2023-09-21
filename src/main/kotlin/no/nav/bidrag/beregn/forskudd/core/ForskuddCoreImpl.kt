@@ -30,7 +30,6 @@ import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode
 import no.nav.bidrag.domain.enums.BostatusKode
-import no.nav.bidrag.domain.enums.InntektType
 import no.nav.bidrag.domain.enums.SivilstandKode
 import java.time.format.DateTimeFormatter
 
@@ -91,7 +90,7 @@ open class ForskuddCoreImpl(private val forskuddPeriode: ForskuddPeriode) : Fors
                 InntektPeriode(
                     referanse = it.referanse,
                     inntektPeriode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-                    type = InntektType.valueOf(it.type),
+                    type = it.type,
                     belop = it.belop
                 )
             )

@@ -7,7 +7,6 @@ import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode
 import no.nav.bidrag.domain.enums.BostatusKode
-import no.nav.bidrag.domain.enums.InntektType
 import no.nav.bidrag.domain.enums.SivilstandKode
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
@@ -26,7 +25,7 @@ internal class PeriodisererTest {
                 InntektPeriode(
                     referanse = INNTEKT_REFERANSE_1,
                     inntektPeriode = Periode(datoFom = LocalDate.parse("2019-01-01"), datoTil = LocalDate.parse("2019-03-01")),
-                    type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                    type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     belop = BigDecimal.valueOf(1000)
                 )
             )
@@ -58,7 +57,7 @@ internal class PeriodisererTest {
                 InntektPeriode(
                     referanse = INNTEKT_REFERANSE_1,
                     inntektPeriode = Periode(datoFom = LocalDate.parse("2019-01-01"), datoTil = LocalDate.parse("2019-04-01")),
-                    type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                    type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     belop = BigDecimal.valueOf(1000)
                 )
             )
@@ -108,7 +107,7 @@ internal class PeriodisererTest {
                 InntektPeriode(
                     referanse = INNTEKT_REFERANSE_1,
                     inntektPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2018-01-01")),
-                    type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                    type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     belop = BigDecimal.valueOf(250000)
                 )
             )
@@ -116,7 +115,7 @@ internal class PeriodisererTest {
                 InntektPeriode(
                     referanse = INNTEKT_REFERANSE_2,
                     inntektPeriode = Periode(datoFom = LocalDate.parse("2018-01-01"), datoTil = LocalDate.parse("2019-01-01")),
-                    type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                    type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     belop = BigDecimal.valueOf(400000)
                 )
             )
@@ -124,7 +123,7 @@ internal class PeriodisererTest {
                 InntektPeriode(
                     referanse = INNTEKT_REFERANSE_3,
                     inntektPeriode = Periode(datoFom = LocalDate.parse("2019-01-01"), datoTil = null),
-                    type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                    type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     belop = BigDecimal.valueOf(500000)
                 )
             )

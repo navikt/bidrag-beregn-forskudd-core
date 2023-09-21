@@ -3,7 +3,6 @@ package no.nav.bidrag.beregn.forskudd.core.bo
 import no.nav.bidrag.beregn.felles.bo.Periode
 import no.nav.bidrag.beregn.felles.bo.PeriodisertGrunnlag
 import no.nav.bidrag.domain.enums.BostatusKode
-import no.nav.bidrag.domain.enums.InntektType
 import no.nav.bidrag.domain.enums.SivilstandKode
 import java.math.BigDecimal
 
@@ -27,7 +26,7 @@ data class BostatusPeriode(
 data class InntektPeriode(
     val referanse: String,
     val inntektPeriode: Periode,
-    val type: InntektType,
+    val type: String,
     val belop: BigDecimal
 ) : PeriodisertGrunnlag {
 

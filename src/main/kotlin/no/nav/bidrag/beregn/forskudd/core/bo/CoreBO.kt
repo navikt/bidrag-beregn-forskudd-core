@@ -4,7 +4,6 @@ import no.nav.bidrag.beregn.felles.bo.Periode
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriodeNavnVerdi
 import no.nav.bidrag.domain.enums.BostatusKode
-import no.nav.bidrag.domain.enums.InntektType
 import no.nav.bidrag.domain.enums.SivilstandKode
 import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeForskudd
 import java.math.BigDecimal
@@ -50,7 +49,7 @@ data class GrunnlagBeregning(
 
 data class Inntekt(
     val referanse: String,
-    val type: InntektType,
+    val type: String,
     val belop: BigDecimal
 )
 
