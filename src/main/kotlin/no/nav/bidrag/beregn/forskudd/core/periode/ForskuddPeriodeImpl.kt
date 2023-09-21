@@ -308,6 +308,7 @@ open class ForskuddPeriodeImpl(private val forskuddBeregning: ForskuddBeregning)
                 sjekkBeregnPeriode = false
             )
         )
+
         return avvikListe
     }
 }

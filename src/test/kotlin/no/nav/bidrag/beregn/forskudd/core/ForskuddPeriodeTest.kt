@@ -15,7 +15,6 @@ import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriodeImpl
 import no.nav.bidrag.domain.enums.AvvikType
 import no.nav.bidrag.domain.enums.BostatusKode
-import no.nav.bidrag.domain.enums.InntektType
 import no.nav.bidrag.domain.enums.SivilstandKode
 import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeForskudd
 import org.assertj.core.api.Assertions.assertThat
@@ -56,7 +55,7 @@ internal class ForskuddPeriodeTest {
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.inntektListe).hasSize(1) },
             Executable {
                 assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.inntektListe[0].type)
-                    .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER)
+                    .isEqualTo("INNTEKTSOPPLYSNINGER_ARBEIDSGIVER")
             },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.inntektListe[0].belop).isEqualTo(BigDecimal.valueOf(250000)) },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.inntektListe[0].referanse).isEqualTo(INNTEKT_REFERANSE_1) },
@@ -202,7 +201,7 @@ internal class ForskuddPeriodeTest {
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.inntektListe).hasSize(1) },
             Executable {
                 assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.inntektListe[0].type)
-                    .isEqualTo(InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER)
+                    .isEqualTo("INNTEKTSOPPLYSNINGER_ARBEIDSGIVER")
             },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.inntektListe[0].belop).isEqualTo(BigDecimal.valueOf(250000)) },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.sivilstand.kode).isEqualTo(SivilstandKode.GIFT) },
@@ -232,7 +231,7 @@ internal class ForskuddPeriodeTest {
             InntektPeriode(
                 referanse = INNTEKT_REFERANSE_1,
                 inntektPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = null),
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = BigDecimal.valueOf(400000)
             )
         )
@@ -240,7 +239,7 @@ internal class ForskuddPeriodeTest {
             InntektPeriode(
                 referanse = INNTEKT_REFERANSE_2,
                 inntektPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2017-06-01")),
-                type = InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER,
+                type = "KAPITALINNTEKT_EGNE_OPPLYSNINGER",
                 belop = BigDecimal.valueOf(10000)
             )
         )
@@ -248,7 +247,7 @@ internal class ForskuddPeriodeTest {
             InntektPeriode(
                 referanse = INNTEKT_REFERANSE_3,
                 inntektPeriode = Periode(datoFom = LocalDate.parse("2017-04-01"), datoTil = LocalDate.parse("2017-09-01")),
-                type = InntektType.UTVIDET_BARNETRYGD,
+                type = "UTVIDET_BARNETRYGD",
                 belop = BigDecimal.valueOf(15000)
             )
         )
@@ -267,7 +266,7 @@ internal class ForskuddPeriodeTest {
             InntektPeriode(
                 referanse = INNTEKT_REFERANSE_1,
                 inntektPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2018-01-01")),
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = BigDecimal.valueOf(400000)
             )
         )
@@ -275,7 +274,7 @@ internal class ForskuddPeriodeTest {
             InntektPeriode(
                 referanse = INNTEKT_REFERANSE_2,
                 inntektPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2017-06-01")),
-                type = InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER,
+                type = "KAPITALINNTEKT_EGNE_OPPLYSNINGER",
                 belop = BigDecimal.valueOf(10000)
             )
         )
@@ -283,7 +282,7 @@ internal class ForskuddPeriodeTest {
             InntektPeriode(
                 referanse = INNTEKT_REFERANSE_3,
                 inntektPeriode = Periode(datoFom = LocalDate.parse("2017-04-01"), datoTil = LocalDate.parse("2017-09-01")),
-                type = InntektType.UTVIDET_BARNETRYGD,
+                type = "UTVIDET_BARNETRYGD",
                 belop = BigDecimal.valueOf(15000)
             )
         )
@@ -302,7 +301,7 @@ internal class ForskuddPeriodeTest {
             InntektPeriode(
                 referanse = INNTEKT_REFERANSE_1,
                 inntektPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = null),
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = BigDecimal.valueOf(400000)
             )
         )
@@ -310,7 +309,7 @@ internal class ForskuddPeriodeTest {
             InntektPeriode(
                 referanse = INNTEKT_REFERANSE_2,
                 inntektPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2018-01-01")),
-                type = InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER,
+                type = "KAPITALINNTEKT_EGNE_OPPLYSNINGER",
                 belop = BigDecimal.valueOf(10000)
             )
         )
@@ -318,7 +317,7 @@ internal class ForskuddPeriodeTest {
             InntektPeriode(
                 referanse = INNTEKT_REFERANSE_3,
                 inntektPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2018-01-01")),
-                type = InntektType.UTVIDET_BARNETRYGD,
+                type = "UTVIDET_BARNETRYGD",
                 belop = BigDecimal.valueOf(15000)
             )
         )
@@ -337,7 +336,7 @@ internal class ForskuddPeriodeTest {
             InntektPeriode(
                 referanse = INNTEKT_REFERANSE_1,
                 inntektPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = null),
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = BigDecimal.valueOf(400000)
             )
         )
@@ -345,7 +344,7 @@ internal class ForskuddPeriodeTest {
             InntektPeriode(
                 referanse = INNTEKT_REFERANSE_2,
                 inntektPeriode = Periode(datoFom = LocalDate.parse("2017-03-01"), datoTil = LocalDate.parse("2017-06-01")),
-                type = InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER,
+                type = "KAPITALINNTEKT_EGNE_OPPLYSNINGER",
                 belop = BigDecimal.valueOf(10000)
             )
         )
@@ -353,7 +352,7 @@ internal class ForskuddPeriodeTest {
             InntektPeriode(
                 referanse = INNTEKT_REFERANSE_3,
                 inntektPeriode = Periode(datoFom = LocalDate.parse("2017-03-01"), datoTil = LocalDate.parse("2017-06-01")),
-                type = InntektType.UTVIDET_BARNETRYGD,
+                type = "UTVIDET_BARNETRYGD",
                 belop = BigDecimal.valueOf(15000)
             )
         )
@@ -372,7 +371,7 @@ internal class ForskuddPeriodeTest {
             InntektPeriode(
                 referanse = INNTEKT_REFERANSE_1,
                 inntektPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2017-06-01")),
-                type = InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER,
+                type = "KAPITALINNTEKT_EGNE_OPPLYSNINGER",
                 belop = BigDecimal.valueOf(10000)
             )
         )
@@ -380,7 +379,7 @@ internal class ForskuddPeriodeTest {
             InntektPeriode(
                 referanse = INNTEKT_REFERANSE_2,
                 inntektPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = null),
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = BigDecimal.valueOf(400000)
             )
         )
@@ -388,7 +387,7 @@ internal class ForskuddPeriodeTest {
             InntektPeriode(
                 referanse = INNTEKT_REFERANSE_3,
                 inntektPeriode = Periode(datoFom = LocalDate.parse("2017-04-01"), datoTil = LocalDate.parse("2017-09-01")),
-                type = InntektType.UTVIDET_BARNETRYGD,
+                type = "UTVIDET_BARNETRYGD",
                 belop = BigDecimal.valueOf(15000)
             )
         )

@@ -21,6 +21,7 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 | Versjon | Endringstype   | Beskrivelse                                                                                                    |
 |---------|----------------|----------------------------------------------------------------------------------------------------------------|
+| 1.0.6   | Endret         | Gjort om fra enum InntektType til String i domene-objekter for å unngå feil                                    |
 | 1.0.5   | Endret         | Tatt inn bidrag-domain for enums, justert litt på workflow og refaktorert kode                                 |
 | 1.0.4   | Endret         | Dto'er lagt tilbake, se avklaringer i Github wiki                                                              |
 | 1.0.3   | Endret         | Lagt tilbake interfacer                                                                                        |

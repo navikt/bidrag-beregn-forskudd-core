@@ -13,7 +13,6 @@ import no.nav.bidrag.beregn.forskudd.core.bo.Inntekt
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning
 import no.nav.bidrag.beregn.forskudd.core.bo.Sivilstand
 import no.nav.bidrag.domain.enums.BostatusKode
-import no.nav.bidrag.domain.enums.InntektType
 import no.nav.bidrag.domain.enums.SivilstandKode
 import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeForskudd
 import no.nav.bidrag.domain.enums.sjablon.SjablonTallNavn
@@ -46,7 +45,7 @@ internal class ForskuddBeregningTest {
         val inntektListe = listOf(
             Inntekt(
                 referanse = INNTEKT_REFERANSE_1,
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = BigDecimal.ZERO
             )
         )
@@ -75,7 +74,7 @@ internal class ForskuddBeregningTest {
         val inntektListe = listOf(
             Inntekt(
                 referanse = INNTEKT_REFERANSE_1,
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = BigDecimal.ZERO
             )
         )
@@ -104,7 +103,7 @@ internal class ForskuddBeregningTest {
         val inntektListe = listOf(
             Inntekt(
                 referanse = INNTEKT_REFERANSE_1,
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = BigDecimal.ZERO
             )
         )
@@ -132,7 +131,7 @@ internal class ForskuddBeregningTest {
         val inntektListe = listOf(
             Inntekt(
                 referanse = INNTEKT_REFERANSE_1,
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = finnSjablonVerdi(sjablonPeriodeListe = sjablonPeriodeListe, sjablonTallNavn = SjablonTallNavn.FORSKUDDSSATS_BELOP)
                     .multiply(
                         finnSjablonVerdi(
@@ -167,7 +166,7 @@ internal class ForskuddBeregningTest {
         val inntektListe = listOf(
             Inntekt(
                 referanse = INNTEKT_REFERANSE_1,
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = finnSjablonVerdi(
                     sjablonPeriodeListe = sjablonPeriodeListe,
                     sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP
@@ -199,7 +198,7 @@ internal class ForskuddBeregningTest {
         val inntektListe = listOf(
             Inntekt(
                 referanse = INNTEKT_REFERANSE_1,
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = finnSjablonVerdi(
                     sjablonPeriodeListe = sjablonPeriodeListe,
                     sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP
@@ -231,7 +230,7 @@ internal class ForskuddBeregningTest {
         val inntektListe = listOf(
             Inntekt(
                 referanse = INNTEKT_REFERANSE_1,
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = finnSjablonVerdi(
                     sjablonPeriodeListe = sjablonPeriodeListe,
                     sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP
@@ -264,7 +263,7 @@ internal class ForskuddBeregningTest {
         val inntektListe = listOf(
             Inntekt(
                 referanse = INNTEKT_REFERANSE_1,
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = finnSjablonVerdi(
                     sjablonPeriodeListe = sjablonPeriodeListe,
                     sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP
@@ -297,7 +296,7 @@ internal class ForskuddBeregningTest {
         val inntektListe = listOf(
             Inntekt(
                 referanse = INNTEKT_REFERANSE_1,
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = finnSjablonVerdi(
                     sjablonPeriodeListe = sjablonPeriodeListe,
                     sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP
@@ -332,7 +331,7 @@ internal class ForskuddBeregningTest {
         val inntektListe = listOf(
             Inntekt(
                 referanse = INNTEKT_REFERANSE_1,
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = finnSjablonVerdi(
                     sjablonPeriodeListe = sjablonPeriodeListe,
                     sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP
@@ -367,7 +366,7 @@ internal class ForskuddBeregningTest {
         val inntektListe = listOf(
             Inntekt(
                 referanse = INNTEKT_REFERANSE_1,
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = finnSjablonVerdi(
                     sjablonPeriodeListe = sjablonPeriodeListe,
                     sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP
@@ -400,7 +399,7 @@ internal class ForskuddBeregningTest {
         val inntektListe = listOf(
             Inntekt(
                 referanse = INNTEKT_REFERANSE_1,
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = finnSjablonVerdi(
                     sjablonPeriodeListe = sjablonPeriodeListe,
                     sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP
@@ -433,7 +432,7 @@ internal class ForskuddBeregningTest {
         val inntektListe = listOf(
             Inntekt(
                 referanse = INNTEKT_REFERANSE_1,
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = finnSjablonVerdi(
                     sjablonPeriodeListe = sjablonPeriodeListe,
                     sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP
@@ -468,7 +467,7 @@ internal class ForskuddBeregningTest {
         val inntektListe = listOf(
             Inntekt(
                 referanse = INNTEKT_REFERANSE_1,
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = finnSjablonVerdi(
                     sjablonPeriodeListe = sjablonPeriodeListe,
                     sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP
@@ -506,7 +505,7 @@ internal class ForskuddBeregningTest {
         val inntektListe = listOf(
             Inntekt(
                 referanse = INNTEKT_REFERANSE_1,
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = finnSjablonVerdi(
                     sjablonPeriodeListe = sjablonPeriodeListe,
                     sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP
@@ -514,7 +513,7 @@ internal class ForskuddBeregningTest {
             ),
             Inntekt(
                 referanse = INNTEKT_REFERANSE_2,
-                type = InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                 belop = finnSjablonVerdi(
                     sjablonPeriodeListe = sjablonPeriodeListe,
                     sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP
