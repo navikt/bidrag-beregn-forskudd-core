@@ -28,13 +28,13 @@ import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore
-import no.nav.bidrag.domain.enums.AvvikType
-import no.nav.bidrag.domain.enums.BostatusKode
-import no.nav.bidrag.domain.enums.InntektType
-import no.nav.bidrag.domain.enums.SivilstandKode
-import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeForskudd
-import no.nav.bidrag.domain.enums.sjablon.SjablonInnholdNavn
-import no.nav.bidrag.domain.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.enums.Avvikstype
+import no.nav.bidrag.domene.enums.Bostatuskode
+import no.nav.bidrag.domene.enums.InntektType
+import no.nav.bidrag.domene.enums.SivilstandskodeBeregning
+import no.nav.bidrag.domene.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
+import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -49,6 +49,7 @@ object TestUtil {
     private const val BARN_I_HUSSTANDEN_REFERANSE_2 = "BARN_I_HUSSTANDEN_REFERANSE_2"
     private const val BARN_I_HUSSTANDEN_REFERANSE_3 = "BARN_I_HUSSTANDEN_REFERANSE_3"
     private const val BARN_I_HUSSTANDEN_REFERANSE_4 = "BARN_I_HUSSTANDEN_REFERANSE_4"
+    private const val BARN_I_HUSSTANDEN_REFERANSE_5 = "BARN_I_HUSSTANDEN_REFERANSE_5"
     private const val SOKNADBARN_REFERANSE = "SOKNADBARN_REFERANSE"
     private const val BOSTATUS_REFERANSE_MED_FORELDRE_1 = "BOSTATUS_REFERANSE_MED_FORELDRE_1"
     private const val BOSTATUS_REFERANSE_MED_FORELDRE_2 = "BOSTATUS_REFERANSE_MED_FORELDRE_2"
@@ -156,7 +157,7 @@ object TestUtil {
         )
 
     fun byggForskuddGrunnlagCore(): BeregnForskuddGrunnlagCore {
-        return byggForskuddGrunnlagCore(BostatusKode.BOR_MED_FORELDRE.toString())
+        return byggForskuddGrunnlagCore(Bostatuskode.MED_FORELDER.toString())
     }
 
     fun byggForskuddGrunnlagCore(bostatus: String): BeregnForskuddGrunnlagCore {
@@ -174,7 +175,7 @@ object TestUtil {
             InntektPeriodeCore(
                 INNTEKT_REFERANSE_1,
                 PeriodeCore(LocalDate.parse("2017-01-01"), null),
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER.toString(),
+                InntektType.LØNNSINNTEKT.toString(),
                 BigDecimal.ZERO
             )
         )
@@ -183,12 +184,12 @@ object TestUtil {
             SivilstandPeriodeCore(
                 SIVILSTAND_REFERANSE_GIFT,
                 PeriodeCore(LocalDate.parse("2018-01-01"), LocalDate.parse("2020-01-01")),
-                SivilstandKode.GIFT.toString()
+                SivilstandskodeBeregning.GIFT_SAMBOER.toString()
             ),
             SivilstandPeriodeCore(
                 SIVILSTAND_REFERANSE_ENSLIG,
                 PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
-                SivilstandKode.ENSLIG.toString()
+                SivilstandskodeBeregning.BOR_ALENE_MED_BARN.toString()
             )
         )
 
@@ -198,8 +199,7 @@ object TestUtil {
                 PeriodeCore(
                     LocalDate.parse("2017-01-01"),
                     LocalDate.parse("2020-01-01")
-                ),
-                1.0
+                )
             )
         )
 
@@ -229,10 +229,13 @@ object TestUtil {
                     listOf(
                         Inntekt(INNTEKT_REFERANSE_1, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000))
                     ),
-                    Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandKode.ENSLIG),
-                    BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 2.0),
+                    Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandskodeBeregning.BOR_ALENE_MED_BARN),
+                    listOf(
+                        BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1),
+                        BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_2)
+                    ),
                     Alder(SOKNADBARN_REFERANSE, 10),
-                    Bostatus(BOSTATUS_REFERANSE_MED_FORELDRE_1, BostatusKode.BOR_MED_FORELDRE),
+                    Bostatus(BOSTATUS_REFERANSE_MED_FORELDRE_1, Bostatuskode.MED_FORELDER),
                     byggSjablonPeriodeListe()
                 )
             ),
@@ -248,10 +251,13 @@ object TestUtil {
                     listOf(
                         Inntekt(INNTEKT_REFERANSE_2, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000))
                     ),
-                    Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandKode.ENSLIG),
-                    BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 2.0),
+                    Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandskodeBeregning.BOR_ALENE_MED_BARN),
+                    listOf(
+                        BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1),
+                        BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_2)
+                    ),
                     Alder(SOKNADBARN_REFERANSE, 10),
-                    Bostatus(BOSTATUS_REFERANSE_MED_FORELDRE_1, BostatusKode.BOR_MED_FORELDRE),
+                    Bostatus(BOSTATUS_REFERANSE_MED_FORELDRE_1, Bostatuskode.MED_FORELDER),
                     byggSjablonPeriodeListe()
                 )
             ),
@@ -262,10 +268,13 @@ object TestUtil {
                     listOf(
                         Inntekt(INNTEKT_REFERANSE_3, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000))
                     ),
-                    Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandKode.ENSLIG),
-                    BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 2.0),
+                    Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandskodeBeregning.BOR_ALENE_MED_BARN),
+                    listOf(
+                        BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1),
+                        BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_2)
+                    ),
                     Alder(SOKNADBARN_REFERANSE, 10),
-                    Bostatus(BOSTATUS_REFERANSE_MED_FORELDRE_1, BostatusKode.BOR_MED_FORELDRE),
+                    Bostatus(BOSTATUS_REFERANSE_MED_FORELDRE_1, Bostatuskode.MED_FORELDER),
                     byggSjablonPeriodeListe()
                 )
             )
@@ -274,7 +283,7 @@ object TestUtil {
     }
 
     fun byggAvvikListe(): List<Avvik> {
-        return listOf(Avvik("beregnDatoTil må være etter beregnDatoFra", AvvikType.DATO_FOM_ETTER_DATO_TIL))
+        return listOf(Avvik("beregnDatoTil må være etter beregnDatoFra", Avvikstype.DATO_FOM_ETTER_DATO_TIL))
     }
 
     fun byggForskuddGrunnlag(): BeregnForskuddGrunnlag {
@@ -288,17 +297,17 @@ object TestUtil {
             BostatusPeriode(
                 BOSTATUS_REFERANSE_MED_FORELDRE_1,
                 Periode(LocalDate.parse("2006-12-19"), LocalDate.parse("2018-08-16")),
-                BostatusKode.BOR_MED_FORELDRE
+                Bostatuskode.MED_FORELDER
             ),
             BostatusPeriode(
                 BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE,
                 Periode(LocalDate.parse("2018-08-16"), LocalDate.parse("2018-11-13")),
-                BostatusKode.BOR_IKKE_MED_FORELDRE
+                Bostatuskode.IKKE_MED_FORELDER
             ),
             BostatusPeriode(
                 BOSTATUS_REFERANSE_MED_FORELDRE_2,
                 Periode(LocalDate.parse("2018-11-13"), null),
-                BostatusKode.BOR_MED_FORELDRE
+                Bostatuskode.MED_FORELDER
             )
         )
 
@@ -329,45 +338,35 @@ object TestUtil {
             SivilstandPeriode(
                 SIVILSTAND_REFERANSE_GIFT,
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-17")),
-                SivilstandKode.GIFT
+                SivilstandskodeBeregning.GIFT_SAMBOER
             ),
             SivilstandPeriode(
                 SIVILSTAND_REFERANSE_ENSLIG,
                 Periode(LocalDate.parse("2018-04-17"), LocalDate.parse("2019-08-01")),
-                SivilstandKode.ENSLIG
+                SivilstandskodeBeregning.BOR_ALENE_MED_BARN
             )
         )
 
         val barnIHusstandenListe = listOf(
             BarnIHusstandenPeriode(
                 BARN_I_HUSSTANDEN_REFERANSE_1,
-                Periode(LocalDate.parse("2006-12-19"), LocalDate.parse("2017-01-01")),
-                1.0
-            ),
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_1,
-                Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-06-17")),
-                3.0
+                Periode(LocalDate.parse("2006-12-19"), null)
             ),
             BarnIHusstandenPeriode(
                 BARN_I_HUSSTANDEN_REFERANSE_2,
-                Periode(LocalDate.parse("2018-06-17"), LocalDate.parse("2018-08-16")),
-                2.0
-            ),
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_2,
-                Periode(LocalDate.parse("2018-08-16"), LocalDate.parse("2018-11-13")),
-                1.0
+                Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-08-16"))
             ),
             BarnIHusstandenPeriode(
                 BARN_I_HUSSTANDEN_REFERANSE_3,
-                Periode(LocalDate.parse("2018-11-13"), LocalDate.parse("2019-03-31")),
-                2.0
+                Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-06-17"))
             ),
             BarnIHusstandenPeriode(
                 BARN_I_HUSSTANDEN_REFERANSE_4,
-                Periode(LocalDate.parse("2019-03-31"), null),
-                3.0
+                Periode(LocalDate.parse("2018-11-13"), null)
+            ),
+            BarnIHusstandenPeriode(
+                BARN_I_HUSSTANDEN_REFERANSE_5,
+                Periode(LocalDate.parse("2019-03-31"), null)
             )
         )
 
@@ -392,17 +391,17 @@ object TestUtil {
             BostatusPeriode(
                 BOSTATUS_REFERANSE_MED_FORELDRE_1,
                 Periode(LocalDate.parse("2006-12-19"), LocalDate.parse("2018-08-16")),
-                BostatusKode.BOR_MED_FORELDRE
+                Bostatuskode.MED_FORELDER
             ),
             BostatusPeriode(
                 BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE,
                 Periode(LocalDate.parse("2018-08-16"), LocalDate.parse("2018-11-13")),
-                BostatusKode.BOR_IKKE_MED_FORELDRE
+                Bostatuskode.IKKE_MED_FORELDER
             ),
             BostatusPeriode(
                 BOSTATUS_REFERANSE_MED_FORELDRE_2,
                 Periode(LocalDate.parse("2018-11-13"), null),
-                BostatusKode.BOR_MED_FORELDRE
+                Bostatuskode.MED_FORELDER
             )
         )
 
@@ -432,28 +431,23 @@ object TestUtil {
         val barnIHusstandenListe = listOf(
             BarnIHusstandenPeriode(
                 BARN_I_HUSSTANDEN_REFERANSE_1,
-                Periode(LocalDate.parse("2006-12-19"), LocalDate.parse("2017-01-01")),
-                1.0
-            ),
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_1,
-                Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-06-17")),
-                3.0
+                Periode(LocalDate.parse("2006-12-19"), LocalDate.parse("2019-03-31"))
             ),
             BarnIHusstandenPeriode(
                 BARN_I_HUSSTANDEN_REFERANSE_2,
-                Periode(LocalDate.parse("2018-06-17"), LocalDate.parse("2018-08-16")),
-                2.0
-            ),
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_2,
-                Periode(LocalDate.parse("2018-08-16"), LocalDate.parse("2018-11-13")),
-                1.0
+                Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-08-16"))
             ),
             BarnIHusstandenPeriode(
                 BARN_I_HUSSTANDEN_REFERANSE_3,
-                Periode(LocalDate.parse("2018-11-13"), LocalDate.parse("2019-03-31")),
-                2.0
+                Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-06-17"))
+            ),
+            BarnIHusstandenPeriode(
+                BARN_I_HUSSTANDEN_REFERANSE_4,
+                Periode(LocalDate.parse("2018-11-13"), LocalDate.parse("2019-03-31"))
+            ),
+            BarnIHusstandenPeriode(
+                BARN_I_HUSSTANDEN_REFERANSE_5,
+                Periode(LocalDate.parse("2019-03-31"), LocalDate.parse("2019-03-31"))
             )
         )
 
@@ -478,17 +472,17 @@ object TestUtil {
             BostatusPeriode(
                 BOSTATUS_REFERANSE_MED_FORELDRE_1,
                 Periode(LocalDate.parse("2006-12-19"), LocalDate.parse("2018-08-16")),
-                BostatusKode.BOR_MED_FORELDRE
+                Bostatuskode.MED_FORELDER
             ),
             BostatusPeriode(
                 BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE,
                 Periode(LocalDate.parse("2018-08-16"), null),
-                BostatusKode.BOR_IKKE_MED_FORELDRE
+                Bostatuskode.IKKE_MED_FORELDER
             ),
             BostatusPeriode(
                 BOSTATUS_REFERANSE_MED_FORELDRE_2,
                 Periode(LocalDate.parse("2018-11-13"), null),
-                BostatusKode.BOR_MED_FORELDRE
+                Bostatuskode.MED_FORELDER
             )
         )
 
@@ -519,30 +513,27 @@ object TestUtil {
             SivilstandPeriode(
                 SIVILSTAND_REFERANSE_GIFT,
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-01")),
-                SivilstandKode.GIFT
+                SivilstandskodeBeregning.GIFT_SAMBOER
             ),
             SivilstandPeriode(
                 SIVILSTAND_REFERANSE_ENSLIG,
                 Periode(LocalDate.parse("2018-03-17"), LocalDate.parse("2019-07-01")),
-                SivilstandKode.ENSLIG
+                SivilstandskodeBeregning.BOR_ALENE_MED_BARN
             )
         )
 
         val barnIHusstandenListe = listOf(
             BarnIHusstandenPeriode(
                 BARN_I_HUSSTANDEN_REFERANSE_1,
-                Periode(LocalDate.parse("2017-01-01"), null),
-                1.0
+                Periode(LocalDate.parse("2017-01-01"), null)
             ),
             BarnIHusstandenPeriode(
                 BARN_I_HUSSTANDEN_REFERANSE_2,
-                Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-06-17")),
-                1.0
+                Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-06-17"))
             ),
             BarnIHusstandenPeriode(
                 BARN_I_HUSSTANDEN_REFERANSE_3,
-                Periode(LocalDate.parse("2019-03-31"), LocalDate.parse("2018-06-17")),
-                1.0
+                Periode(LocalDate.parse("2019-03-31"), LocalDate.parse("2018-06-17"))
             )
         )
 
@@ -567,7 +558,7 @@ object TestUtil {
             BostatusPeriode(
                 BOSTATUS_REFERANSE_MED_FORELDRE_1,
                 Periode(LocalDate.parse("2006-12-19"), null),
-                BostatusKode.BOR_MED_FORELDRE
+                Bostatuskode.MED_FORELDER
             )
         )
 
@@ -586,15 +577,14 @@ object TestUtil {
             SivilstandPeriode(
                 SIVILSTAND_REFERANSE_GIFT,
                 Periode(LocalDate.parse("2017-01-01"), null),
-                SivilstandKode.GIFT
+                SivilstandskodeBeregning.GIFT_SAMBOER
             )
         )
 
         val barnIHusstandenListe = listOf(
             BarnIHusstandenPeriode(
                 BARN_I_HUSSTANDEN_REFERANSE_1,
-                Periode(LocalDate.parse("2017-01-01"), null),
-                1.0
+                Periode(LocalDate.parse("2017-01-01"), null)
             )
         )
 
@@ -619,7 +609,7 @@ object TestUtil {
             BostatusPeriode(
                 BOSTATUS_REFERANSE_MED_FORELDRE_1,
                 Periode(LocalDate.parse("2017-01-01"), null),
-                BostatusKode.BOR_MED_FORELDRE
+                Bostatuskode.MED_FORELDER
             )
         )
 
@@ -629,15 +619,18 @@ object TestUtil {
             SivilstandPeriode(
                 SIVILSTAND_REFERANSE_ENSLIG,
                 Periode(LocalDate.parse("2017-01-01"), null),
-                SivilstandKode.ENSLIG
+                SivilstandskodeBeregning.BOR_ALENE_MED_BARN
             )
         )
 
         val barnIHusstandenListe = listOf(
             BarnIHusstandenPeriode(
                 BARN_I_HUSSTANDEN_REFERANSE_1,
-                Periode(LocalDate.parse("2017-01-01"), null),
-                2.0
+                Periode(LocalDate.parse("2017-01-01"), null)
+            ),
+            BarnIHusstandenPeriode(
+                BARN_I_HUSSTANDEN_REFERANSE_2,
+                Periode(LocalDate.parse("2017-01-01"), null)
             )
         )
 

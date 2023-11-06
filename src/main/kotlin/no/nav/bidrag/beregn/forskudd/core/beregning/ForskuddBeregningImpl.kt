@@ -7,10 +7,10 @@ import no.nav.bidrag.beregn.felles.util.SjablonUtil
 import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning
 import no.nav.bidrag.beregn.forskudd.core.bo.Sjablonverdier
-import no.nav.bidrag.domain.enums.BostatusKode
-import no.nav.bidrag.domain.enums.SivilstandKode
-import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeForskudd
-import no.nav.bidrag.domain.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.enums.Bostatuskode
+import no.nav.bidrag.domene.enums.SivilstandskodeBeregning
+import no.nav.bidrag.domene.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDate
@@ -22,8 +22,11 @@ open class ForskuddBeregningImpl : ForskuddBeregning {
 
         val maksInntektsgrense = sjablonverdier.forskuddssats100ProsentBelop.multiply(sjablonverdier.maksInntektForskuddMottakerMultiplikator)
 
+        // Legger sammen antall barn i husstanden
+        val antallBarnIHusstanden = grunnlag.barnIHusstandenListe.count()
+
         // Inntektsintervall regnes ut med antall barn utover ett
-        var inntektsIntervallTotal = sjablonverdier.inntektsintervallForskuddBelop.multiply(BigDecimal.valueOf(grunnlag.barnIHusstanden.antall - 1))
+        var inntektsIntervallTotal = sjablonverdier.inntektsintervallForskuddBelop * BigDecimal(antallBarnIHusstanden - 1)
         if (inntektsIntervallTotal < BigDecimal.ZERO) {
             inntektsIntervallTotal = BigDecimal.ZERO
         }
@@ -44,7 +47,7 @@ open class ForskuddBeregningImpl : ForskuddBeregning {
             }
 
             // Søknadsbarn bor alene eller ikke med foreldre (REGEL 2/3)
-            grunnlag.soknadBarnBostatus.kode != BostatusKode.BOR_MED_FORELDRE -> {
+            grunnlag.soknadBarnBostatus.kode != Bostatuskode.MED_FORELDER && grunnlag.soknadBarnBostatus.kode != Bostatuskode.DOKUMENTERT_SKOLEGANG -> {
                 resultatKode =
                     if (grunnlag.soknadBarnAlder.alder >= 11) ResultatKodeForskudd.FORHOYET_FORSKUDD_11_AAR_125_PROSENT else ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT
                 regel = if (resultatKode == ResultatKodeForskudd.FORHOYET_FORSKUDD_11_AAR_125_PROSENT) "REGEL 2" else "REGEL 3"
@@ -79,14 +82,14 @@ open class ForskuddBeregningImpl : ForskuddBeregning {
                     ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT
                 }
 
-                regel = if (grunnlag.sivilstand.kode == SivilstandKode.ENSLIG) {
-                    if (grunnlag.barnIHusstanden.antall == 1.0) {
+                regel = if (grunnlag.sivilstand.kode == SivilstandskodeBeregning.BOR_ALENE_MED_BARN) {
+                    if (antallBarnIHusstanden == 1) {
                         if (resultatKode == ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT) "REGEL 7" else "REGEL 8"
                     } else {
                         if (resultatKode == ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT) "REGEL 9" else "REGEL 10"
                     }
                 } else {
-                    if (grunnlag.barnIHusstanden.antall == 1.0) {
+                    if (antallBarnIHusstanden == 1) {
                         if (resultatKode == ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT) "REGEL 11" else "REGEL 12"
                     } else {
                         if (resultatKode == ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT) "REGEL 13" else "REGEL 14"
@@ -184,11 +187,11 @@ open class ForskuddBeregningImpl : ForskuddBeregning {
         inntekt.compareTo(inntektsgrense) < 1
 
     private fun finnInntektsgrense(
-        sivilstandKode: SivilstandKode,
+        sivilstandKode: SivilstandskodeBeregning,
         inntektsgrenseEnslig75Prosent: BigDecimal,
         inntektsgrenseGift75Prosent: BigDecimal
     ) =
-        if (sivilstandKode == SivilstandKode.ENSLIG) inntektsgrenseEnslig75Prosent else inntektsgrenseGift75Prosent
+        if (sivilstandKode == SivilstandskodeBeregning.BOR_ALENE_MED_BARN) inntektsgrenseEnslig75Prosent else inntektsgrenseGift75Prosent
 
     // Henter sjablonverdier
     private fun hentSjablonVerdier(sjablonPeriodeListe: List<SjablonPeriode>): Sjablonverdier {

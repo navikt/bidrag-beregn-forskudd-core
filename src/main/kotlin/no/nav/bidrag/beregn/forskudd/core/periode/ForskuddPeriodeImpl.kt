@@ -127,11 +127,9 @@ open class ForskuddPeriodeImpl(private val forskuddBeregning: ForskuddBeregning)
                 .findFirst()
                 .orElseThrow { IllegalArgumentException("Grunnlagsobjekt BOSTATUS mangler data for periode: ${beregningsperiode.getPeriode()}") }
 
-            val barnIHusstanden = beregnForskuddListeGrunnlag.justertBarnIHusstandenPeriodeListe.stream()
+            val barnIHusstandenListe = beregnForskuddListeGrunnlag.justertBarnIHusstandenPeriodeListe
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                .map { BarnIHusstanden(referanse = it.referanse, antall = it.antall) }
-                .findFirst()
-                .orElseThrow { IllegalArgumentException("Grunnlagsobjekt BARN_I_HUSSTAND mangler data for periode: ${beregningsperiode.getPeriode()}") }
+                .map { BarnIHusstanden(referanse = it.referanse) }
 
             val sjablonListe = beregnForskuddListeGrunnlag.justertSjablonPeriodeListe
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
@@ -139,7 +137,7 @@ open class ForskuddPeriodeImpl(private val forskuddBeregning: ForskuddBeregning)
             val grunnlagBeregning = GrunnlagBeregning(
                 inntektListe = inntektListe,
                 sivilstand = sivilstand,
-                barnIHusstanden = barnIHusstanden,
+                barnIHusstandenListe = barnIHusstandenListe,
                 soknadBarnAlder = alder,
                 soknadBarnBostatus = bostatus,
                 sjablonListe = sjablonListe

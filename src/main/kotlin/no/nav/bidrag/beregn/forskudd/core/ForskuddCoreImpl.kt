@@ -29,8 +29,8 @@ import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode
-import no.nav.bidrag.domain.enums.BostatusKode
-import no.nav.bidrag.domain.enums.SivilstandKode
+import no.nav.bidrag.domene.enums.Bostatuskode
+import no.nav.bidrag.domene.enums.SivilstandskodeBeregning
 import java.time.format.DateTimeFormatter
 
 open class ForskuddCoreImpl(private val forskuddPeriode: ForskuddPeriode) : ForskuddCore {
@@ -76,7 +76,7 @@ open class ForskuddCoreImpl(private val forskuddPeriode: ForskuddPeriode) : Fors
                 BostatusPeriode(
                     referanse = it.referanse,
                     bostatusPeriode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-                    kode = BostatusKode.valueOf(it.kode)
+                    kode = Bostatuskode.valueOf(it.kode)
                 )
             )
         }
@@ -105,7 +105,7 @@ open class ForskuddCoreImpl(private val forskuddPeriode: ForskuddPeriode) : Fors
                 SivilstandPeriode(
                     referanse = it.referanse,
                     sivilstandPeriode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-                    kode = SivilstandKode.valueOf(it.kode)
+                    kode = SivilstandskodeBeregning.valueOf(it.kode)
                 )
             )
         }
@@ -118,8 +118,7 @@ open class ForskuddCoreImpl(private val forskuddPeriode: ForskuddPeriode) : Fors
             barnIHusstandenPeriodeListe.add(
                 BarnIHusstandenPeriode(
                     referanse = it.referanse,
-                    barnIHusstandenPeriode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-                    antall = it.antall
+                    barnIHusstandenPeriode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil)
                 )
             )
         }
@@ -162,14 +161,16 @@ open class ForskuddCoreImpl(private val forskuddPeriode: ForskuddPeriode) : Fors
     }
 
     private fun mapReferanseListe(resultatPeriode: ResultatPeriode): List<String> {
-        val (inntektListe, sivilstand, barnIHusstanden, soknadBarnAlder, soknadBarnBostatus) = resultatPeriode.grunnlag
+        val (inntektListe, sivilstand, barnIHusstandenListe, soknadBarnAlder, soknadBarnBostatus) = resultatPeriode.grunnlag
         val sjablonListe = resultatPeriode.resultat.sjablonListe
         val referanseListe = mutableListOf<String>()
         inntektListe.forEach {
             referanseListe.add(it.referanse)
         }
         referanseListe.add(sivilstand.referanse)
-        referanseListe.add(barnIHusstanden.referanse)
+        barnIHusstandenListe.forEach {
+            referanseListe.add(it.referanse)
+        }
         referanseListe.add(soknadBarnAlder.referanse)
         referanseListe.add(soknadBarnBostatus.referanse)
         referanseListe.addAll(sjablonListe.map { lagSjablonReferanse(it) }.distinct())

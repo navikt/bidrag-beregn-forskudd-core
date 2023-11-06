@@ -13,10 +13,10 @@ import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregningImpl
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriodeImpl
-import no.nav.bidrag.domain.enums.AvvikType
-import no.nav.bidrag.domain.enums.BostatusKode
-import no.nav.bidrag.domain.enums.SivilstandKode
-import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.domene.enums.Avvikstype
+import no.nav.bidrag.domene.enums.Bostatuskode
+import no.nav.bidrag.domene.enums.SivilstandskodeBeregning
+import no.nav.bidrag.domene.enums.resultatkoder.ResultatKodeForskudd
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Assertions.assertAll
@@ -59,18 +59,18 @@ internal class ForskuddPeriodeTest {
             },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.inntektListe[0].belop).isEqualTo(BigDecimal.valueOf(250000)) },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.inntektListe[0].referanse).isEqualTo(INNTEKT_REFERANSE_1) },
-            Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.sivilstand.kode).isEqualTo(SivilstandKode.GIFT) },
+            Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.sivilstand.kode).isEqualTo(SivilstandskodeBeregning.GIFT_SAMBOER) },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.sivilstand.referanse).isEqualTo(SIVILSTAND_REFERANSE_GIFT) },
-            Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.barnIHusstanden.antall).isEqualTo(3.0) },
+            Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.barnIHusstandenListe.count()).isEqualTo(3) },
             Executable {
-                assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.barnIHusstanden.referanse)
+                assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.barnIHusstandenListe[0].referanse)
                     .isEqualTo(BARN_I_HUSSTANDEN_REFERANSE_1)
             },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.soknadBarnAlder.alder).isZero() },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.soknadBarnAlder.referanse).isEqualTo(SOKNADBARN_REFERANSE) },
             Executable {
                 assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.soknadBarnBostatus.kode)
-                    .isEqualTo(BostatusKode.BOR_MED_FORELDRE)
+                    .isEqualTo(Bostatuskode.MED_FORELDER)
             },
             Executable {
                 assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.soknadBarnBostatus.referanse)
@@ -129,27 +129,27 @@ internal class ForskuddPeriodeTest {
             Executable { assertThat(avvikListe).isNotEmpty() },
             Executable { assertThat(avvikListe).hasSize(5) },
             Executable { assertThat(avvikListe[0].avvikTekst).isEqualTo("beregnDatoTil må være etter beregnDatoFra") },
-            Executable { assertThat(avvikListe[0].avvikType).isEqualTo(AvvikType.DATO_FOM_ETTER_DATO_TIL) },
+            Executable { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.DATO_FOM_ETTER_DATO_TIL) },
             Executable {
                 assertThat(avvikListe[1].avvikTekst)
                     .isEqualTo("Opphold mellom perioder i bidragMottakerInntektPeriodeListe: datoTil=2018-01-01, datoFom=2018-01-04")
             },
-            Executable { assertThat(avvikListe[1].avvikType).isEqualTo(AvvikType.PERIODER_HAR_OPPHOLD) },
+            Executable { assertThat(avvikListe[1].avvikType).isEqualTo(Avvikstype.PERIODER_HAR_OPPHOLD) },
             Executable {
                 assertThat(avvikListe[2].avvikTekst)
                     .isEqualTo("Overlappende perioder i bidragMottakerSivilstandPeriodeListe: datoTil=2018-04-01, datoFom=2018-03-17")
             },
-            Executable { assertThat(avvikListe[2].avvikType).isEqualTo(AvvikType.PERIODER_OVERLAPPER) },
+            Executable { assertThat(avvikListe[2].avvikType).isEqualTo(Avvikstype.PERIODER_OVERLAPPER) },
             Executable {
                 assertThat(avvikListe[3].avvikTekst)
                     .isEqualTo("datoTil kan ikke være null i soknadBarnBostatusPeriodeListe: datoFom=2018-08-16, datoTil=null")
             },
-            Executable { assertThat(avvikListe[3].avvikType).isEqualTo(AvvikType.NULL_VERDI_I_DATO) },
+            Executable { assertThat(avvikListe[3].avvikType).isEqualTo(Avvikstype.NULL_VERDI_I_DATO) },
             Executable {
                 assertThat(avvikListe[4].avvikTekst)
                     .isEqualTo("datoTil må være etter datoFom i bidragMottakerBarnPeriodeListe: datoFom=2019-03-31, datoTil=2018-06-17")
             },
-            Executable { assertThat(avvikListe[4].avvikType).isEqualTo(AvvikType.DATO_FOM_ETTER_DATO_TIL) }
+            Executable { assertThat(avvikListe[4].avvikType).isEqualTo(Avvikstype.DATO_FOM_ETTER_DATO_TIL) }
         )
 
         printAvvikListe(avvikListe)
@@ -168,17 +168,17 @@ internal class ForskuddPeriodeTest {
                 assertThat(avvikListe[0].avvikTekst)
                     .isEqualTo("Første dato i bidragMottakerInntektPeriodeListe (2017-01-01) er etter beregnDatoFra (2016-01-01)")
             },
-            Executable { assertThat(avvikListe[0].avvikType).isEqualTo(AvvikType.PERIODE_MANGLER_DATA) },
+            Executable { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.PERIODE_MANGLER_DATA) },
             Executable {
                 assertThat(avvikListe[1].avvikTekst)
                     .isEqualTo("Første dato i bidragMottakerSivilstandPeriodeListe (2017-01-01) er etter beregnDatoFra (2016-01-01)")
             },
-            Executable { assertThat(avvikListe[1].avvikType).isEqualTo(AvvikType.PERIODE_MANGLER_DATA) },
+            Executable { assertThat(avvikListe[1].avvikType).isEqualTo(Avvikstype.PERIODE_MANGLER_DATA) },
             Executable {
                 assertThat(avvikListe[2].avvikTekst)
                     .isEqualTo("Siste dato i bidragMottakerSivilstandPeriodeListe (2019-08-01) er før beregnDatoTil (2020-01-01)")
             },
-            Executable { assertThat(avvikListe[2].avvikType).isEqualTo(AvvikType.PERIODE_MANGLER_DATA) }
+            Executable { assertThat(avvikListe[2].avvikType).isEqualTo(Avvikstype.PERIODE_MANGLER_DATA) }
         )
 
         printAvvikListe(avvikListe)
@@ -204,12 +204,12 @@ internal class ForskuddPeriodeTest {
                     .isEqualTo("INNTEKTSOPPLYSNINGER_ARBEIDSGIVER")
             },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.inntektListe[0].belop).isEqualTo(BigDecimal.valueOf(250000)) },
-            Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.sivilstand.kode).isEqualTo(SivilstandKode.GIFT) },
-            Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.barnIHusstanden.antall).isEqualTo(1.0) },
+            Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.sivilstand.kode).isEqualTo(SivilstandskodeBeregning.GIFT_SAMBOER) },
+            Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.barnIHusstandenListe.count()).isEqualTo(1) },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.soknadBarnAlder.alder).isZero() },
             Executable {
                 assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.soknadBarnBostatus.kode)
-                    .isEqualTo(BostatusKode.BOR_MED_FORELDRE)
+                    .isEqualTo(Bostatuskode.MED_FORELDER)
             },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.sjablonListe).isEqualTo(byggSjablonPeriodeListe()) }
         )

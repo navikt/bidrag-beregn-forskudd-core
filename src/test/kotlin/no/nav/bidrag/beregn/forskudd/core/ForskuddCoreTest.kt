@@ -5,8 +5,8 @@ import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggForskuddGrunnlagCore
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggForskuddResultat
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggSjablonPeriodeListe
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriodeImpl
-import no.nav.bidrag.domain.enums.AvvikType
-import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.domene.enums.Avvikstype
+import no.nav.bidrag.domene.enums.resultatkoder.ResultatKodeForskudd
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Assertions.assertAll
@@ -74,18 +74,22 @@ internal class ForskuddCoreTest {
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagReferanseListe[1])
-                    .isEqualTo(BOSTATUS_REFERANSE_MED_FORELDRE_1)
+                    .isEqualTo(BARN_I_HUSSTANDEN_REFERANSE_2)
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagReferanseListe[2])
-                    .isEqualTo(INNTEKT_REFERANSE_1)
+                    .isEqualTo(BOSTATUS_REFERANSE_MED_FORELDRE_1)
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagReferanseListe[3])
-                    .isEqualTo(SIVILSTAND_REFERANSE_ENSLIG)
+                    .isEqualTo(INNTEKT_REFERANSE_1)
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagReferanseListe[4])
+                    .isEqualTo(SIVILSTAND_REFERANSE_ENSLIG)
+            },
+            Executable {
+                assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagReferanseListe[5])
                     .isEqualTo(SOKNADBARN_REFERANSE)
             },
             Executable {
@@ -142,7 +146,7 @@ internal class ForskuddCoreTest {
             Executable { assertThat(beregnForskuddResultatCore.avvikListe).isNotEmpty() },
             Executable { assertThat(beregnForskuddResultatCore.avvikListe).hasSize(1) },
             Executable { assertThat(beregnForskuddResultatCore.avvikListe[0].avvikTekst).isEqualTo("beregnDatoTil må være etter beregnDatoFra") },
-            Executable { assertThat(beregnForskuddResultatCore.avvikListe[0].avvikType).isEqualTo(AvvikType.DATO_FOM_ETTER_DATO_TIL.toString()) },
+            Executable { assertThat(beregnForskuddResultatCore.avvikListe[0].avvikType).isEqualTo(Avvikstype.DATO_FOM_ETTER_DATO_TIL.toString()) },
             Executable { assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe).isEmpty() }
         )
     }
@@ -152,13 +156,14 @@ internal class ForskuddCoreTest {
     fun skalKasteIllegalArgumentExceptionVedUgyldigEnum() {
         assertThatExceptionOfType(IllegalArgumentException::class.java)
             .isThrownBy { forskuddCore.beregnForskudd(byggForskuddGrunnlagCore("BOR_HELT_ALENE")) }
-            .withMessage("No enum constant no.nav.bidrag.domain.enums.BostatusKode.BOR_HELT_ALENE")
+            .withMessage("No enum constant no.nav.bidrag.domene.enums.Bostatuskode.BOR_HELT_ALENE")
     }
 
     companion object {
         private const val INNTEKT_REFERANSE_1 = "INNTEKT_REFERANSE_1"
         private const val SIVILSTAND_REFERANSE_ENSLIG = "SIVILSTAND_REFERANSE_ENSLIG"
         private const val BARN_I_HUSSTANDEN_REFERANSE_1 = "BARN_I_HUSSTANDEN_REFERANSE_1"
+        private const val BARN_I_HUSSTANDEN_REFERANSE_2 = "BARN_I_HUSSTANDEN_REFERANSE_2"
         private const val SOKNADBARN_REFERANSE = "SOKNADBARN_REFERANSE"
         private const val BOSTATUS_REFERANSE_MED_FORELDRE_1 = "BOSTATUS_REFERANSE_MED_FORELDRE_1"
     }
