@@ -3,9 +3,9 @@ package no.nav.bidrag.beregn.forskudd.core.bo
 import no.nav.bidrag.beregn.felles.bo.Periode
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriodeNavnVerdi
-import no.nav.bidrag.domain.enums.BostatusKode
-import no.nav.bidrag.domain.enums.SivilstandKode
-import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.domene.enums.Bostatuskode
+import no.nav.bidrag.domene.enums.SivilstandskodeBeregning
+import no.nav.bidrag.domene.enums.resultatkoder.ResultatKodeForskudd
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -41,7 +41,7 @@ data class ResultatPeriode(
 data class GrunnlagBeregning(
     val inntektListe: List<Inntekt>,
     val sivilstand: Sivilstand,
-    val barnIHusstanden: BarnIHusstanden,
+    val barnIHusstandenListe: List<BarnIHusstanden>,
     val soknadBarnAlder: Alder,
     val soknadBarnBostatus: Bostatus,
     val sjablonListe: List<SjablonPeriode>
@@ -55,12 +55,11 @@ data class Inntekt(
 
 data class Sivilstand(
     val referanse: String,
-    val kode: SivilstandKode
+    val kode: SivilstandskodeBeregning
 )
 
 data class BarnIHusstanden(
-    val referanse: String,
-    val antall: Double
+    val referanse: String
 )
 
 data class Alder(
@@ -70,7 +69,7 @@ data class Alder(
 
 data class Bostatus(
     val referanse: String,
-    val kode: BostatusKode
+    val kode: Bostatuskode
 )
 
 // Resultat beregning

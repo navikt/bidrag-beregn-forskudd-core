@@ -12,10 +12,10 @@ import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning
 import no.nav.bidrag.beregn.forskudd.core.bo.Inntekt
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning
 import no.nav.bidrag.beregn.forskudd.core.bo.Sivilstand
-import no.nav.bidrag.domain.enums.BostatusKode
-import no.nav.bidrag.domain.enums.SivilstandKode
-import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeForskudd
-import no.nav.bidrag.domain.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.enums.Bostatuskode
+import no.nav.bidrag.domene.enums.SivilstandskodeBeregning
+import no.nav.bidrag.domene.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.DisplayName
@@ -49,11 +49,11 @@ internal class ForskuddBeregningTest {
                 belop = BigDecimal.ZERO
             )
         )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
-        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
+        val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 18)
-        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.MED_FORELDER)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barnIHusstandenListe, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
 
         assertAll(
@@ -78,11 +78,11 @@ internal class ForskuddBeregningTest {
                 belop = BigDecimal.ZERO
             )
         )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
-        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
+        val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
-        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_IKKE_MED_FORELDRE)
-        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.IKKE_MED_FORELDER)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barnIHusstandenListe, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
 
         assertAll(
@@ -107,11 +107,11 @@ internal class ForskuddBeregningTest {
                 belop = BigDecimal.ZERO
             )
         )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
-        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
+        val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 10)
-        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_IKKE_MED_FORELDRE)
-        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.IKKE_MED_FORELDER)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barnIHusstandenListe, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
 
         assertAll(
@@ -141,11 +141,11 @@ internal class ForskuddBeregningTest {
                     ).add(BigDecimal.ONE)
             )
         )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
-        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
+        val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
-        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.MED_FORELDER)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barnIHusstandenListe, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
 
         assertAll(
@@ -173,11 +173,11 @@ internal class ForskuddBeregningTest {
                 )
             )
         )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
-        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
+        val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
-        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.MED_FORELDER)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barnIHusstandenListe, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
 
         assertAll(
@@ -205,11 +205,11 @@ internal class ForskuddBeregningTest {
                 )
             )
         )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
-        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
+        val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 10)
-        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.MED_FORELDER)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barnIHusstandenListe, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
 
         assertAll(
@@ -237,12 +237,12 @@ internal class ForskuddBeregningTest {
                 )
             )
         )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
-        val barnIHusstanden = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
-        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barnIHusstanden, alder = alder, bostatus = bostatus)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.MED_FORELDER)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barnIHusstandenListe, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
 
         assertAll(
@@ -270,12 +270,12 @@ internal class ForskuddBeregningTest {
                 ).add(BigDecimal.ONE)
             )
         )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
-        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
-        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.MED_FORELDER)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barnIHusstandenListe, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
 
         assertAll(
@@ -305,12 +305,13 @@ internal class ForskuddBeregningTest {
                 )
             )
         )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
-        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 2.0)
+        val barnIHusstandenListe =
+            listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1), BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_2))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
-        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.MED_FORELDER)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barnIHusstandenListe, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
 
         assertAll(
@@ -340,12 +341,13 @@ internal class ForskuddBeregningTest {
                 ).add(BigDecimal.ONE)
             )
         )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.ENSLIG)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
-        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 2.0)
+        val barnIHusstandenListe =
+            listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1), BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_2))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
-        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.MED_FORELDER)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barnIHusstandenListe, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
 
         assertAll(
@@ -373,12 +375,12 @@ internal class ForskuddBeregningTest {
                 )
             )
         )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.GIFT)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.GIFT_SAMBOER)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
-        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
-        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.MED_FORELDER)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barnIHusstandenListe, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
 
         assertAll(
@@ -406,12 +408,12 @@ internal class ForskuddBeregningTest {
                 ).add(BigDecimal.ONE)
             )
         )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.GIFT)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.GIFT_SAMBOER)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
-        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1.0)
+        val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
-        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.MED_FORELDER)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barnIHusstandenListe, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
 
         assertAll(
@@ -441,12 +443,13 @@ internal class ForskuddBeregningTest {
                 )
             )
         )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.GIFT)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.GIFT_SAMBOER)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
-        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 2.0)
+        val barnIHusstandenListe =
+            listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1), BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_2))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
-        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.MED_FORELDER)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barnIHusstandenListe, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
 
         assertAll(
@@ -479,12 +482,13 @@ internal class ForskuddBeregningTest {
                 )
             )
         )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.GIFT)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.GIFT_SAMBOER)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
-        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 2.0)
+        val barnIHusstandenListe =
+            listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1), BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_2))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
-        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.MED_FORELDER)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barnIHusstandenListe, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
 
         assertAll(
@@ -520,12 +524,13 @@ internal class ForskuddBeregningTest {
                 ).add(BigDecimal.ONE)
             )
         )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandKode.GIFT)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.GIFT_SAMBOER)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
-        val barn = BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 2.0)
+        val barnIHusstandenListe =
+            listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1), BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_2))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
-        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = BostatusKode.BOR_MED_FORELDRE)
-        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barn, alder = alder, bostatus = bostatus)
+        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.MED_FORELDER)
+        lagGrunnlag(inntekt = inntektListe, sivilstand = sivilstand, barnIHusstanden = barnIHusstandenListe, alder = alder, bostatus = bostatus)
         val resultat = forskuddBeregning.beregn(grunnlag!!)
 
         assertAll(
@@ -539,11 +544,17 @@ internal class ForskuddBeregningTest {
         printGrunnlagResultat(resultat, "***  ")
     }
 
-    private fun lagGrunnlag(inntekt: List<Inntekt>, sivilstand: Sivilstand, barnIHusstanden: BarnIHusstanden, alder: Alder, bostatus: Bostatus) {
+    private fun lagGrunnlag(
+        inntekt: List<Inntekt>,
+        sivilstand: Sivilstand,
+        barnIHusstanden: List<BarnIHusstanden>,
+        alder: Alder,
+        bostatus: Bostatus
+    ) {
         grunnlag = GrunnlagBeregning(
             inntektListe = inntekt,
             sivilstand = sivilstand,
-            barnIHusstanden = barnIHusstanden,
+            barnIHusstandenListe = barnIHusstanden,
             soknadBarnAlder = alder,
             soknadBarnBostatus = bostatus,
             sjablonListe = sjablonPeriodeListe
@@ -616,7 +627,7 @@ internal class ForskuddBeregningTest {
             "BM sivilstand:                                     " + betydning[1] + " " +
                 grunnlag!!.sivilstand.kode.name
         )
-        println("Antall barn i husstand:                            " + betydning[2] + " " + grunnlag!!.barnIHusstanden)
+        println("Antall barn i husstand:                            " + betydning[2] + " " + grunnlag!!.barnIHusstandenListe.count())
         println("Alder på søknadsbarn:                              " + betydning[3] + " " + grunnlag!!.soknadBarnAlder)
         println(
             "Bostedsstatus søknadsbarn:                         " + betydning[4] + " " + grunnlag!!.soknadBarnBostatus.kode.name
@@ -626,11 +637,7 @@ internal class ForskuddBeregningTest {
             "Inntektsintervall totalt (0036 x (antall barn - 1)): " + finnSjablonVerdi(
                 sjablonPeriodeListe,
                 SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP
-            ).multiply(
-                BigDecimal.valueOf(
-                    grunnlag!!.barnIHusstanden.antall - 1
-                )
-            )
+            ).multiply(BigDecimal(grunnlag!!.barnIHusstandenListe.count() - 1))
         )
         println()
         println("RESULTAT:")
@@ -645,6 +652,7 @@ internal class ForskuddBeregningTest {
         private const val INNTEKT_REFERANSE_2 = "INNTEKT_REFERANSE_2"
         private const val SIVILSTAND_REFERANSE = "SIVILSTAND_REFERANSE"
         private const val BARN_I_HUSSTANDEN_REFERANSE_1 = "BARN_I_HUSSTANDEN_REFERANSE_1"
+        private const val BARN_I_HUSSTANDEN_REFERANSE_2 = "BARN_I_HUSSTANDEN_REFERANSE_2"
         private const val SOKNADBARN_REFERANSE = "SOKNADBARN_REFERANSE"
         private const val BOSTATUS_REFERANSE = "BOSTATUS_REFERANSE"
     }

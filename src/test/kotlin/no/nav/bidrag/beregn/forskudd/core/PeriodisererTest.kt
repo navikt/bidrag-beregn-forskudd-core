@@ -6,8 +6,8 @@ import no.nav.bidrag.beregn.forskudd.core.bo.BarnIHusstandenPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode
-import no.nav.bidrag.domain.enums.BostatusKode
-import no.nav.bidrag.domain.enums.SivilstandKode
+import no.nav.bidrag.domene.enums.Bostatuskode
+import no.nav.bidrag.domene.enums.SivilstandskodeBeregning
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.DisplayName
@@ -33,7 +33,7 @@ internal class PeriodisererTest {
                 SivilstandPeriode(
                     referanse = SIVILSTAND_REFERANSE_GIFT,
                     sivilstandPeriode = Periode(datoFom = LocalDate.parse("2019-02-01"), datoTil = LocalDate.parse("2019-04-01")),
-                    kode = SivilstandKode.GIFT
+                    kode = SivilstandskodeBeregning.GIFT_SAMBOER
                 )
             )
             .finnPerioder(beregnDatoFom = LocalDate.parse("2000-01-01"), beregnDatoTil = LocalDate.parse("2100-01-01"))
@@ -65,7 +65,7 @@ internal class PeriodisererTest {
                 SivilstandPeriode(
                     referanse = SIVILSTAND_REFERANSE_GIFT,
                     sivilstandPeriode = Periode(datoFom = LocalDate.parse("2019-02-01"), datoTil = LocalDate.parse("2019-04-01")),
-                    kode = SivilstandKode.GIFT
+                    kode = SivilstandskodeBeregning.GIFT_SAMBOER
                 )
             )
             .finnPerioder(LocalDate.parse("2000-01-01"), LocalDate.parse("2100-01-01"))
@@ -87,7 +87,7 @@ internal class PeriodisererTest {
                 SivilstandPeriode(
                     referanse = SIVILSTAND_REFERANSE_GIFT,
                     sivilstandPeriode = Periode(datoFom = LocalDate.parse("2019-02-01"), datoTil = null),
-                    kode = SivilstandKode.GIFT
+                    kode = SivilstandskodeBeregning.GIFT_SAMBOER
                 )
             )
             .finnPerioder(beregnDatoFom = LocalDate.parse("2000-01-01"), beregnDatoTil = LocalDate.parse("2100-01-01"))
@@ -131,56 +131,53 @@ internal class PeriodisererTest {
                 SivilstandPeriode(
                     referanse = SIVILSTAND_REFERANSE_GIFT,
                     sivilstandPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2018-04-17")),
-                    kode = SivilstandKode.GIFT
+                    kode = SivilstandskodeBeregning.GIFT_SAMBOER
                 )
             )
             .addBruddpunkter(
                 SivilstandPeriode(
                     referanse = SIVILSTAND_REFERANSE_ENSLIG,
                     sivilstandPeriode = Periode(datoFom = LocalDate.parse("2018-04-17"), datoTil = null),
-                    kode = SivilstandKode.ENSLIG
+                    kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN
                 )
             )
             .addBruddpunkter(
                 BarnIHusstandenPeriode(
                     referanse = BARN_REFERANSE_1,
-                    barnIHusstandenPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = null),
-                    antall = 1.0
+                    barnIHusstandenPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = null)
                 )
             )
             .addBruddpunkter(
                 BarnIHusstandenPeriode(
                     referanse = BARN_REFERANSE_2,
-                    barnIHusstandenPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2018-06-16")),
-                    antall = 1.0
+                    barnIHusstandenPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2018-06-16"))
                 )
             )
             .addBruddpunkter(
                 BarnIHusstandenPeriode(
                     referanse = BARN_REFERANSE_3,
-                    barnIHusstandenPeriode = Periode(datoFom = LocalDate.parse("2019-03-31"), datoTil = null),
-                    antall = 1.0
+                    barnIHusstandenPeriode = Periode(datoFom = LocalDate.parse("2019-03-31"), datoTil = null)
                 )
             )
             .addBruddpunkter(
                 BostatusPeriode(
                     referanse = BOSTATUS_REFERANSE_MED_FORELDRE_1,
                     bostatusPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2018-08-16")),
-                    kode = BostatusKode.BOR_MED_FORELDRE
+                    kode = Bostatuskode.MED_FORELDER
                 )
             )
             .addBruddpunkter(
                 BostatusPeriode(
                     referanse = BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE,
                     bostatusPeriode = Periode(datoFom = LocalDate.parse("2018-08-16"), datoTil = LocalDate.parse("2018-11-13")),
-                    kode = BostatusKode.BOR_IKKE_MED_FORELDRE
+                    kode = Bostatuskode.IKKE_MED_FORELDER
                 )
             )
             .addBruddpunkter(
                 BostatusPeriode(
                     referanse = BOSTATUS_REFERANSE_MED_FORELDRE_2,
                     bostatusPeriode = Periode(datoFom = LocalDate.parse("2018-11-13"), datoTil = null),
-                    kode = BostatusKode.BOR_MED_FORELDRE
+                    kode = Bostatuskode.MED_FORELDER
                 )
             )
             .finnPerioder(beregnDatoFom = LocalDate.parse("2000-01-01"), beregnDatoTil = LocalDate.parse("2100-01-01"))

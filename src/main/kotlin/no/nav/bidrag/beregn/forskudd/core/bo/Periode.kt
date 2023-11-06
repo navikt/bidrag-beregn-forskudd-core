@@ -2,14 +2,14 @@ package no.nav.bidrag.beregn.forskudd.core.bo
 
 import no.nav.bidrag.beregn.felles.bo.Periode
 import no.nav.bidrag.beregn.felles.bo.PeriodisertGrunnlag
-import no.nav.bidrag.domain.enums.BostatusKode
-import no.nav.bidrag.domain.enums.SivilstandKode
+import no.nav.bidrag.domene.enums.Bostatuskode
+import no.nav.bidrag.domene.enums.SivilstandskodeBeregning
 import java.math.BigDecimal
 
 data class BostatusPeriode(
     val referanse: String,
     val bostatusPeriode: Periode,
-    val kode: BostatusKode
+    val kode: Bostatuskode
 ) : PeriodisertGrunnlag {
 
     constructor(bostatusPeriode: BostatusPeriode) : this(
@@ -45,7 +45,7 @@ data class InntektPeriode(
 data class SivilstandPeriode(
     val referanse: String,
     val sivilstandPeriode: Periode,
-    val kode: SivilstandKode
+    val kode: SivilstandskodeBeregning
 ) : PeriodisertGrunnlag {
 
     constructor(sivilstandPeriode: SivilstandPeriode) : this(
@@ -72,14 +72,12 @@ data class AlderPeriode(
 
 data class BarnIHusstandenPeriode(
     val referanse: String,
-    val barnIHusstandenPeriode: Periode,
-    val antall: Double
+    val barnIHusstandenPeriode: Periode
 ) : PeriodisertGrunnlag {
 
     constructor(barnIHusstandenPeriode: BarnIHusstandenPeriode) : this(
         barnIHusstandenPeriode.referanse,
-        barnIHusstandenPeriode.barnIHusstandenPeriode.justerDatoer(),
-        barnIHusstandenPeriode.antall
+        barnIHusstandenPeriode.barnIHusstandenPeriode.justerDatoer()
     )
 
     override fun getPeriode(): Periode {

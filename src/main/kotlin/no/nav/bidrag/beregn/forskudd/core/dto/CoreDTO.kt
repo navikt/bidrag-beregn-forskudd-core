@@ -45,8 +45,7 @@ data class SivilstandPeriodeCore(
 
 data class BarnIHusstandenPeriodeCore(
     val referanse: String,
-    val periode: PeriodeCore,
-    val antall: Double
+    val periode: PeriodeCore
 )
 
 // Resultat
