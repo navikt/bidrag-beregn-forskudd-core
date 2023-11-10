@@ -18,23 +18,23 @@ data class BeregnForskuddGrunnlag(
     val inntektPeriodeListe: List<InntektPeriode>,
     val sivilstandPeriodeListe: List<SivilstandPeriode>,
     val barnIHusstandenPeriodeListe: List<BarnIHusstandenPeriode>,
-    val sjablonPeriodeListe: List<SjablonPeriode>
+    val sjablonPeriodeListe: List<SjablonPeriode>,
 )
 
 data class SoknadBarn(
     val referanse: String,
-    val fodselsdato: LocalDate
+    val fodselsdato: LocalDate,
 )
 
 // Resultat periode
 data class BeregnForskuddResultat(
-    val beregnetForskuddPeriodeListe: List<ResultatPeriode>
+    val beregnetForskuddPeriodeListe: List<ResultatPeriode>,
 )
 
 data class ResultatPeriode(
     val periode: Periode,
     val resultat: ResultatBeregning,
-    val grunnlag: GrunnlagBeregning
+    val grunnlag: GrunnlagBeregning,
 )
 
 // Grunnlag beregning
@@ -44,32 +44,32 @@ data class GrunnlagBeregning(
     val barnIHusstandenListe: List<BarnIHusstanden>,
     val soknadBarnAlder: Alder,
     val soknadBarnBostatus: Bostatus,
-    val sjablonListe: List<SjablonPeriode>
+    val sjablonListe: List<SjablonPeriode>,
 )
 
 data class Inntekt(
     val referanse: String,
     val type: String,
-    val belop: BigDecimal
+    val belop: BigDecimal,
 )
 
 data class Sivilstand(
     val referanse: String,
-    val kode: SivilstandskodeBeregning
+    val kode: SivilstandskodeBeregning,
 )
 
 data class BarnIHusstanden(
-    val referanse: String
+    val referanse: String,
 )
 
 data class Alder(
     val referanse: String,
-    val alder: Int
+    val alder: Int,
 )
 
 data class Bostatus(
     val referanse: String,
-    val kode: Bostatuskode
+    val kode: Bostatuskode,
 )
 
 // Resultat beregning
@@ -77,19 +77,19 @@ data class ResultatBeregning(
     val belop: BigDecimal,
     val kode: ResultatKodeForskudd,
     val regel: String,
-    val sjablonListe: List<SjablonPeriodeNavnVerdi>
+    val sjablonListe: List<SjablonPeriodeNavnVerdi>,
 )
 
 // Hjelpeklasser
-data class BeregnForskuddListeGrunnlag(
+data class GrunnlagTilBeregning(
     val periodeResultatListe: MutableList<ResultatPeriode> = mutableListOf(),
-    var justertInntektPeriodeListe: List<InntektPeriode> = emptyList(),
-    var justertSivilstandPeriodeListe: List<SivilstandPeriode> = emptyList(),
-    var justertBarnIHusstandenPeriodeListe: List<BarnIHusstandenPeriode> = emptyList(),
-    var justertBostatusPeriodeListe: List<BostatusPeriode> = emptyList(),
-    var justertAlderPeriodeListe: List<AlderPeriode> = emptyList(),
-    var justertSjablonPeriodeListe: List<SjablonPeriode> = emptyList(),
-    var bruddPeriodeListe: MutableList<Periode> = mutableListOf()
+    var inntektPeriodeListe: List<InntektPeriode> = emptyList(),
+    var sivilstandPeriodeListe: List<SivilstandPeriode> = emptyList(),
+    var barnIHusstandenPeriodeListe: List<BarnIHusstandenPeriode> = emptyList(),
+    var bostatusPeriodeListe: List<BostatusPeriode> = emptyList(),
+    var alderPeriodeListe: List<AlderPeriode> = emptyList(),
+    var sjablonPeriodeListe: List<SjablonPeriode> = emptyList(),
+    var bruddPeriodeListe: MutableList<Periode> = mutableListOf(),
 )
 
 data class Sjablonverdier(
@@ -99,5 +99,5 @@ data class Sjablonverdier(
     var forskuddssats100ProsentBelop: BigDecimal = BigDecimal.ZERO,
     var inntektsgrense100ProsentForskuddBelop: BigDecimal = BigDecimal.ZERO,
     var inntektsgrenseEnslig75ProsentForskuddBelop: BigDecimal = BigDecimal.ZERO,
-    var inntektsgrenseGiftSamboer75ProsentForskuddBelop: BigDecimal = BigDecimal.ZERO
+    var inntektsgrenseGiftSamboer75ProsentForskuddBelop: BigDecimal = BigDecimal.ZERO,
 )

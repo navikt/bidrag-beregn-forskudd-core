@@ -39,7 +39,6 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 object TestUtil {
-
     private const val INNTEKT_REFERANSE_1 = "INNTEKT_REFERANSE_1"
     private const val INNTEKT_REFERANSE_2 = "INNTEKT_REFERANSE_2"
     private const val INNTEKT_REFERANSE_3 = "INNTEKT_REFERANSE_3"
@@ -61,38 +60,38 @@ object TestUtil {
             SjablonPeriodeNavnVerdi(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELOP.navn,
-                BigDecimal.valueOf(1280)
+                BigDecimal.valueOf(1280),
             ),
             SjablonPeriodeNavnVerdi(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 SjablonTallNavn.FORSKUDDSSATS_BELOP.navn,
-                BigDecimal.valueOf(1710)
+                BigDecimal.valueOf(1710),
             ),
             SjablonPeriodeNavnVerdi(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.navn,
-                BigDecimal.valueOf(320)
+                BigDecimal.valueOf(320),
             ),
             SjablonPeriodeNavnVerdi(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP.navn,
-                BigDecimal.valueOf(270200)
+                BigDecimal.valueOf(270200),
             ),
             SjablonPeriodeNavnVerdi(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP.navn,
-                BigDecimal.valueOf(419700)
+                BigDecimal.valueOf(419700),
             ),
             SjablonPeriodeNavnVerdi(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP.navn,
-                BigDecimal.valueOf(336500)
+                BigDecimal.valueOf(336500),
             ),
             SjablonPeriodeNavnVerdi(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP.navn,
-                BigDecimal.valueOf(61700)
-            )
+                BigDecimal.valueOf(61700),
+            ),
         )
 
     fun byggSjablonPeriodeListe() =
@@ -103,57 +102,57 @@ object TestUtil {
                 Sjablon(
                     SjablonTallNavn.FORSKUDDSSATS_BELOP.navn,
                     emptyList(),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(1710)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(1710))),
+                ),
             ),
             SjablonPeriode(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 Sjablon(
                     SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.navn,
                     emptyList(),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(320)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(320))),
+                ),
             ),
             SjablonPeriode(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 Sjablon(
                     SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP.navn,
                     emptyList(),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(270200)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(270200))),
+                ),
             ),
             SjablonPeriode(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 Sjablon(
                     SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP.navn,
                     emptyList(),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(419700)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(419700))),
+                ),
             ),
             SjablonPeriode(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 Sjablon(
                     SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP.navn,
                     emptyList(),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(336500)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(336500))),
+                ),
             ),
             SjablonPeriode(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 Sjablon(
                     SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP.navn,
                     emptyList(),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(61700)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(61700))),
+                ),
             ),
             SjablonPeriode(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 Sjablon(
                     SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELOP.navn,
                     emptyList(),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(1280)))
-                )
-            )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(1280))),
+                ),
+            ),
         )
 
     fun byggForskuddGrunnlagCore(): BeregnForskuddGrunnlagCore {
@@ -163,45 +162,49 @@ object TestUtil {
     fun byggForskuddGrunnlagCore(bostatus: String): BeregnForskuddGrunnlagCore {
         val soknadBarn = SoknadBarnCore(SOKNADBARN_REFERANSE, LocalDate.parse("2006-05-12"))
 
-        val bostatusPeriodeListe = listOf(
-            BostatusPeriodeCore(
-                BOSTATUS_REFERANSE_MED_FORELDRE_1,
-                PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")),
-                bostatus
+        val bostatusPeriodeListe =
+            listOf(
+                BostatusPeriodeCore(
+                    BOSTATUS_REFERANSE_MED_FORELDRE_1,
+                    PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")),
+                    bostatus,
+                ),
             )
-        )
 
-        val inntektPeriodeListe = listOf(
-            InntektPeriodeCore(
-                INNTEKT_REFERANSE_1,
-                PeriodeCore(LocalDate.parse("2017-01-01"), null),
-                InntektType.LØNNSINNTEKT.toString(),
-                BigDecimal.ZERO
+        val inntektPeriodeListe =
+            listOf(
+                InntektPeriodeCore(
+                    INNTEKT_REFERANSE_1,
+                    PeriodeCore(LocalDate.parse("2017-01-01"), null),
+                    InntektType.LØNNSINNTEKT.toString(),
+                    BigDecimal.ZERO,
+                ),
             )
-        )
 
-        val bidragMottakerSivilstandPeriodeListe = listOf(
-            SivilstandPeriodeCore(
-                SIVILSTAND_REFERANSE_GIFT,
-                PeriodeCore(LocalDate.parse("2018-01-01"), LocalDate.parse("2020-01-01")),
-                SivilstandskodeBeregning.GIFT_SAMBOER.toString()
-            ),
-            SivilstandPeriodeCore(
-                SIVILSTAND_REFERANSE_ENSLIG,
-                PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
-                SivilstandskodeBeregning.BOR_ALENE_MED_BARN.toString()
+        val bidragMottakerSivilstandPeriodeListe =
+            listOf(
+                SivilstandPeriodeCore(
+                    SIVILSTAND_REFERANSE_GIFT,
+                    PeriodeCore(LocalDate.parse("2018-01-01"), LocalDate.parse("2020-01-01")),
+                    SivilstandskodeBeregning.GIFT_SAMBOER.toString(),
+                ),
+                SivilstandPeriodeCore(
+                    SIVILSTAND_REFERANSE_ENSLIG,
+                    PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
+                    SivilstandskodeBeregning.BOR_ALENE_MED_BARN.toString(),
+                ),
             )
-        )
 
-        val bidragMottakerBarnPeriodeListe = listOf(
-            BarnIHusstandenPeriodeCore(
-                BARN_I_HUSSTANDEN_REFERANSE_1,
-                PeriodeCore(
-                    LocalDate.parse("2017-01-01"),
-                    LocalDate.parse("2020-01-01")
-                )
+        val bidragMottakerBarnPeriodeListe =
+            listOf(
+                BarnIHusstandenPeriodeCore(
+                    BARN_I_HUSSTANDEN_REFERANSE_1,
+                    PeriodeCore(
+                        LocalDate.parse("2017-01-01"),
+                        LocalDate.parse("2020-01-01"),
+                    ),
+                ),
             )
-        )
 
         return BeregnForskuddGrunnlagCore(
             LocalDate.parse("2017-01-01"),
@@ -211,74 +214,75 @@ object TestUtil {
             inntektPeriodeListe,
             bidragMottakerSivilstandPeriodeListe,
             bidragMottakerBarnPeriodeListe,
-            emptyList()
+            emptyList(),
         )
     }
 
     fun byggForskuddResultat(): BeregnForskuddResultat {
-        val periodeResultatListe = listOf(
-            ResultatPeriode(
-                Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
-                ResultatBeregning(
-                    BigDecimal.valueOf(1600),
-                    ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT,
-                    "REGEL 1",
-                    byggSjablonPeriodeNavnVerdiListe()
+        val periodeResultatListe =
+            listOf(
+                ResultatPeriode(
+                    Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
+                    ResultatBeregning(
+                        BigDecimal.valueOf(1600),
+                        ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT,
+                        "REGEL 1",
+                        byggSjablonPeriodeNavnVerdiListe(),
+                    ),
+                    GrunnlagBeregning(
+                        listOf(
+                            Inntekt(INNTEKT_REFERANSE_1, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000)),
+                        ),
+                        Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandskodeBeregning.BOR_ALENE_MED_BARN),
+                        listOf(
+                            BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1),
+                            BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_2),
+                        ),
+                        Alder(SOKNADBARN_REFERANSE, 10),
+                        Bostatus(BOSTATUS_REFERANSE_MED_FORELDRE_1, Bostatuskode.MED_FORELDER),
+                        byggSjablonPeriodeListe(),
+                    ),
                 ),
-                GrunnlagBeregning(
-                    listOf(
-                        Inntekt(INNTEKT_REFERANSE_1, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000))
+                ResultatPeriode(
+                    Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
+                    ResultatBeregning(
+                        BigDecimal.valueOf(1200),
+                        ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT,
+                        "REGEL 2",
+                        byggSjablonPeriodeNavnVerdiListe(),
                     ),
-                    Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandskodeBeregning.BOR_ALENE_MED_BARN),
-                    listOf(
-                        BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1),
-                        BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_2)
+                    GrunnlagBeregning(
+                        listOf(
+                            Inntekt(INNTEKT_REFERANSE_2, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000)),
+                        ),
+                        Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandskodeBeregning.BOR_ALENE_MED_BARN),
+                        listOf(
+                            BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1),
+                            BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_2),
+                        ),
+                        Alder(SOKNADBARN_REFERANSE, 10),
+                        Bostatus(BOSTATUS_REFERANSE_MED_FORELDRE_1, Bostatuskode.MED_FORELDER),
+                        byggSjablonPeriodeListe(),
                     ),
-                    Alder(SOKNADBARN_REFERANSE, 10),
-                    Bostatus(BOSTATUS_REFERANSE_MED_FORELDRE_1, Bostatuskode.MED_FORELDER),
-                    byggSjablonPeriodeListe()
-                )
-            ),
-            ResultatPeriode(
-                Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
-                ResultatBeregning(
-                    BigDecimal.valueOf(1200),
-                    ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT,
-                    "REGEL 2",
-                    byggSjablonPeriodeNavnVerdiListe()
                 ),
-                GrunnlagBeregning(
-                    listOf(
-                        Inntekt(INNTEKT_REFERANSE_2, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000))
+                ResultatPeriode(
+                    Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")),
+                    ResultatBeregning(BigDecimal.valueOf(0), ResultatKodeForskudd.AVSLAG, "REGEL 11", byggSjablonPeriodeNavnVerdiListe()),
+                    GrunnlagBeregning(
+                        listOf(
+                            Inntekt(INNTEKT_REFERANSE_3, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000)),
+                        ),
+                        Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandskodeBeregning.BOR_ALENE_MED_BARN),
+                        listOf(
+                            BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1),
+                            BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_2),
+                        ),
+                        Alder(SOKNADBARN_REFERANSE, 10),
+                        Bostatus(BOSTATUS_REFERANSE_MED_FORELDRE_1, Bostatuskode.MED_FORELDER),
+                        byggSjablonPeriodeListe(),
                     ),
-                    Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandskodeBeregning.BOR_ALENE_MED_BARN),
-                    listOf(
-                        BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1),
-                        BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_2)
-                    ),
-                    Alder(SOKNADBARN_REFERANSE, 10),
-                    Bostatus(BOSTATUS_REFERANSE_MED_FORELDRE_1, Bostatuskode.MED_FORELDER),
-                    byggSjablonPeriodeListe()
-                )
-            ),
-            ResultatPeriode(
-                Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")),
-                ResultatBeregning(BigDecimal.valueOf(0), ResultatKodeForskudd.AVSLAG, "REGEL 11", byggSjablonPeriodeNavnVerdiListe()),
-                GrunnlagBeregning(
-                    listOf(
-                        Inntekt(INNTEKT_REFERANSE_3, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000))
-                    ),
-                    Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandskodeBeregning.BOR_ALENE_MED_BARN),
-                    listOf(
-                        BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1),
-                        BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_2)
-                    ),
-                    Alder(SOKNADBARN_REFERANSE, 10),
-                    Bostatus(BOSTATUS_REFERANSE_MED_FORELDRE_1, Bostatuskode.MED_FORELDER),
-                    byggSjablonPeriodeListe()
-                )
+                ),
             )
-        )
         return BeregnForskuddResultat(periodeResultatListe)
     }
 
@@ -290,85 +294,92 @@ object TestUtil {
         return byggForskuddGrunnlag("2017-01-01", "2019-08-01")
     }
 
-    fun byggForskuddGrunnlag(beregnDatoFra: String, beregnDatoTil: String): BeregnForskuddGrunnlag {
+    fun byggForskuddGrunnlag(
+        beregnDatoFra: String,
+        beregnDatoTil: String,
+    ): BeregnForskuddGrunnlag {
         val fodselsdato = LocalDate.parse("2006-12-19")
 
-        val bostatusListe = listOf(
-            BostatusPeriode(
-                BOSTATUS_REFERANSE_MED_FORELDRE_1,
-                Periode(LocalDate.parse("2006-12-19"), LocalDate.parse("2018-08-16")),
-                Bostatuskode.MED_FORELDER
-            ),
-            BostatusPeriode(
-                BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE,
-                Periode(LocalDate.parse("2018-08-16"), LocalDate.parse("2018-11-13")),
-                Bostatuskode.IKKE_MED_FORELDER
-            ),
-            BostatusPeriode(
-                BOSTATUS_REFERANSE_MED_FORELDRE_2,
-                Periode(LocalDate.parse("2018-11-13"), null),
-                Bostatuskode.MED_FORELDER
+        val bostatusListe =
+            listOf(
+                BostatusPeriode(
+                    BOSTATUS_REFERANSE_MED_FORELDRE_1,
+                    Periode(LocalDate.parse("2007-01-01"), LocalDate.parse("2018-09-01")),
+                    Bostatuskode.MED_FORELDER,
+                ),
+                BostatusPeriode(
+                    BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE,
+                    Periode(LocalDate.parse("2018-09-01"), LocalDate.parse("2018-12-01")),
+                    Bostatuskode.IKKE_MED_FORELDER,
+                ),
+                BostatusPeriode(
+                    BOSTATUS_REFERANSE_MED_FORELDRE_2,
+                    Periode(LocalDate.parse("2018-12-01"), null),
+                    Bostatuskode.MED_FORELDER,
+                ),
             )
-        )
 
         val soknadBarn = SoknadBarn(SOKNADBARN_REFERANSE, fodselsdato)
 
-        val inntektListe = listOf(
-            InntektPeriode(
-                INNTEKT_REFERANSE_1,
-                Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
-                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                BigDecimal.valueOf(250000)
-            ),
-            InntektPeriode(
-                INNTEKT_REFERANSE_2,
-                Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
-                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                BigDecimal.valueOf(400000)
-            ),
-            InntektPeriode(
-                INNTEKT_REFERANSE_3,
-                Periode(LocalDate.parse("2019-01-01"), null),
-                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                BigDecimal.valueOf(500000)
+        val inntektListe =
+            listOf(
+                InntektPeriode(
+                    INNTEKT_REFERANSE_1,
+                    Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
+                    "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+                    BigDecimal.valueOf(250000),
+                ),
+                InntektPeriode(
+                    INNTEKT_REFERANSE_2,
+                    Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
+                    "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+                    BigDecimal.valueOf(400000),
+                ),
+                InntektPeriode(
+                    INNTEKT_REFERANSE_3,
+                    Periode(LocalDate.parse("2019-01-01"), null),
+                    "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+                    BigDecimal.valueOf(500000),
+                ),
             )
-        )
 
-        val sivilstandListe = listOf(
-            SivilstandPeriode(
-                SIVILSTAND_REFERANSE_GIFT,
-                Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-17")),
-                SivilstandskodeBeregning.GIFT_SAMBOER
-            ),
-            SivilstandPeriode(
-                SIVILSTAND_REFERANSE_ENSLIG,
-                Periode(LocalDate.parse("2018-04-17"), LocalDate.parse("2019-08-01")),
-                SivilstandskodeBeregning.BOR_ALENE_MED_BARN
+        val sivilstandListe =
+            listOf(
+                SivilstandPeriode(
+                    SIVILSTAND_REFERANSE_GIFT,
+                    Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-05-01")),
+                    SivilstandskodeBeregning.GIFT_SAMBOER,
+                ),
+                SivilstandPeriode(
+                    SIVILSTAND_REFERANSE_ENSLIG,
+                    Periode(LocalDate.parse("2018-05-01"), LocalDate.parse("2019-08-01")),
+                    SivilstandskodeBeregning.BOR_ALENE_MED_BARN,
+                ),
             )
-        )
 
-        val barnIHusstandenListe = listOf(
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_1,
-                Periode(LocalDate.parse("2006-12-19"), null)
-            ),
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_2,
-                Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-08-16"))
-            ),
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_3,
-                Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-06-17"))
-            ),
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_4,
-                Periode(LocalDate.parse("2018-11-13"), null)
-            ),
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_5,
-                Periode(LocalDate.parse("2019-03-31"), null)
+        val barnIHusstandenListe =
+            listOf(
+                BarnIHusstandenPeriode(
+                    BARN_I_HUSSTANDEN_REFERANSE_1,
+                    Periode(LocalDate.parse("2007-01-01"), null),
+                ),
+                BarnIHusstandenPeriode(
+                    BARN_I_HUSSTANDEN_REFERANSE_2,
+                    Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-09-01")),
+                ),
+                BarnIHusstandenPeriode(
+                    BARN_I_HUSSTANDEN_REFERANSE_3,
+                    Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-07-01")),
+                ),
+                BarnIHusstandenPeriode(
+                    BARN_I_HUSSTANDEN_REFERANSE_4,
+                    Periode(LocalDate.parse("2018-12-01"), null),
+                ),
+                BarnIHusstandenPeriode(
+                    BARN_I_HUSSTANDEN_REFERANSE_5,
+                    Periode(LocalDate.parse("2019-04-01"), null),
+                ),
             )
-        )
 
         return BeregnForskuddGrunnlag(
             LocalDate.parse(beregnDatoFra),
@@ -378,7 +389,7 @@ object TestUtil {
             inntektListe,
             sivilstandListe,
             barnIHusstandenListe,
-            byggSjablonPeriodeListe()
+            byggSjablonPeriodeListe(),
         )
     }
 
@@ -387,69 +398,72 @@ object TestUtil {
         val beregnDatoTil = LocalDate.parse("2017-02-01")
         val fodselsdato = LocalDate.parse("2006-12-19")
 
-        val bostatusListe = listOf(
-            BostatusPeriode(
-                BOSTATUS_REFERANSE_MED_FORELDRE_1,
-                Periode(LocalDate.parse("2006-12-19"), LocalDate.parse("2018-08-16")),
-                Bostatuskode.MED_FORELDER
-            ),
-            BostatusPeriode(
-                BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE,
-                Periode(LocalDate.parse("2018-08-16"), LocalDate.parse("2018-11-13")),
-                Bostatuskode.IKKE_MED_FORELDER
-            ),
-            BostatusPeriode(
-                BOSTATUS_REFERANSE_MED_FORELDRE_2,
-                Periode(LocalDate.parse("2018-11-13"), null),
-                Bostatuskode.MED_FORELDER
+        val bostatusListe =
+            listOf(
+                BostatusPeriode(
+                    BOSTATUS_REFERANSE_MED_FORELDRE_1,
+                    Periode(LocalDate.parse("2007-01-01"), LocalDate.parse("2018-09-01")),
+                    Bostatuskode.MED_FORELDER,
+                ),
+                BostatusPeriode(
+                    BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE,
+                    Periode(LocalDate.parse("2018-09-01"), LocalDate.parse("2018-12-01")),
+                    Bostatuskode.IKKE_MED_FORELDER,
+                ),
+                BostatusPeriode(
+                    BOSTATUS_REFERANSE_MED_FORELDRE_2,
+                    Periode(LocalDate.parse("2018-12-01"), null),
+                    Bostatuskode.MED_FORELDER,
+                ),
             )
-        )
 
         val soknadBarn = SoknadBarn(SOKNADBARN_REFERANSE, fodselsdato)
 
-        val inntektListe = listOf(
-            InntektPeriode(
-                INNTEKT_REFERANSE_1,
-                Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
-                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                BigDecimal.valueOf(250000)
-            ),
-            InntektPeriode(
-                INNTEKT_REFERANSE_2,
-                Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
-                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                BigDecimal.valueOf(400000)
-            ),
-            InntektPeriode(
-                INNTEKT_REFERANSE_3,
-                Periode(LocalDate.parse("2019-01-01"), null),
-                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                BigDecimal.valueOf(500000)
+        val inntektListe =
+            listOf(
+                InntektPeriode(
+                    INNTEKT_REFERANSE_1,
+                    Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
+                    "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+                    BigDecimal.valueOf(250000),
+                ),
+                InntektPeriode(
+                    INNTEKT_REFERANSE_2,
+                    Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
+                    "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+                    BigDecimal.valueOf(400000),
+                ),
+                InntektPeriode(
+                    INNTEKT_REFERANSE_3,
+                    Periode(LocalDate.parse("2019-01-01"), null),
+                    "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+                    BigDecimal.valueOf(500000),
+                ),
             )
-        )
 
-        val barnIHusstandenListe = listOf(
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_1,
-                Periode(LocalDate.parse("2006-12-19"), LocalDate.parse("2019-03-31"))
-            ),
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_2,
-                Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-08-16"))
-            ),
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_3,
-                Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-06-17"))
-            ),
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_4,
-                Periode(LocalDate.parse("2018-11-13"), LocalDate.parse("2019-03-31"))
-            ),
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_5,
-                Periode(LocalDate.parse("2019-03-31"), LocalDate.parse("2019-03-31"))
+        val barnIHusstandenListe =
+            listOf(
+                BarnIHusstandenPeriode(
+                    BARN_I_HUSSTANDEN_REFERANSE_1,
+                    Periode(LocalDate.parse("2007-01-01"), LocalDate.parse("2019-04-01")),
+                ),
+                BarnIHusstandenPeriode(
+                    BARN_I_HUSSTANDEN_REFERANSE_2,
+                    Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-09-01")),
+                ),
+                BarnIHusstandenPeriode(
+                    BARN_I_HUSSTANDEN_REFERANSE_3,
+                    Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-07-01")),
+                ),
+                BarnIHusstandenPeriode(
+                    BARN_I_HUSSTANDEN_REFERANSE_4,
+                    Periode(LocalDate.parse("2018-12-01"), LocalDate.parse("2019-04-01")),
+                ),
+                BarnIHusstandenPeriode(
+                    BARN_I_HUSSTANDEN_REFERANSE_5,
+                    Periode(LocalDate.parse("2019-04-01"), LocalDate.parse("2019-04-01")),
+                ),
             )
-        )
 
         return BeregnForskuddGrunnlag(
             beregnDatoFra,
@@ -459,7 +473,7 @@ object TestUtil {
             inntektListe,
             emptyList(),
             barnIHusstandenListe,
-            byggSjablonPeriodeListe()
+            byggSjablonPeriodeListe(),
         )
     }
 
@@ -468,74 +482,78 @@ object TestUtil {
         val beregnDatoTil = LocalDate.parse("2017-01-01")
         val fodselsdato = LocalDate.parse("2006-12-19")
 
-        val bostatusListe = listOf(
-            BostatusPeriode(
-                BOSTATUS_REFERANSE_MED_FORELDRE_1,
-                Periode(LocalDate.parse("2006-12-19"), LocalDate.parse("2018-08-16")),
-                Bostatuskode.MED_FORELDER
-            ),
-            BostatusPeriode(
-                BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE,
-                Periode(LocalDate.parse("2018-08-16"), null),
-                Bostatuskode.IKKE_MED_FORELDER
-            ),
-            BostatusPeriode(
-                BOSTATUS_REFERANSE_MED_FORELDRE_2,
-                Periode(LocalDate.parse("2018-11-13"), null),
-                Bostatuskode.MED_FORELDER
+        val bostatusListe =
+            listOf(
+                BostatusPeriode(
+                    BOSTATUS_REFERANSE_MED_FORELDRE_1,
+                    Periode(LocalDate.parse("2007-01-01"), LocalDate.parse("2018-09-01")),
+                    Bostatuskode.MED_FORELDER,
+                ),
+                BostatusPeriode(
+                    BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE,
+                    Periode(LocalDate.parse("2018-09-01"), null),
+                    Bostatuskode.IKKE_MED_FORELDER,
+                ),
+                BostatusPeriode(
+                    BOSTATUS_REFERANSE_MED_FORELDRE_2,
+                    Periode(LocalDate.parse("2018-12-01"), null),
+                    Bostatuskode.MED_FORELDER,
+                ),
             )
-        )
 
         val soknadBarn = SoknadBarn(SOKNADBARN_REFERANSE, fodselsdato)
 
-        val inntektListe = listOf(
-            InntektPeriode(
-                INNTEKT_REFERANSE_1,
-                Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
-                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                BigDecimal.valueOf(250000)
-            ),
-            InntektPeriode(
-                INNTEKT_REFERANSE_2,
-                Periode(LocalDate.parse("2018-01-04"), LocalDate.parse("2019-01-01")),
-                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                BigDecimal.valueOf(400000)
-            ),
-            InntektPeriode(
-                INNTEKT_REFERANSE_3,
-                Periode(LocalDate.parse("2019-01-01"), null),
-                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                BigDecimal.valueOf(500000)
+        val inntektListe =
+            listOf(
+                InntektPeriode(
+                    INNTEKT_REFERANSE_1,
+                    Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
+                    "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+                    BigDecimal.valueOf(250000),
+                ),
+                InntektPeriode(
+                    INNTEKT_REFERANSE_2,
+                    Periode(LocalDate.parse("2018-02-01"), LocalDate.parse("2019-01-01")),
+                    "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+                    BigDecimal.valueOf(400000),
+                ),
+                InntektPeriode(
+                    INNTEKT_REFERANSE_3,
+                    Periode(LocalDate.parse("2019-01-01"), null),
+                    "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+                    BigDecimal.valueOf(500000),
+                ),
             )
-        )
 
-        val sivilstandListe = listOf(
-            SivilstandPeriode(
-                SIVILSTAND_REFERANSE_GIFT,
-                Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-01")),
-                SivilstandskodeBeregning.GIFT_SAMBOER
-            ),
-            SivilstandPeriode(
-                SIVILSTAND_REFERANSE_ENSLIG,
-                Periode(LocalDate.parse("2018-03-17"), LocalDate.parse("2019-07-01")),
-                SivilstandskodeBeregning.BOR_ALENE_MED_BARN
+        val sivilstandListe =
+            listOf(
+                SivilstandPeriode(
+                    SIVILSTAND_REFERANSE_GIFT,
+                    Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-01")),
+                    SivilstandskodeBeregning.GIFT_SAMBOER,
+                ),
+                SivilstandPeriode(
+                    SIVILSTAND_REFERANSE_ENSLIG,
+                    Periode(LocalDate.parse("2018-03-01"), LocalDate.parse("2019-07-01")),
+                    SivilstandskodeBeregning.BOR_ALENE_MED_BARN,
+                ),
             )
-        )
 
-        val barnIHusstandenListe = listOf(
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_1,
-                Periode(LocalDate.parse("2017-01-01"), null)
-            ),
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_2,
-                Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-06-17"))
-            ),
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_3,
-                Periode(LocalDate.parse("2019-03-31"), LocalDate.parse("2018-06-17"))
+        val barnIHusstandenListe =
+            listOf(
+                BarnIHusstandenPeriode(
+                    BARN_I_HUSSTANDEN_REFERANSE_1,
+                    Periode(LocalDate.parse("2017-01-01"), null),
+                ),
+                BarnIHusstandenPeriode(
+                    BARN_I_HUSSTANDEN_REFERANSE_2,
+                    Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-07-01")),
+                ),
+                BarnIHusstandenPeriode(
+                    BARN_I_HUSSTANDEN_REFERANSE_3,
+                    Periode(LocalDate.parse("2019-04-01"), LocalDate.parse("2018-07-01")),
+                ),
             )
-        )
 
         return BeregnForskuddGrunnlag(
             beregnDatoFra,
@@ -545,7 +563,7 @@ object TestUtil {
             inntektListe,
             sivilstandListe,
             barnIHusstandenListe,
-            byggSjablonPeriodeListe()
+            byggSjablonPeriodeListe(),
         )
     }
 
@@ -554,39 +572,43 @@ object TestUtil {
         val beregnDatoTil = LocalDate.parse("2017-02-01")
         val fodselsdato = LocalDate.parse("2006-12-19")
 
-        val bostatusListe = listOf(
-            BostatusPeriode(
-                BOSTATUS_REFERANSE_MED_FORELDRE_1,
-                Periode(LocalDate.parse("2006-12-19"), null),
-                Bostatuskode.MED_FORELDER
+        val bostatusListe =
+            listOf(
+                BostatusPeriode(
+                    BOSTATUS_REFERANSE_MED_FORELDRE_1,
+                    Periode(LocalDate.parse("2007-01-01"), null),
+                    Bostatuskode.MED_FORELDER,
+                ),
             )
-        )
 
         val soknadBarn = SoknadBarn(SOKNADBARN_REFERANSE, fodselsdato)
 
-        val inntektListe = listOf(
-            InntektPeriode(
-                INNTEKT_REFERANSE_1,
-                Periode(LocalDate.parse("2017-01-01"), null),
-                "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                BigDecimal.valueOf(250000)
+        val inntektListe =
+            listOf(
+                InntektPeriode(
+                    INNTEKT_REFERANSE_1,
+                    Periode(LocalDate.parse("2017-01-01"), null),
+                    "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+                    BigDecimal.valueOf(250000),
+                ),
             )
-        )
 
-        val sivilstandListe = listOf(
-            SivilstandPeriode(
-                SIVILSTAND_REFERANSE_GIFT,
-                Periode(LocalDate.parse("2017-01-01"), null),
-                SivilstandskodeBeregning.GIFT_SAMBOER
+        val sivilstandListe =
+            listOf(
+                SivilstandPeriode(
+                    SIVILSTAND_REFERANSE_GIFT,
+                    Periode(LocalDate.parse("2017-01-01"), null),
+                    SivilstandskodeBeregning.GIFT_SAMBOER,
+                ),
             )
-        )
 
-        val barnIHusstandenListe = listOf(
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_1,
-                Periode(LocalDate.parse("2017-01-01"), null)
+        val barnIHusstandenListe =
+            listOf(
+                BarnIHusstandenPeriode(
+                    BARN_I_HUSSTANDEN_REFERANSE_1,
+                    Periode(LocalDate.parse("2017-01-01"), null),
+                ),
             )
-        )
 
         return BeregnForskuddGrunnlag(
             beregnDatoFra,
@@ -596,7 +618,7 @@ object TestUtil {
             inntektListe,
             sivilstandListe,
             barnIHusstandenListe,
-            byggSjablonPeriodeListe()
+            byggSjablonPeriodeListe(),
         )
     }
 
@@ -605,34 +627,37 @@ object TestUtil {
         val beregnDatoTil = LocalDate.parse("2018-01-01")
         val fodselsdato = LocalDate.parse("2007-12-19")
 
-        val bostatusListe = listOf(
-            BostatusPeriode(
-                BOSTATUS_REFERANSE_MED_FORELDRE_1,
-                Periode(LocalDate.parse("2017-01-01"), null),
-                Bostatuskode.MED_FORELDER
+        val bostatusListe =
+            listOf(
+                BostatusPeriode(
+                    BOSTATUS_REFERANSE_MED_FORELDRE_1,
+                    Periode(LocalDate.parse("2017-01-01"), null),
+                    Bostatuskode.MED_FORELDER,
+                ),
             )
-        )
 
         val soknadBarn = SoknadBarn(SOKNADBARN_REFERANSE, fodselsdato)
 
-        val sivilstandListe = listOf(
-            SivilstandPeriode(
-                SIVILSTAND_REFERANSE_ENSLIG,
-                Periode(LocalDate.parse("2017-01-01"), null),
-                SivilstandskodeBeregning.BOR_ALENE_MED_BARN
+        val sivilstandListe =
+            listOf(
+                SivilstandPeriode(
+                    SIVILSTAND_REFERANSE_ENSLIG,
+                    Periode(LocalDate.parse("2017-01-01"), null),
+                    SivilstandskodeBeregning.BOR_ALENE_MED_BARN,
+                ),
             )
-        )
 
-        val barnIHusstandenListe = listOf(
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_1,
-                Periode(LocalDate.parse("2017-01-01"), null)
-            ),
-            BarnIHusstandenPeriode(
-                BARN_I_HUSSTANDEN_REFERANSE_2,
-                Periode(LocalDate.parse("2017-01-01"), null)
+        val barnIHusstandenListe =
+            listOf(
+                BarnIHusstandenPeriode(
+                    BARN_I_HUSSTANDEN_REFERANSE_1,
+                    Periode(LocalDate.parse("2017-01-01"), null),
+                ),
+                BarnIHusstandenPeriode(
+                    BARN_I_HUSSTANDEN_REFERANSE_2,
+                    Periode(LocalDate.parse("2017-01-01"), null),
+                ),
             )
-        )
 
         return BeregnForskuddGrunnlag(
             beregnDatoFra,
@@ -642,7 +667,7 @@ object TestUtil {
             inntektListe,
             sivilstandListe,
             barnIHusstandenListe,
-            byggSjablonPeriodeListe()
+            byggSjablonPeriodeListe(),
         )
     }
 }

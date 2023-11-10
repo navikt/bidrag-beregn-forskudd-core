@@ -4,7 +4,6 @@ import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning
 
 fun interface ForskuddBeregning {
-
     fun beregn(grunnlag: GrunnlagBeregning): ResultatBeregning
 
     companion object {

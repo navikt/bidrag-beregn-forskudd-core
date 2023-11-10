@@ -24,7 +24,6 @@ import java.time.LocalDate
 @ExtendWith(MockitoExtension::class)
 @DisplayName("ForskuddCoreTest")
 internal class ForskuddCoreTest {
-
     @InjectMocks
     private lateinit var forskuddCore: ForskuddCoreImpl
 
@@ -131,7 +130,7 @@ internal class ForskuddCoreTest {
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[2].resultat.regel)
                     .isEqualTo("REGEL 11")
-            }
+            },
         )
     }
 
@@ -145,9 +144,17 @@ internal class ForskuddCoreTest {
             Executable { assertThat(beregnForskuddResultatCore).isNotNull() },
             Executable { assertThat(beregnForskuddResultatCore.avvikListe).isNotEmpty() },
             Executable { assertThat(beregnForskuddResultatCore.avvikListe).hasSize(1) },
-            Executable { assertThat(beregnForskuddResultatCore.avvikListe[0].avvikTekst).isEqualTo("beregnDatoTil må være etter beregnDatoFra") },
-            Executable { assertThat(beregnForskuddResultatCore.avvikListe[0].avvikType).isEqualTo(Avvikstype.DATO_FOM_ETTER_DATO_TIL.toString()) },
-            Executable { assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe).isEmpty() }
+            Executable {
+                assertThat(
+                    beregnForskuddResultatCore.avvikListe[0].avvikTekst,
+                ).isEqualTo("beregnDatoTil må være etter beregnDatoFra")
+            },
+            Executable {
+                assertThat(
+                    beregnForskuddResultatCore.avvikListe[0].avvikType,
+                ).isEqualTo(Avvikstype.DATO_FOM_ETTER_DATO_TIL.toString())
+            },
+            Executable { assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe).isEmpty() },
         )
     }
 
