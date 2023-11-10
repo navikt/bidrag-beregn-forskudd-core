@@ -9,15 +9,8 @@ import java.math.BigDecimal
 data class BostatusPeriode(
     val referanse: String,
     val bostatusPeriode: Periode,
-    val kode: Bostatuskode
+    val kode: Bostatuskode,
 ) : PeriodisertGrunnlag {
-
-    constructor(bostatusPeriode: BostatusPeriode) : this(
-        bostatusPeriode.referanse,
-        bostatusPeriode.bostatusPeriode.justerDatoer(),
-        bostatusPeriode.kode
-    )
-
     override fun getPeriode(): Periode {
         return bostatusPeriode
     }
@@ -27,16 +20,8 @@ data class InntektPeriode(
     val referanse: String,
     val inntektPeriode: Periode,
     val type: String,
-    val belop: BigDecimal
+    val belop: BigDecimal,
 ) : PeriodisertGrunnlag {
-
-    constructor(inntektPeriode: InntektPeriode) : this(
-        inntektPeriode.referanse,
-        inntektPeriode.inntektPeriode.justerDatoer(),
-        inntektPeriode.type,
-        inntektPeriode.belop
-    )
-
     override fun getPeriode(): Periode {
         return inntektPeriode
     }
@@ -45,15 +30,8 @@ data class InntektPeriode(
 data class SivilstandPeriode(
     val referanse: String,
     val sivilstandPeriode: Periode,
-    val kode: SivilstandskodeBeregning
+    val kode: SivilstandskodeBeregning,
 ) : PeriodisertGrunnlag {
-
-    constructor(sivilstandPeriode: SivilstandPeriode) : this(
-        sivilstandPeriode.referanse,
-        sivilstandPeriode.sivilstandPeriode.justerDatoer(),
-        sivilstandPeriode.kode
-    )
-
     override fun getPeriode(): Periode {
         return sivilstandPeriode
     }
@@ -62,9 +40,8 @@ data class SivilstandPeriode(
 data class AlderPeriode(
     val referanse: String,
     val alderPeriode: Periode,
-    val alder: Int
+    val alder: Int,
 ) : PeriodisertGrunnlag {
-
     override fun getPeriode(): Periode {
         return alderPeriode
     }
@@ -72,14 +49,8 @@ data class AlderPeriode(
 
 data class BarnIHusstandenPeriode(
     val referanse: String,
-    val barnIHusstandenPeriode: Periode
+    val barnIHusstandenPeriode: Periode,
 ) : PeriodisertGrunnlag {
-
-    constructor(barnIHusstandenPeriode: BarnIHusstandenPeriode) : this(
-        barnIHusstandenPeriode.referanse,
-        barnIHusstandenPeriode.barnIHusstandenPeriode.justerDatoer()
-    )
-
     override fun getPeriode(): Periode {
         return barnIHusstandenPeriode
     }

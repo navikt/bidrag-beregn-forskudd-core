@@ -7,6 +7,7 @@ import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat
 
 interface ForskuddPeriode {
     fun beregnPerioder(grunnlag: BeregnForskuddGrunnlag): BeregnForskuddResultat
+
     fun validerInput(grunnlag: BeregnForskuddGrunnlag): List<Avvik>
 
     companion object {
