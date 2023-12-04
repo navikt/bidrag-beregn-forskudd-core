@@ -58,7 +58,7 @@ data class BeregnetForskuddResultatCore(
 data class ResultatPeriodeCore(
     val periode: PeriodeCore,
     val resultat: ResultatBeregningCore,
-    val grunnlagReferanseListe: List<String>,
+    val grunnlagsreferanseListe: List<String>,
 )
 
 data class ResultatBeregningCore(

@@ -68,27 +68,27 @@ internal class ForskuddCoreTest {
                     .isEqualTo("REGEL 1")
             },
             Executable {
-                assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagReferanseListe[0])
+                assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagsreferanseListe[0])
                     .isEqualTo(BARN_I_HUSSTANDEN_REFERANSE_1)
             },
             Executable {
-                assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagReferanseListe[1])
+                assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagsreferanseListe[1])
                     .isEqualTo(BARN_I_HUSSTANDEN_REFERANSE_2)
             },
             Executable {
-                assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagReferanseListe[2])
+                assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagsreferanseListe[2])
                     .isEqualTo(BOSTATUS_REFERANSE_MED_FORELDRE_1)
             },
             Executable {
-                assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagReferanseListe[3])
+                assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagsreferanseListe[3])
                     .isEqualTo(INNTEKT_REFERANSE_1)
             },
             Executable {
-                assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagReferanseListe[4])
+                assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagsreferanseListe[4])
                     .isEqualTo(SIVILSTAND_REFERANSE_ENSLIG)
             },
             Executable {
-                assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagReferanseListe[5])
+                assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].grunnlagsreferanseListe[5])
                     .isEqualTo(SOKNADBARN_REFERANSE)
             },
             Executable {

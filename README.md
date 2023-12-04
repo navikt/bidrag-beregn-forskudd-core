@@ -21,6 +21,7 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 | Versjon | Endringstype   | Beskrivelse                                                                                                    |
 |---------|----------------|----------------------------------------------------------------------------------------------------------------|
+| 1.2.0   | Endret         | Endret grunnlagReferanseListe til grunnlagsreferanseListe                                                      |
 | 1.1.2   | Endret         | Ny versjon av bidrag-domene                                                                                    |
 | 1.1.1   | Endret         | Fjernet justering og lagt til validering av perioder. Java versjon 21. ktlint formattering.                    |
 | 1.1.0   | Endret         | Endring i grensesnitt mot rest. Nye domene-enums. Byttet bidrag-domain med bidrag-domene.                      |
