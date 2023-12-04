@@ -6,8 +6,8 @@ import no.nav.bidrag.beregn.forskudd.core.bo.BarnIHusstandenPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode
-import no.nav.bidrag.domene.enums.Bostatuskode
-import no.nav.bidrag.domene.enums.SivilstandskodeBeregning
+import no.nav.bidrag.domene.enums.person.Bostatuskode
+import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.DisplayName
@@ -34,7 +34,7 @@ internal class PeriodisererTest {
                     SivilstandPeriode(
                         referanse = SIVILSTAND_REFERANSE_GIFT,
                         sivilstandPeriode = Periode(datoFom = LocalDate.parse("2019-02-01"), datoTil = LocalDate.parse("2019-04-01")),
-                        kode = SivilstandskodeBeregning.GIFT_SAMBOER,
+                        kode = Sivilstandskode.GIFT_SAMBOER,
                     ),
                 )
                 .finnPerioder(beregnDatoFom = LocalDate.parse("2000-01-01"), beregnDatoTil = LocalDate.parse("2100-01-01"))
@@ -67,7 +67,7 @@ internal class PeriodisererTest {
                     SivilstandPeriode(
                         referanse = SIVILSTAND_REFERANSE_GIFT,
                         sivilstandPeriode = Periode(datoFom = LocalDate.parse("2019-02-01"), datoTil = LocalDate.parse("2019-04-01")),
-                        kode = SivilstandskodeBeregning.GIFT_SAMBOER,
+                        kode = Sivilstandskode.GIFT_SAMBOER,
                     ),
                 )
                 .finnPerioder(LocalDate.parse("2000-01-01"), LocalDate.parse("2100-01-01"))
@@ -90,7 +90,7 @@ internal class PeriodisererTest {
                     SivilstandPeriode(
                         referanse = SIVILSTAND_REFERANSE_GIFT,
                         sivilstandPeriode = Periode(datoFom = LocalDate.parse("2019-02-01"), datoTil = null),
-                        kode = SivilstandskodeBeregning.GIFT_SAMBOER,
+                        kode = Sivilstandskode.GIFT_SAMBOER,
                     ),
                 )
                 .finnPerioder(beregnDatoFom = LocalDate.parse("2000-01-01"), beregnDatoTil = LocalDate.parse("2100-01-01"))
@@ -135,14 +135,14 @@ internal class PeriodisererTest {
                     SivilstandPeriode(
                         referanse = SIVILSTAND_REFERANSE_GIFT,
                         sivilstandPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2018-04-17")),
-                        kode = SivilstandskodeBeregning.GIFT_SAMBOER,
+                        kode = Sivilstandskode.GIFT_SAMBOER,
                     ),
                 )
                 .addBruddpunkter(
                     SivilstandPeriode(
                         referanse = SIVILSTAND_REFERANSE_ENSLIG,
                         sivilstandPeriode = Periode(datoFom = LocalDate.parse("2018-04-17"), datoTil = null),
-                        kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN,
+                        kode = Sivilstandskode.BOR_ALENE_MED_BARN,
                     ),
                 )
                 .addBruddpunkter(

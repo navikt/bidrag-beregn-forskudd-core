@@ -2,8 +2,8 @@ package no.nav.bidrag.beregn.forskudd.core.bo
 
 import no.nav.bidrag.beregn.felles.bo.Periode
 import no.nav.bidrag.beregn.felles.bo.PeriodisertGrunnlag
-import no.nav.bidrag.domene.enums.Bostatuskode
-import no.nav.bidrag.domene.enums.SivilstandskodeBeregning
+import no.nav.bidrag.domene.enums.person.Bostatuskode
+import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import java.math.BigDecimal
 
 data class BostatusPeriode(
@@ -30,7 +30,7 @@ data class InntektPeriode(
 data class SivilstandPeriode(
     val referanse: String,
     val sivilstandPeriode: Periode,
-    val kode: SivilstandskodeBeregning,
+    val kode: Sivilstandskode,
 ) : PeriodisertGrunnlag {
     override fun getPeriode(): Periode {
         return sivilstandPeriode

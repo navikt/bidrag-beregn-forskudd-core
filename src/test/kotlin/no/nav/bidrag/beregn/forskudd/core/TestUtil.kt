@@ -28,11 +28,11 @@ import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore
-import no.nav.bidrag.domene.enums.Avvikstype
-import no.nav.bidrag.domene.enums.Bostatuskode
-import no.nav.bidrag.domene.enums.InntektType
-import no.nav.bidrag.domene.enums.SivilstandskodeBeregning
-import no.nav.bidrag.domene.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.domene.enums.beregning.Avvikstype
+import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
+import no.nav.bidrag.domene.enums.inntekt.Inntektstype
+import no.nav.bidrag.domene.enums.person.Bostatuskode
+import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import java.math.BigDecimal
@@ -59,12 +59,12 @@ object TestUtil {
         listOf(
             SjablonPeriodeNavnVerdi(
                 Periode(LocalDate.parse("2017-01-01"), null),
-                SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELOP.navn,
+                SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELØP.navn,
                 BigDecimal.valueOf(1280),
             ),
             SjablonPeriodeNavnVerdi(
                 Periode(LocalDate.parse("2017-01-01"), null),
-                SjablonTallNavn.FORSKUDDSSATS_BELOP.navn,
+                SjablonTallNavn.FORSKUDDSSATS_BELØP.navn,
                 BigDecimal.valueOf(1710),
             ),
             SjablonPeriodeNavnVerdi(
@@ -74,22 +74,22 @@ object TestUtil {
             ),
             SjablonPeriodeNavnVerdi(
                 Periode(LocalDate.parse("2017-01-01"), null),
-                SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP.navn,
+                SjablonTallNavn.ØVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELØP.navn,
                 BigDecimal.valueOf(270200),
             ),
             SjablonPeriodeNavnVerdi(
                 Periode(LocalDate.parse("2017-01-01"), null),
-                SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP.navn,
+                SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP.navn,
                 BigDecimal.valueOf(419700),
             ),
             SjablonPeriodeNavnVerdi(
                 Periode(LocalDate.parse("2017-01-01"), null),
-                SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP.navn,
+                SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP.navn,
                 BigDecimal.valueOf(336500),
             ),
             SjablonPeriodeNavnVerdi(
                 Periode(LocalDate.parse("2017-01-01"), null),
-                SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP.navn,
+                SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP.navn,
                 BigDecimal.valueOf(61700),
             ),
         )
@@ -100,7 +100,7 @@ object TestUtil {
             SjablonPeriode(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 Sjablon(
-                    SjablonTallNavn.FORSKUDDSSATS_BELOP.navn,
+                    SjablonTallNavn.FORSKUDDSSATS_BELØP.navn,
                     emptyList(),
                     listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(1710))),
                 ),
@@ -116,7 +116,7 @@ object TestUtil {
             SjablonPeriode(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 Sjablon(
-                    SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP.navn,
+                    SjablonTallNavn.ØVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELØP.navn,
                     emptyList(),
                     listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(270200))),
                 ),
@@ -124,7 +124,7 @@ object TestUtil {
             SjablonPeriode(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 Sjablon(
-                    SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP.navn,
+                    SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP.navn,
                     emptyList(),
                     listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(419700))),
                 ),
@@ -132,7 +132,7 @@ object TestUtil {
             SjablonPeriode(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 Sjablon(
-                    SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP.navn,
+                    SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP.navn,
                     emptyList(),
                     listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(336500))),
                 ),
@@ -140,7 +140,7 @@ object TestUtil {
             SjablonPeriode(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 Sjablon(
-                    SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP.navn,
+                    SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP.navn,
                     emptyList(),
                     listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(61700))),
                 ),
@@ -148,7 +148,7 @@ object TestUtil {
             SjablonPeriode(
                 Periode(LocalDate.parse("2017-01-01"), null),
                 Sjablon(
-                    SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELOP.navn,
+                    SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELØP.navn,
                     emptyList(),
                     listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(1280))),
                 ),
@@ -176,7 +176,7 @@ object TestUtil {
                 InntektPeriodeCore(
                     INNTEKT_REFERANSE_1,
                     PeriodeCore(LocalDate.parse("2017-01-01"), null),
-                    InntektType.LØNNSINNTEKT.toString(),
+                    Inntektstype.LØNNSINNTEKT.toString(),
                     BigDecimal.ZERO,
                 ),
             )
@@ -186,12 +186,12 @@ object TestUtil {
                 SivilstandPeriodeCore(
                     SIVILSTAND_REFERANSE_GIFT,
                     PeriodeCore(LocalDate.parse("2018-01-01"), LocalDate.parse("2020-01-01")),
-                    SivilstandskodeBeregning.GIFT_SAMBOER.toString(),
+                    Sivilstandskode.GIFT_SAMBOER.toString(),
                 ),
                 SivilstandPeriodeCore(
                     SIVILSTAND_REFERANSE_ENSLIG,
                     PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
-                    SivilstandskodeBeregning.BOR_ALENE_MED_BARN.toString(),
+                    Sivilstandskode.BOR_ALENE_MED_BARN.toString(),
                 ),
             )
 
@@ -225,7 +225,7 @@ object TestUtil {
                     Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
                     ResultatBeregning(
                         BigDecimal.valueOf(1600),
-                        ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT,
+                        ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT,
                         "REGEL 1",
                         byggSjablonPeriodeNavnVerdiListe(),
                     ),
@@ -233,7 +233,7 @@ object TestUtil {
                         listOf(
                             Inntekt(INNTEKT_REFERANSE_1, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000)),
                         ),
-                        Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandskodeBeregning.BOR_ALENE_MED_BARN),
+                        Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, Sivilstandskode.BOR_ALENE_MED_BARN),
                         listOf(
                             BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1),
                             BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_2),
@@ -247,7 +247,7 @@ object TestUtil {
                     Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
                     ResultatBeregning(
                         BigDecimal.valueOf(1200),
-                        ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT,
+                        ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT,
                         "REGEL 2",
                         byggSjablonPeriodeNavnVerdiListe(),
                     ),
@@ -255,7 +255,7 @@ object TestUtil {
                         listOf(
                             Inntekt(INNTEKT_REFERANSE_2, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000)),
                         ),
-                        Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandskodeBeregning.BOR_ALENE_MED_BARN),
+                        Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, Sivilstandskode.BOR_ALENE_MED_BARN),
                         listOf(
                             BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1),
                             BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_2),
@@ -267,12 +267,12 @@ object TestUtil {
                 ),
                 ResultatPeriode(
                     Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")),
-                    ResultatBeregning(BigDecimal.valueOf(0), ResultatKodeForskudd.AVSLAG, "REGEL 11", byggSjablonPeriodeNavnVerdiListe()),
+                    ResultatBeregning(BigDecimal.valueOf(0), ResultatkodeForskudd.AVSLAG, "REGEL 11", byggSjablonPeriodeNavnVerdiListe()),
                     GrunnlagBeregning(
                         listOf(
                             Inntekt(INNTEKT_REFERANSE_3, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000)),
                         ),
-                        Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, SivilstandskodeBeregning.BOR_ALENE_MED_BARN),
+                        Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, Sivilstandskode.BOR_ALENE_MED_BARN),
                         listOf(
                             BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1),
                             BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_2),
@@ -348,12 +348,12 @@ object TestUtil {
                 SivilstandPeriode(
                     SIVILSTAND_REFERANSE_GIFT,
                     Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-05-01")),
-                    SivilstandskodeBeregning.GIFT_SAMBOER,
+                    Sivilstandskode.GIFT_SAMBOER,
                 ),
                 SivilstandPeriode(
                     SIVILSTAND_REFERANSE_ENSLIG,
                     Periode(LocalDate.parse("2018-05-01"), LocalDate.parse("2019-08-01")),
-                    SivilstandskodeBeregning.BOR_ALENE_MED_BARN,
+                    Sivilstandskode.BOR_ALENE_MED_BARN,
                 ),
             )
 
@@ -530,12 +530,12 @@ object TestUtil {
                 SivilstandPeriode(
                     SIVILSTAND_REFERANSE_GIFT,
                     Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-04-01")),
-                    SivilstandskodeBeregning.GIFT_SAMBOER,
+                    Sivilstandskode.GIFT_SAMBOER,
                 ),
                 SivilstandPeriode(
                     SIVILSTAND_REFERANSE_ENSLIG,
                     Periode(LocalDate.parse("2018-03-01"), LocalDate.parse("2019-07-01")),
-                    SivilstandskodeBeregning.BOR_ALENE_MED_BARN,
+                    Sivilstandskode.BOR_ALENE_MED_BARN,
                 ),
             )
 
@@ -598,7 +598,7 @@ object TestUtil {
                 SivilstandPeriode(
                     SIVILSTAND_REFERANSE_GIFT,
                     Periode(LocalDate.parse("2017-01-01"), null),
-                    SivilstandskodeBeregning.GIFT_SAMBOER,
+                    Sivilstandskode.GIFT_SAMBOER,
                 ),
             )
 
@@ -643,7 +643,7 @@ object TestUtil {
                 SivilstandPeriode(
                     SIVILSTAND_REFERANSE_ENSLIG,
                     Periode(LocalDate.parse("2017-01-01"), null),
-                    SivilstandskodeBeregning.BOR_ALENE_MED_BARN,
+                    Sivilstandskode.BOR_ALENE_MED_BARN,
                 ),
             )
 

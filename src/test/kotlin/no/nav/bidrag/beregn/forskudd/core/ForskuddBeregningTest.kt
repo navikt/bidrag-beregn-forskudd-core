@@ -12,9 +12,9 @@ import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning
 import no.nav.bidrag.beregn.forskudd.core.bo.Inntekt
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning
 import no.nav.bidrag.beregn.forskudd.core.bo.Sivilstand
-import no.nav.bidrag.domene.enums.Bostatuskode
-import no.nav.bidrag.domene.enums.SivilstandskodeBeregning
-import no.nav.bidrag.domene.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
+import no.nav.bidrag.domene.enums.person.Bostatuskode
+import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
@@ -50,7 +50,7 @@ internal class ForskuddBeregningTest {
                     belop = BigDecimal.ZERO,
                 ),
             )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
         val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 18)
         val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.MED_FORELDER)
@@ -66,7 +66,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isZero() },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.AVSLAG) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.AVSLAG) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 1") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -86,7 +86,7 @@ internal class ForskuddBeregningTest {
                     belop = BigDecimal.ZERO,
                 ),
             )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
         val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
         val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.IKKE_MED_FORELDER)
@@ -102,7 +102,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop125Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.FORHOYET_FORSKUDD_11_AAR_125_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 2") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -122,7 +122,7 @@ internal class ForskuddBeregningTest {
                     belop = BigDecimal.ZERO,
                 ),
             )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
         val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 10)
         val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.IKKE_MED_FORELDER)
@@ -155,7 +155,7 @@ internal class ForskuddBeregningTest {
                     referanse = INNTEKT_REFERANSE_1,
                     type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     belop =
-                        finnSjablonVerdi(sjablonPeriodeListe = sjablonPeriodeListe, sjablonTallNavn = SjablonTallNavn.FORSKUDDSSATS_BELOP)
+                        finnSjablonVerdi(sjablonPeriodeListe = sjablonPeriodeListe, sjablonTallNavn = SjablonTallNavn.FORSKUDDSSATS_BELØP)
                             .multiply(
                                 finnSjablonVerdi(
                                     sjablonPeriodeListe = sjablonPeriodeListe,
@@ -164,7 +164,7 @@ internal class ForskuddBeregningTest {
                             ).add(BigDecimal.ONE),
                 ),
             )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
         val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
         val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.MED_FORELDER)
@@ -180,7 +180,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isZero() },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.AVSLAG) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.AVSLAG) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 4") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -200,11 +200,11 @@ internal class ForskuddBeregningTest {
                     belop =
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP,
+                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELØP,
                         ),
                 ),
             )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
         val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
         val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.MED_FORELDER)
@@ -220,7 +220,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop125Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.FORHOYET_FORSKUDD_11_AAR_125_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 5") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -240,11 +240,11 @@ internal class ForskuddBeregningTest {
                     belop =
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP,
+                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELØP,
                         ),
                 ),
             )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
         val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 10)
         val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.MED_FORELDER)
@@ -260,7 +260,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop100Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 6") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -280,11 +280,11 @@ internal class ForskuddBeregningTest {
                     belop =
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP,
+                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP,
                         ),
                 ),
             )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
         val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
@@ -301,7 +301,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop75Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 7") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -321,11 +321,11 @@ internal class ForskuddBeregningTest {
                     belop =
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP,
+                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP,
                         ).add(BigDecimal.ONE),
                 ),
             )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
         val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
@@ -342,7 +342,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop50Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 8") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -362,16 +362,16 @@ internal class ForskuddBeregningTest {
                     belop =
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP,
+                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP,
                         ).add(
                             finnSjablonVerdi(
                                 sjablonPeriodeListe = sjablonPeriodeListe,
-                                sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP,
+                                sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
                             ),
                         ),
                 ),
             )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
         val barnIHusstandenListe =
             listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1), BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_2))
@@ -389,7 +389,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop75Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 9") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -409,16 +409,16 @@ internal class ForskuddBeregningTest {
                     belop =
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP,
+                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP,
                         ).add(
                             finnSjablonVerdi(
                                 sjablonPeriodeListe = sjablonPeriodeListe,
-                                sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP,
+                                sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
                             ),
                         ).add(BigDecimal.ONE),
                 ),
             )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.BOR_ALENE_MED_BARN)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
         val barnIHusstandenListe =
             listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1), BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_2))
@@ -436,7 +436,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop50Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 10") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -456,11 +456,11 @@ internal class ForskuddBeregningTest {
                     belop =
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP,
+                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
                         ),
                 ),
             )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.GIFT_SAMBOER)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.GIFT_SAMBOER)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
         val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
@@ -477,7 +477,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop75Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 11") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -497,11 +497,11 @@ internal class ForskuddBeregningTest {
                     belop =
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP,
+                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
                         ).add(BigDecimal.ONE),
                 ),
             )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.GIFT_SAMBOER)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.GIFT_SAMBOER)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
         val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1))
         val alder = Alder(referanse = SOKNADBARN_REFERANSE, alder = 11)
@@ -518,7 +518,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop50Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 12") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -538,16 +538,16 @@ internal class ForskuddBeregningTest {
                     belop =
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP,
+                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
                         ).add(
                             finnSjablonVerdi(
                                 sjablonPeriodeListe = sjablonPeriodeListe,
-                                sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP,
+                                sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
                             ),
                         ),
                 ),
             )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.GIFT_SAMBOER)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.GIFT_SAMBOER)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
         val barnIHusstandenListe =
             listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1), BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_2))
@@ -565,7 +565,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop75Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 13") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -585,16 +585,16 @@ internal class ForskuddBeregningTest {
                     belop =
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP,
+                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
                         ).add(
                             finnSjablonVerdi(
                                 sjablonPeriodeListe = sjablonPeriodeListe,
-                                sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP,
+                                sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
                             ).add(BigDecimal.ONE),
                         ),
                 ),
             )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.GIFT_SAMBOER)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.GIFT_SAMBOER)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
         val barnIHusstandenListe =
             listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1), BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_2))
@@ -611,7 +611,7 @@ internal class ForskuddBeregningTest {
 
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop50Prosent) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 14") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
@@ -632,7 +632,7 @@ internal class ForskuddBeregningTest {
                     belop =
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP,
+                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
                         ),
                 ),
                 Inntekt(
@@ -641,11 +641,11 @@ internal class ForskuddBeregningTest {
                     belop =
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP,
+                            sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
                         ).add(BigDecimal.ONE),
                 ),
             )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = SivilstandskodeBeregning.GIFT_SAMBOER)
+        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.GIFT_SAMBOER)
         // Søknadsbarnet er med i grunnlag antall barn i husstanden
         val barnIHusstandenListe =
             listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1), BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_2))
@@ -662,7 +662,7 @@ internal class ForskuddBeregningTest {
 
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop50Prosent) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 14") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
@@ -709,7 +709,7 @@ internal class ForskuddBeregningTest {
         println("---------------")
         println(
             "0005 Forskuddssats 100%:                             " +
-                finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.FORSKUDDSSATS_BELOP),
+                finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.FORSKUDDSSATS_BELØP),
         )
         println(
             "0013 Multiplikator:                                  " +
@@ -722,42 +722,42 @@ internal class ForskuddBeregningTest {
             "0033 Inntektsgrense 100%:                            " +
                 finnSjablonVerdi(
                     sjablonPeriodeListe,
-                    SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP,
+                    SjablonTallNavn.ØVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELØP,
                 ),
         )
         println(
             "0034 Inntektsgrense 75% enslig:                      " +
                 finnSjablonVerdi(
                     sjablonPeriodeListe,
-                    SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP,
+                    SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP,
                 ),
         )
         println(
             "0035 Inntektsgrense 75% gift:                        " +
                 finnSjablonVerdi(
                     sjablonPeriodeListe,
-                    SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP,
+                    SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
                 ),
         )
         println(
             "0036 Inntektsintervall:                              " +
                 finnSjablonVerdi(
                     sjablonPeriodeListe,
-                    SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP,
+                    SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
                 ),
         )
         println(
             "0038 Forskuddssats 75%:                              " +
                 finnSjablonVerdi(
                     sjablonPeriodeListe,
-                    SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELOP,
+                    SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELØP,
                 ),
         )
         println(
             "0005x0013 Maks inntektsgrense:                       " +
                 finnSjablonVerdi(
                     sjablonPeriodeListe,
-                    SjablonTallNavn.FORSKUDDSSATS_BELOP,
+                    SjablonTallNavn.FORSKUDDSSATS_BELØP,
                 ).multiply(
                     finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR),
                 ),
@@ -782,7 +782,7 @@ internal class ForskuddBeregningTest {
             "Inntektsintervall totalt (0036 x (antall barn - 1)): " +
                 finnSjablonVerdi(
                     sjablonPeriodeListe,
-                    SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP,
+                    SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
                 ).multiply(BigDecimal(grunnlag!!.barnIHusstandenListe.count() - 1)),
         )
         println()

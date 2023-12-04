@@ -13,10 +13,10 @@ import no.nav.bidrag.beregn.forskudd.core.beregning.ForskuddBeregningImpl
 import no.nav.bidrag.beregn.forskudd.core.bo.BeregnForskuddResultat
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriodeImpl
-import no.nav.bidrag.domene.enums.Avvikstype
-import no.nav.bidrag.domene.enums.Bostatuskode
-import no.nav.bidrag.domene.enums.SivilstandskodeBeregning
-import no.nav.bidrag.domene.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.domene.enums.beregning.Avvikstype
+import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
+import no.nav.bidrag.domene.enums.person.Bostatuskode
+import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Assertions.assertAll
@@ -52,7 +52,7 @@ internal class ForskuddPeriodeTest {
             Executable {
                 assertThat(
                     resultat.beregnetForskuddPeriodeListe[0].resultat.kode,
-                ).isEqualTo(ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT)
+                ).isEqualTo(ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT)
             },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].resultat.regel).isEqualTo("REGEL 6") },
             Executable {
@@ -78,7 +78,7 @@ internal class ForskuddPeriodeTest {
             Executable {
                 assertThat(
                     resultat.beregnetForskuddPeriodeListe[0].grunnlag.sivilstand.kode,
-                ).isEqualTo(SivilstandskodeBeregning.GIFT_SAMBOER)
+                ).isEqualTo(Sivilstandskode.GIFT_SAMBOER)
             },
             Executable {
                 assertThat(
@@ -109,7 +109,7 @@ internal class ForskuddPeriodeTest {
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[1].periode.datoTil).isEqualTo(LocalDate.parse("2018-01-01")) },
             Executable {
                 assertThat(resultat.beregnetForskuddPeriodeListe[1].resultat.kode)
-                    .isEqualTo(ResultatKodeForskudd.FORHOYET_FORSKUDD_11_AAR_125_PROSENT)
+                    .isEqualTo(ResultatkodeForskudd.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT)
             },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[1].resultat.regel).isEqualTo("REGEL 5") },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[2].periode.datoFom).isEqualTo(LocalDate.parse("2018-01-01")) },
@@ -117,7 +117,7 @@ internal class ForskuddPeriodeTest {
             Executable {
                 assertThat(
                     resultat.beregnetForskuddPeriodeListe[2].resultat.kode,
-                ).isEqualTo(ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT)
+                ).isEqualTo(ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT)
             },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[2].resultat.regel).isEqualTo("REGEL 13") },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[3].periode.datoFom).isEqualTo(LocalDate.parse("2018-05-01")) },
@@ -125,7 +125,7 @@ internal class ForskuddPeriodeTest {
             Executable {
                 assertThat(
                     resultat.beregnetForskuddPeriodeListe[3].resultat.kode,
-                ).isEqualTo(ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT)
+                ).isEqualTo(ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT)
             },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[3].resultat.regel).isEqualTo("REGEL 9") },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[4].periode.datoFom).isEqualTo(LocalDate.parse("2018-07-01")) },
@@ -133,14 +133,14 @@ internal class ForskuddPeriodeTest {
             Executable {
                 assertThat(
                     resultat.beregnetForskuddPeriodeListe[4].resultat.kode,
-                ).isEqualTo(ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT)
+                ).isEqualTo(ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT)
             },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[4].resultat.regel).isEqualTo("REGEL 9") },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[5].periode.datoFom).isEqualTo(LocalDate.parse("2018-09-01")) },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[5].periode.datoTil).isEqualTo(LocalDate.parse("2018-12-01")) },
             Executable {
                 assertThat(resultat.beregnetForskuddPeriodeListe[5].resultat.kode)
-                    .isEqualTo(ResultatKodeForskudd.FORHOYET_FORSKUDD_11_AAR_125_PROSENT)
+                    .isEqualTo(ResultatkodeForskudd.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT)
             },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[5].resultat.regel).isEqualTo("REGEL 2") },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[6].periode.datoFom).isEqualTo(LocalDate.parse("2018-12-01")) },
@@ -148,7 +148,7 @@ internal class ForskuddPeriodeTest {
             Executable {
                 assertThat(
                     resultat.beregnetForskuddPeriodeListe[6].resultat.kode,
-                ).isEqualTo(ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT)
+                ).isEqualTo(ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT)
             },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[6].resultat.regel).isEqualTo("REGEL 9") },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[7].periode.datoFom).isEqualTo(LocalDate.parse("2019-01-01")) },
@@ -156,7 +156,7 @@ internal class ForskuddPeriodeTest {
             Executable {
                 assertThat(
                     resultat.beregnetForskuddPeriodeListe[7].resultat.kode,
-                ).isEqualTo(ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT)
+                ).isEqualTo(ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT)
             },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[7].resultat.regel).isEqualTo("REGEL 10") },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[8].periode.datoFom).isEqualTo(LocalDate.parse("2019-04-01")) },
@@ -164,7 +164,7 @@ internal class ForskuddPeriodeTest {
             Executable {
                 assertThat(
                     resultat.beregnetForskuddPeriodeListe[8].resultat.kode,
-                ).isEqualTo(ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT)
+                ).isEqualTo(ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT)
             },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[8].resultat.regel).isEqualTo("REGEL 9") },
         )
@@ -245,7 +245,7 @@ internal class ForskuddPeriodeTest {
             Executable {
                 assertThat(
                     resultat.beregnetForskuddPeriodeListe[0].resultat.kode,
-                ).isEqualTo(ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT)
+                ).isEqualTo(ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT)
             },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].resultat.regel).isEqualTo("REGEL 6") },
             Executable {
@@ -266,7 +266,7 @@ internal class ForskuddPeriodeTest {
             Executable {
                 assertThat(
                     resultat.beregnetForskuddPeriodeListe[0].grunnlag.sivilstand.kode,
-                ).isEqualTo(SivilstandskodeBeregning.GIFT_SAMBOER)
+                ).isEqualTo(Sivilstandskode.GIFT_SAMBOER)
             },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.barnIHusstandenListe.count()).isEqualTo(1) },
             Executable { assertThat(resultat.beregnetForskuddPeriodeListe[0].grunnlag.soknadBarnAlder.alder).isZero() },

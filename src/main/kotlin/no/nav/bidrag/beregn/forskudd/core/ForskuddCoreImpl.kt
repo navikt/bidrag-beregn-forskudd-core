@@ -29,8 +29,8 @@ import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode
-import no.nav.bidrag.domene.enums.Bostatuskode
-import no.nav.bidrag.domene.enums.SivilstandskodeBeregning
+import no.nav.bidrag.domene.enums.person.Bostatuskode
+import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import java.time.format.DateTimeFormatter
 
 open class ForskuddCoreImpl(private val forskuddPeriode: ForskuddPeriode) : ForskuddCore {
@@ -106,7 +106,7 @@ open class ForskuddCoreImpl(private val forskuddPeriode: ForskuddPeriode) : Fors
                 SivilstandPeriode(
                     referanse = it.referanse,
                     sivilstandPeriode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-                    kode = SivilstandskodeBeregning.valueOf(it.kode),
+                    kode = Sivilstandskode.valueOf(it.kode),
                 ),
             )
         }
