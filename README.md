@@ -21,6 +21,7 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 | Versjon | Endringstype   | Beskrivelse                                                                                                    |
 |---------|----------------|----------------------------------------------------------------------------------------------------------------|
+| 1.1.2   | Endret         | Ny versjon av bidrag-domene                                                                                    |
 | 1.1.1   | Endret         | Fjernet justering og lagt til validering av perioder. Java versjon 21. ktlint formattering.                    |
 | 1.1.0   | Endret         | Endring i grensesnitt mot rest. Nye domene-enums. Byttet bidrag-domain med bidrag-domene.                      |
 | 1.0.6   | Endret         | Gjort om fra enum InntektType til String i domene-objekter for å unngå feil                                    |

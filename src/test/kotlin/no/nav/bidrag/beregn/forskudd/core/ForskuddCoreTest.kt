@@ -5,8 +5,8 @@ import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggForskuddGrunnlagCore
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggForskuddResultat
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggSjablonPeriodeListe
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriodeImpl
-import no.nav.bidrag.domene.enums.Avvikstype
-import no.nav.bidrag.domene.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.domene.enums.beregning.Avvikstype
+import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Assertions.assertAll
@@ -61,7 +61,7 @@ internal class ForskuddCoreTest {
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].resultat.kode)
-                    .isEqualTo(ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT.toString())
+                    .isEqualTo(ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT.toString())
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].resultat.regel)
@@ -105,7 +105,7 @@ internal class ForskuddCoreTest {
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[1].resultat.kode)
-                    .isEqualTo(ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT.toString())
+                    .isEqualTo(ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT.toString())
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[1].resultat.regel)
@@ -125,7 +125,7 @@ internal class ForskuddCoreTest {
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[2].resultat.kode)
-                    .isEqualTo(ResultatKodeForskudd.AVSLAG.toString())
+                    .isEqualTo(ResultatkodeForskudd.AVSLAG.toString())
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[2].resultat.regel)
@@ -163,7 +163,7 @@ internal class ForskuddCoreTest {
     fun skalKasteIllegalArgumentExceptionVedUgyldigEnum() {
         assertThatExceptionOfType(IllegalArgumentException::class.java)
             .isThrownBy { forskuddCore.beregnForskudd(byggForskuddGrunnlagCore("BOR_HELT_ALENE")) }
-            .withMessage("No enum constant no.nav.bidrag.domene.enums.Bostatuskode.BOR_HELT_ALENE")
+            .withMessage("No enum constant no.nav.bidrag.domene.enums.person.Bostatuskode.BOR_HELT_ALENE")
     }
 
     companion object {
