@@ -29,7 +29,7 @@
     <kotlin.version>1.9.21</kotlin.version>
 
     <!-- build -->
-    <build-helper-maven.version>3.3.0</build-helper-maven.version>
+    <build-helper-maven.version>3.5.0</build-helper-maven.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
