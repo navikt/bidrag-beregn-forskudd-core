@@ -21,6 +21,7 @@ Det er ingen sikkerhet, da tjenesten ikke behandler sensitive data.
 
 | Versjon | Endringstype   | Beskrivelse                                                                                                    |
 |---------|----------------|----------------------------------------------------------------------------------------------------------------|
+| 1.2.1   | Endret         | Lagt til dependabot. Oppgradert versjoner.                                               |
 | 1.2.0   | Endret         | Endret grunnlagReferanseListe til grunnlagsreferanseListe                                                      |
 | 1.1.2   | Endret         | Ny versjon av bidrag-domene                                                                                    |
 | 1.1.1   | Endret         | Fjernet justering og lagt til validering av perioder. Java versjon 21. ktlint formattering.                    |
